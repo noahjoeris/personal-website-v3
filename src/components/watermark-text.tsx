@@ -12,11 +12,7 @@ export function WatermarkText() {
       aria-hidden="true"
     >
       <span
-        className="block w-full whitespace-nowrap text-center font-bold uppercase leading-[0.8] text-foreground/20"
-        style={{
-          fontSize: "clamp(4rem, 16vw, 20rem)",
-          letterSpacing: "-0.03em",
-        }}
+        className="block w-full whitespace-nowrap text-center font-bold uppercase leading-[0.8] text-foreground/20 text-[clamp(4rem,16vw,20rem)] tracking-[-0.03em]"
       >
         NOAH JOERIS
       </span>

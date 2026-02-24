@@ -11,13 +11,11 @@ export function HeroSection() {
       className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[hsl(182,30%,14%)] via-[hsl(182,30%,12%)] to-[hsl(185,25%,10%)]"
       aria-label="Hero"
     >
-      <div className="absolute inset-0 z-10 md:left-auto md:w-[65%] lg:w-[60%]">
+      <div className="absolute inset-0 z-10">
         <HeroImage />
-        <div className="absolute inset-y-0 left-0 z-20 hidden w-2/3 bg-gradient-to-r from-background via-background/90 to-transparent md:block" />
-        <div className="absolute bottom-0 left-0 right-0 z-20 h-1/2 bg-gradient-to-t from-background via-background/90 to-transparent" />
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 z-[8] translate-y-[35%]">
+      <div className="absolute bottom-0 left-0 right-0 z-8">
         <WatermarkText />
       </div>
 
