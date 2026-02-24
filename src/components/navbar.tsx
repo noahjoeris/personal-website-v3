@@ -1,73 +1,285 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { Github, Linkedin } from "lucide-react";
-import { siteConfig } from "@/config/site";
+import { usePathname } from "next/navigation";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 
-function XIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className={className}
-      aria-hidden="true"
-    >
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
+import type { NavItem, SocialLink } from "@/config/site";
+import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
+
+const mobileMenuId = "mobile-nav-menu";
+
+const socialIconPathMap: Record<SocialLink["icon"], string> = {
+  x: "/icons/social/x.svg",
+  linkedin: "/icons/social/linkedin.svg",
+  github: "/icons/social/github.svg",
+};
+
+function getSocialIconMask(icon: SocialLink["icon"]): CSSProperties {
+  const maskUrl = `url("${socialIconPathMap[icon]}")`;
+
+  return {
+    WebkitMaskImage: maskUrl,
+    maskImage: maskUrl,
+    WebkitMaskRepeat: "no-repeat",
+    maskRepeat: "no-repeat",
+    WebkitMaskPosition: "center",
+    maskPosition: "center",
+    WebkitMaskSize: "contain",
+    maskSize: "contain",
+  };
 }
 
-const socialIconMap = {
-  X: XIcon,
-  LinkedIn: Linkedin,
-  GitHub: Github,
-} as const;
+function isActivePath(pathname: string, href: NavItem["href"]) {
+  if (href === "/") {
+    return pathname === "/";
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export function Navbar() {
+  const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mobileMenuPanelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsMobileMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    function handlePointerDown(event: PointerEvent) {
+      if (!isMobileMenuOpen) {
+        return;
+      }
+
+      const target = event.target as Node | null;
+      if (!target) {
+        return;
+      }
+
+      if (mobileMenuPanelRef.current?.contains(target)) {
+        return;
+      }
+
+      setIsMobileMenuOpen(false);
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [isMobileMenuOpen]);
+
   return (
     <motion.header
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 px-6 py-4 md:px-10 lg:px-16"
+      className="fixed inset-x-0 top-0 z-50"
     >
-      <nav className="flex items-center justify-between" aria-label="Main navigation">
-        <ul className="hidden items-center gap-6 sm:flex md:gap-8">
-          {siteConfig.nav.map((link) => (
-            <li key={link.href}>
-              <Link
-                href={link.href}
-                className="text-xs font-medium tracking-widest text-foreground/80 transition-colors hover:text-foreground"
+      <div className="px-5 py-3 sm:px-6 sm:py-4 md:px-10 lg:px-16">
+        <nav className="relative flex items-center justify-between" aria-label="Main navigation">
+          <ul className="hidden items-center gap-5 sm:flex md:gap-7">
+            {siteConfig.nav.map((link) => {
+              const isActive = isActivePath(pathname, link.href);
+
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className={cn(
+                      "text-[11px] font-medium tracking-[0.18em] transition-colors",
+                      isActive
+                        ? "text-foreground"
+                        : "text-foreground/70 hover:text-foreground"
+                    )}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="ml-auto flex items-center gap-3 sm:gap-4">
+            <ul className="hidden items-center gap-3 sm:flex sm:gap-4">
+              {siteConfig.social.map((social) => (
+                <li key={social.label}>
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground/70 transition-colors hover:text-foreground focus-visible:text-foreground"
+                    aria-label={social.ariaLabel}
+                  >
+                    <span
+                      className="block h-5 w-5 bg-current"
+                      style={getSocialIconMask(social.icon)}
+                      aria-hidden="true"
+                    />
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <button
+              type="button"
+              className="inline-flex h-9 w-9 items-center justify-center text-foreground/90 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:hidden"
+              aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls={mobileMenuId}
+              onClick={() => {
+                setIsMobileMenuOpen((current) => !current);
+              }}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
               >
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
+                <path d={isMobileMenuOpen ? "M5 5l14 14M19 5L5 19" : "M4 7h16M4 12h16M4 17h16"} />
+              </svg>
+            </button>
+          </div>
+        </nav>
 
-        <ul className="flex items-center gap-4">
-          {siteConfig.social.map((social) => {
-            const Icon = socialIconMap[social.label];
+        <div className="mt-3 hidden h-px w-full bg-foreground/20 sm:mt-4 sm:block" />
+      </div>
 
-            return (
-              <li key={social.label}>
-                <a
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground/70 transition-colors hover:text-foreground"
-                  aria-label={social.ariaLabel}
+      <AnimatePresence>
+        {isMobileMenuOpen ? (
+          <motion.div
+            id={mobileMenuId}
+            ref={mobileMenuPanelRef}
+            className="fixed inset-x-0 top-0 z-[60] border-b border-foreground/35 bg-background/25 px-5 pb-8 pt-5 text-foreground backdrop-blur-[1.5px] sm:hidden"
+            initial={{ opacity: 0, y: -18 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+          >
+            <div className="flex justify-end">
+              <button
+                type="button"
+                className="inline-flex h-9 w-9 items-center justify-center text-foreground/90 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="Close navigation menu"
+                aria-expanded={true}
+                aria-controls={mobileMenuId}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
                 >
-                  <Icon className="h-5 w-5" />
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
+                  <path d="M5 5l14 14M19 5L5 19" />
+                </svg>
+              </button>
+            </div>
 
-      <div className="mt-4 h-px w-full bg-foreground/20" />
+            <div className="mt-5 h-px w-full bg-foreground/35" />
+
+            <motion.ul
+              className="mt-8 space-y-5"
+              initial="closed"
+              animate="open"
+              variants={{
+                closed: { opacity: 0 },
+                open: {
+                  opacity: 1,
+                  transition: { delayChildren: 0.03, staggerChildren: 0.045 },
+                },
+              }}
+            >
+              {siteConfig.nav.map((link) => {
+                const isActive = isActivePath(pathname, link.href);
+
+                return (
+                  <motion.li
+                    key={link.href}
+                    variants={{
+                      closed: { opacity: 0, y: -8 },
+                      open: { opacity: 1, y: 0 },
+                    }}
+                    transition={{ duration: 0.18, ease: "easeOut" }}
+                  >
+                    <Link
+                      href={link.href}
+                      className={cn(
+                        "block text-[34px] font-medium leading-[0.98] tracking-[0.035em] transition-colors",
+                        isActive
+                          ? "text-foreground"
+                          : "text-foreground/85 hover:text-foreground"
+                      )}
+                      aria-current={isActive ? "page" : undefined}
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.li>
+                );
+              })}
+            </motion.ul>
+
+            <motion.ul
+              className="mt-8 flex items-center gap-6"
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, ease: "easeOut", delay: 0.1 }}
+            >
+              {siteConfig.social.map((social) => (
+                <li key={social.label}>
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground/80 transition-colors hover:text-foreground focus-visible:text-foreground"
+                    aria-label={social.ariaLabel}
+                  >
+                    <span
+                      className="block h-9 w-9 bg-current"
+                      style={getSocialIconMask(social.icon)}
+                      aria-hidden="true"
+                    />
+                  </a>
+                </li>
+              ))}
+            </motion.ul>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </motion.header>
   );
 }

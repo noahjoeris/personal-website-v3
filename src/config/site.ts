@@ -5,6 +5,7 @@ export type NavItem = {
 
 export type SocialLink = {
   label: 'X' | 'LinkedIn' | 'GitHub'
+  icon: 'x' | 'linkedin' | 'github'
   href: string
   ariaLabel: string
 }
@@ -23,12 +24,23 @@ export const siteConfig = {
   ],
   // TODO: Replace placeholder social profile URLs before publishing.
   social: [
-    { label: 'X', href: 'https://x.com/', ariaLabel: 'X (Twitter)' },
+    {
+      label: 'X',
+      icon: 'x',
+      href: 'https://x.com/',
+      ariaLabel: 'X (Twitter)',
+    },
     {
       label: 'LinkedIn',
+      icon: 'linkedin',
       href: 'https://linkedin.com/',
       ariaLabel: 'LinkedIn',
     },
-    { label: 'GitHub', href: 'https://github.com/', ariaLabel: 'GitHub' },
+    {
+      label: 'GitHub',
+      icon: 'github',
+      href: 'https://github.com/',
+      ariaLabel: 'GitHub',
+    },
   ],
 } satisfies SiteConfig
