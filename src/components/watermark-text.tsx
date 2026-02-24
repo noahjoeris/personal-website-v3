@@ -2,7 +2,11 @@
 
 import { motion } from "framer-motion";
 
+import { landingData } from "@/data/landing-data";
+
 export function WatermarkText() {
+  const { watermark } = landingData.hero;
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -14,7 +18,7 @@ export function WatermarkText() {
       <span
         className="block w-full whitespace-nowrap text-center font-bold uppercase leading-[0.8] text-foreground/20 text-[clamp(4rem,16vw,20rem)] tracking-[-0.03em]"
       >
-        NOAH JOERIS
+        {watermark}
       </span>
     </motion.div>
   );

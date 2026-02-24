@@ -3,7 +3,11 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 
+import { landingData } from "@/data/landing-data";
+
 export function Signature() {
+  const { signatureImgSrc, srTitle } = landingData.hero;
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -40 }}
@@ -11,10 +15,10 @@ export function Signature() {
       transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
       className="relative"
     >
-      <h1 className="sr-only">Noah Joeris - Software Engineer</h1>
+      <h1 className="sr-only">{srTitle}</h1>
       <Image
-        src="/images/signature.png"
-        alt="Noah Joeris signature with Software Engineer title"
+        src={signatureImgSrc}
+        alt="Signature"
         width={500}
         height={200}
         priority

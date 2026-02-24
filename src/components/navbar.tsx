@@ -5,20 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 
-import type { NavItem, SocialLink } from "@/config/site";
-import { siteConfig } from "@/config/site";
+import type { NavItem, SocialLink } from "@/data/landing-data";
+import { landingData } from "@/data/landing-data";
 import { cn } from "@/lib/utils";
 
 const mobileMenuId = "mobile-nav-menu";
 
-const socialIconPathMap: Record<SocialLink["icon"], string> = {
-  x: "/icons/social/x.svg",
-  linkedin: "/icons/social/linkedin.svg",
-  github: "/icons/social/github.svg",
-};
-
-function getSocialIconMask(icon: SocialLink["icon"]): CSSProperties {
-  const maskUrl = `url("${socialIconPathMap[icon]}")`;
+function getSocialIconMask(iconSrc: SocialLink["iconSrc"]): CSSProperties {
+  const maskUrl = `url("${iconSrc}")`;
 
   return {
     WebkitMaskImage: maskUrl,
@@ -98,7 +92,7 @@ export function Navbar() {
       <div className="px-5 py-3 sm:px-6 sm:py-4 md:px-10 lg:px-16">
         <nav className="relative flex items-center justify-between" aria-label="Main navigation">
           <ul className="hidden items-center gap-5 sm:flex md:gap-7">
-            {siteConfig.nav.map((link) => {
+            {landingData.navigation.map((link) => {
               const isActive = isActivePath(pathname, link.href);
 
               return (
@@ -122,18 +116,18 @@ export function Navbar() {
 
           <div className="ml-auto flex items-center gap-3 sm:gap-4">
             <ul className="hidden items-center gap-3 sm:flex sm:gap-4">
-              {siteConfig.social.map((social) => (
+              {landingData.socials.map((social) => (
                 <li key={social.label}>
                   <a
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-foreground/70 transition-colors hover:text-foreground focus-visible:text-foreground"
-                    aria-label={social.ariaLabel}
+                    aria-label={social.label}
                   >
                     <span
                       className="block h-5 w-5 bg-current"
-                      style={getSocialIconMask(social.icon)}
+                      style={getSocialIconMask(social.iconSrc)}
                       aria-hidden="true"
                     />
                   </a>
@@ -221,7 +215,7 @@ export function Navbar() {
                 },
               }}
             >
-              {siteConfig.nav.map((link) => {
+              {landingData.navigation.map((link) => {
                 const isActive = isActivePath(pathname, link.href);
 
                 return (
@@ -259,18 +253,18 @@ export function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, ease: "easeOut", delay: 0.1 }}
             >
-              {siteConfig.social.map((social) => (
+              {landingData.socials.map((social) => (
                 <li key={social.label}>
                   <a
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-foreground/80 transition-colors hover:text-foreground focus-visible:text-foreground"
-                    aria-label={social.ariaLabel}
+                    aria-label={social.label}
                   >
                     <span
                       className="block h-9 w-9 bg-current"
-                      style={getSocialIconMask(social.icon)}
+                      style={getSocialIconMask(social.iconSrc)}
                       aria-hidden="true"
                     />
                   </a>

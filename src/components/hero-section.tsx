@@ -4,12 +4,12 @@ import { Signature } from "@/components/signature";
 import { HeroContent } from "@/components/hero-content";
 import { HeroImage } from "@/components/hero-image";
 import { WatermarkText } from "@/components/watermark-text";
+import { landingData } from "@/data/landing-data";
 
 export function HeroSection() {
   return (
     <section
       className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[hsl(182,30%,14%)] via-[hsl(182,30%,12%)] to-[hsl(185,25%,10%)]"
-      aria-label="Hero"
     >
       <div className="absolute inset-0 z-10">
         <HeroImage />

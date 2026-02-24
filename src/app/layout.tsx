@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 
+import { landingData } from "@/data/landing-data";
+
 import "./globals.css";
 
 const inter = Inter({
@@ -9,9 +11,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Noah Joeris | Software Engineer",
-  description:
-    "Cypherpunk protecting human freedom with software. React, Rust, Bitcoin.",
+  title: landingData.metadata.title,
+  description: landingData.metadata.description,
 };
 
 export const viewport: Viewport = {

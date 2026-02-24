@@ -3,7 +3,11 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 
+import { landingData } from "@/data/landing-data";
+
 export function HeroImage() {
+  const { heroImgSrc } = landingData.hero;
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 1.05 }}
@@ -12,8 +16,8 @@ export function HeroImage() {
       className="relative h-full w-full"
     >
       <Image
-        src="/images/noah-hero.avif"
-        alt="Noah Joeris - profile portrait with cyberpunk duotone effect"
+        src={heroImgSrc}
+        alt="Hero image"
         fill
         priority
         className="object-cover object-[center_20%]"
