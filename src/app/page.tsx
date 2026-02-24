@@ -1,5 +1,5 @@
-import { Navbar } from "@/components/navbar";
-import { HeroSection } from "@/components/hero-section";
+import { HeroSection } from '@/components/hero-section'
+import { Navbar } from '@/components/navbar'
 
 export default function Page() {
   return (
@@ -7,5 +7,5 @@ export default function Page() {
       <Navbar />
       <HeroSection />
     </main>
-  );
+  )
 }

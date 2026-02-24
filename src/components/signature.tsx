@@ -1,18 +1,18 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import Image from "next/image";
+import { motion } from 'framer-motion'
+import Image from 'next/image'
 
-import { landingData } from "@/data/landing-data";
+import { landingData } from '@/data/landing-data'
 
 export function Signature() {
-  const { signatureImgSrc, srTitle } = landingData.hero;
+  const { signatureImgSrc, srTitle } = landingData.hero
 
   return (
     <motion.div
       initial={{ opacity: 0, x: -40 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+      transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
       className="relative"
     >
       <h1 className="sr-only">{srTitle}</h1>
@@ -25,5 +25,5 @@ export function Signature() {
         className="h-auto w-[280px] invert md:w-[380px] lg:w-[460px]"
       />
     </motion.div>
-  );
+  )
 }

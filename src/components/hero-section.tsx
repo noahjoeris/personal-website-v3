@@ -1,16 +1,13 @@
-"use client";
+'use client'
 
-import { Signature } from "@/components/signature";
-import { HeroContent } from "@/components/hero-content";
-import { HeroImage } from "@/components/hero-image";
-import { WatermarkText } from "@/components/watermark-text";
-import { landingData } from "@/data/landing-data";
+import { HeroContent } from '@/components/hero-content'
+import { HeroImage } from '@/components/hero-image'
+import { Signature } from '@/components/signature'
+import { WatermarkText } from '@/components/watermark-text'
 
 export function HeroSection() {
   return (
-    <section
-      className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[hsl(182,30%,14%)] via-[hsl(182,30%,12%)] to-[hsl(185,25%,10%)]"
-    >
+    <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[hsl(182,30%,14%)] via-[hsl(182,30%,12%)] to-[hsl(185,25%,10%)]">
       <div className="absolute inset-0 z-10">
         <HeroImage />
       </div>
@@ -26,5 +23,5 @@ export function HeroSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

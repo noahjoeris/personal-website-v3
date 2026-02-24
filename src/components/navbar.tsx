@@ -1,122 +1,120 @@
-"use client";
+'use client'
 
-import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { type CSSProperties, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from 'framer-motion'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { type CSSProperties, useEffect, useRef, useState } from 'react'
 
-import type { NavItem, SocialLink } from "@/data/landing-data";
-import { landingData } from "@/data/landing-data";
-import { cn } from "@/lib/utils";
+import type { NavItem, SocialLink } from '@/data/landing-data'
+import { landingData } from '@/data/landing-data'
+import { cn } from '@/lib/utils'
 
-const mobileMenuId = "mobile-nav-menu";
+const mobileMenuId = 'mobile-nav-menu'
 
-function getSocialIconMask(iconSrc: SocialLink["iconSrc"]): CSSProperties {
-  const maskUrl = `url("${iconSrc}")`;
+function getSocialIconMask(iconSrc: SocialLink['iconSrc']): CSSProperties {
+  const maskUrl = `url("${iconSrc}")`
 
   return {
     WebkitMaskImage: maskUrl,
     maskImage: maskUrl,
-    WebkitMaskRepeat: "no-repeat",
-    maskRepeat: "no-repeat",
-    WebkitMaskPosition: "center",
-    maskPosition: "center",
-    WebkitMaskSize: "contain",
-    maskSize: "contain",
-  };
+    WebkitMaskRepeat: 'no-repeat',
+    maskRepeat: 'no-repeat',
+    WebkitMaskPosition: 'center',
+    maskPosition: 'center',
+    WebkitMaskSize: 'contain',
+    maskSize: 'contain',
+  }
 }
 
-function isActivePath(pathname: string, href: NavItem["href"]) {
-  if (href === "/") {
-    return pathname === "/";
+function isActivePath(pathname: string, href: NavItem['href']) {
+  if (href === '/') {
+    return pathname === '/'
   }
 
-  return pathname === href || pathname.startsWith(`${href}/`);
+  return pathname === href || pathname.startsWith(`${href}/`)
 }
 
 export function Navbar() {
-  const pathname = usePathname();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const mobileMenuPanelRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const mobileMenuPanelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [pathname]);
+    setIsMobileMenuOpen(false)
+  }, [])
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setIsMobileMenuOpen(false);
+      if (event.key === 'Escape') {
+        setIsMobileMenuOpen(false)
       }
     }
 
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown)
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
 
   useEffect(() => {
     function handlePointerDown(event: PointerEvent) {
       if (!isMobileMenuOpen) {
-        return;
+        return
       }
 
-      const target = event.target as Node | null;
+      const target = event.target as Node | null
       if (!target) {
-        return;
+        return
       }
 
       if (mobileMenuPanelRef.current?.contains(target)) {
-        return;
+        return
       }
 
-      setIsMobileMenuOpen(false);
+      setIsMobileMenuOpen(false)
     }
 
-    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener('pointerdown', handlePointerDown)
 
     return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-    };
-  }, [isMobileMenuOpen]);
+      document.removeEventListener('pointerdown', handlePointerDown)
+    }
+  }, [isMobileMenuOpen])
 
   return (
     <motion.header
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
       className="fixed inset-x-0 top-0 z-50"
     >
       <div className="px-5 py-3 sm:px-6 sm:py-4 md:px-10 lg:px-16">
         <nav className="relative flex items-center justify-between" aria-label="Main navigation">
           <ul className="hidden items-center gap-5 sm:flex md:gap-7">
-            {landingData.navigation.map((link) => {
-              const isActive = isActivePath(pathname, link.href);
+            {landingData.navigation.map(link => {
+              const isActive = isActivePath(pathname, link.href)
 
               return (
                 <li key={link.href}>
                   <Link
                     href={link.href}
                     className={cn(
-                      "text-[11px] font-medium tracking-[0.18em] transition-colors",
-                      isActive
-                        ? "text-foreground"
-                        : "text-foreground/70 hover:text-foreground"
+                      'text-[11px] font-medium tracking-[0.18em] transition-colors',
+                      isActive ? 'text-foreground' : 'text-foreground/70 hover:text-foreground',
                     )}
-                    aria-current={isActive ? "page" : undefined}
+                    aria-current={isActive ? 'page' : undefined}
                   >
                     {link.label}
                   </Link>
                 </li>
-              );
+              )
             })}
           </ul>
 
           <div className="ml-auto flex items-center gap-3 sm:gap-4">
             <ul className="hidden items-center gap-3 sm:flex sm:gap-4">
-              {landingData.socials.map((social) => (
+              {landingData.socials.map(social => (
                 <li key={social.label}>
                   <a
                     href={social.href}
@@ -130,6 +128,7 @@ export function Navbar() {
                       style={getSocialIconMask(social.iconSrc)}
                       aria-hidden="true"
                     />
+                    <span className="sr-only">{social.label}</span>
                   </a>
                 </li>
               ))}
@@ -138,11 +137,11 @@ export function Navbar() {
             <button
               type="button"
               className="inline-flex h-9 w-9 items-center justify-center text-foreground/90 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:hidden"
-              aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={isMobileMenuOpen}
               aria-controls={mobileMenuId}
               onClick={() => {
-                setIsMobileMenuOpen((current) => !current);
+                setIsMobileMenuOpen(current => !current)
               }}
             >
               <svg
@@ -155,7 +154,7 @@ export function Navbar() {
                 strokeLinejoin="round"
                 aria-hidden="true"
               >
-                <path d={isMobileMenuOpen ? "M5 5l14 14M19 5L5 19" : "M4 7h16M4 12h16M4 17h16"} />
+                <path d={isMobileMenuOpen ? 'M5 5l14 14M19 5L5 19' : 'M4 7h16M4 12h16M4 17h16'} />
               </svg>
             </button>
           </div>
@@ -173,7 +172,7 @@ export function Navbar() {
             initial={{ opacity: 0, y: -18 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
           >
             <div className="flex justify-end">
               <button
@@ -183,7 +182,7 @@ export function Navbar() {
                 aria-expanded={true}
                 aria-controls={mobileMenuId}
                 onClick={() => {
-                  setIsMobileMenuOpen(false);
+                  setIsMobileMenuOpen(false)
                 }}
               >
                 <svg
@@ -215,8 +214,8 @@ export function Navbar() {
                 },
               }}
             >
-              {landingData.navigation.map((link) => {
-                const isActive = isActivePath(pathname, link.href);
+              {landingData.navigation.map(link => {
+                const isActive = isActivePath(pathname, link.href)
 
                 return (
                   <motion.li
@@ -225,25 +224,23 @@ export function Navbar() {
                       closed: { opacity: 0, y: -8 },
                       open: { opacity: 1, y: 0 },
                     }}
-                    transition={{ duration: 0.18, ease: "easeOut" }}
+                    transition={{ duration: 0.18, ease: 'easeOut' }}
                   >
                     <Link
                       href={link.href}
                       className={cn(
-                        "block text-[34px] font-medium leading-[0.98] tracking-[0.035em] transition-colors",
-                        isActive
-                          ? "text-foreground"
-                          : "text-foreground/85 hover:text-foreground"
+                        'block text-[34px] font-medium leading-[0.98] tracking-[0.035em] transition-colors',
+                        isActive ? 'text-foreground' : 'text-foreground/85 hover:text-foreground',
                       )}
-                      aria-current={isActive ? "page" : undefined}
+                      aria-current={isActive ? 'page' : undefined}
                       onClick={() => {
-                        setIsMobileMenuOpen(false);
+                        setIsMobileMenuOpen(false)
                       }}
                     >
                       {link.label}
                     </Link>
                   </motion.li>
-                );
+                )
               })}
             </motion.ul>
 
@@ -251,9 +248,9 @@ export function Navbar() {
               className="mt-8 flex items-center gap-6"
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, ease: "easeOut", delay: 0.1 }}
+              transition={{ duration: 0.2, ease: 'easeOut', delay: 0.1 }}
             >
-              {landingData.socials.map((social) => (
+              {landingData.socials.map(social => (
                 <li key={social.label}>
                   <a
                     href={social.href}
@@ -267,6 +264,7 @@ export function Navbar() {
                       style={getSocialIconMask(social.iconSrc)}
                       aria-hidden="true"
                     />
+                    <span className="sr-only">{social.label}</span>
                   </a>
                 </li>
               ))}
@@ -275,5 +273,5 @@ export function Navbar() {
         ) : null}
       </AnimatePresence>
     </motion.header>
-  );
+  )
 }
