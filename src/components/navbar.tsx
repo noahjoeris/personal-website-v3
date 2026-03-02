@@ -168,7 +168,7 @@ export function Navbar() {
           <motion.div
             id={mobileMenuId}
             ref={mobileMenuPanelRef}
-            className="fixed inset-x-0 top-0 z-[60] border-b border-foreground/35 bg-background/25 px-5 pb-8 pt-5 text-foreground backdrop-blur-[1.5px] sm:hidden"
+            className="fixed inset-x-0 top-0 z-60 border-b border-foreground/35 bg-background/25 px-5 pb-8 pt-5 text-foreground backdrop-blur-[1.5px] sm:hidden"
             initial={{ opacity: 0, y: -18 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
