@@ -160,7 +160,7 @@ export function Navbar() {
           </div>
         </nav>
 
-        <div className="mt-3 hidden h-px w-full bg-foreground/20 sm:mt-4 sm:block" />
+        <div className="mt-3 h-px w-full bg-foreground/20 sm:mt-4" />
       </div>
 
       <AnimatePresence>

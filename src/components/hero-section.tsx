@@ -2,23 +2,27 @@
 
 import { HeroContent } from '@/components/hero-content'
 import { HeroImage } from '@/components/hero-image'
-import { Signature } from '@/components/signature'
 import { WatermarkText } from '@/components/watermark-text'
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[hsl(182,30%,14%)] via-[hsl(182,30%,12%)] to-[hsl(185,25%,10%)]">
-      <div className="absolute inset-0 z-10">
+    <section className="relative overflow-hidden bg-black lg:min-h-screen">
+      <div className="absolute inset-0 hidden bg-gradient-to-br from-[hsl(182,30%,14%)] via-[hsl(182,30%,12%)] to-[hsl(185,25%,10%)] lg:block" />
+
+      <div className="absolute inset-x-0 top-0 h-[62vh] min-h-[360px] bg-gradient-to-br from-[hsl(182,30%,14%)] via-[hsl(182,30%,12%)] to-[hsl(185,25%,10%)] lg:hidden" />
+
+      <div className="relative h-[62vh] min-h-[360px] w-full lg:absolute lg:inset-0 lg:z-10 lg:h-full">
         <HeroImage />
+
+        <div className="absolute bottom-0 left-0 right-0 z-20">
+          <WatermarkText />
+        </div>
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-b from-transparent via-black/70 to-black lg:hidden" />
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 z-8">
-        <WatermarkText />
-      </div>
-
-      <div className="relative z-30 flex min-h-screen flex-col justify-end px-6 pb-10 pt-24 md:justify-center md:px-10 md:pb-20 lg:px-16">
-        <div className="max-w-xl">
-          <Signature />
+      <div className="relative z-30 px-6 pb-10 pt-8 md:px-10 md:pb-14 lg:flex lg:min-h-screen lg:flex-col lg:justify-center lg:px-16 lg:pb-20 lg:pt-24">
+        <div className="mx-auto w-full max-w-md lg:mx-0 lg:max-w-xl">
           <HeroContent />
         </div>
       </div>
