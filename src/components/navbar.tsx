@@ -100,7 +100,7 @@ export function Navbar() {
                   <Link
                     href={link.href}
                     className={cn(
-                      'text-[11px] font-medium tracking-[0.18em] transition-colors',
+                      'text-lg font-medium transition-colors',
                       isActive ? 'text-foreground' : 'text-foreground/70 hover:text-foreground',
                     )}
                     aria-current={isActive ? 'page' : undefined}
