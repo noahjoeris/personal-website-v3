@@ -38,7 +38,7 @@ export function HeroImage() {
         />
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-b from-transparent via-black/40 to-black md:h-52 lg:h-[30vh] lg:via-black/32 lg:to-black" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-linear-to-b from-transparent via-black/40 to-black md:h-52 lg:h-[30vh] lg:via-black/32 lg:to-black" />
     </motion.div>
   )
 }
