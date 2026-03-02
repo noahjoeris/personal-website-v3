@@ -15,7 +15,7 @@ export function WatermarkText() {
       className="pointer-events-none select-none overflow-hidden px-2 md:px-3 lg:px-0"
       aria-hidden="true"
     >
-      <span className="mx-auto block w-full max-w-[95vw] whitespace-nowrap text-center font-bold text-[21vw] text-foreground/22 uppercase leading-[0.85] tracking-[-0.03em] lg:max-w-full lg:text-foreground/28 lg:text-[clamp(4rem,16vw,20rem)]">
+      <span className="mx-auto block w-full max-w-[95vw] whitespace-nowrap bg-gradient-to-b from-white/60 to-white/24 bg-clip-text text-center text-[21vw] text-transparent uppercase leading-[0.85] tracking-[-0.03em] lg:max-w-full lg:text-[clamp(4rem,16vw,20rem)] ">
         {watermark}
       </span>
     </motion.div>

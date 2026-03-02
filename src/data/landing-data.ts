@@ -79,7 +79,7 @@ export const landingData = {
       highlight: 'Cypherpunk',
       text: 'protecting human freedom with software',
     },
-    tagline: '- leading by example through discipline',
+    tagline: '– leading by example through discipline',
     stack: ['React', 'Rust', 'Bitcoin'],
     watermark: 'NOAH JOERIS',
   },

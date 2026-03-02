@@ -29,21 +29,23 @@ export function HeroContent() {
           width={500}
           height={200}
           priority
-          className="mx-auto h-auto w-[280px] invert md:w-[380px] lg:mx-0 lg:w-[460px]"
+          className="mx-auto h-auto w-[280px] invert md:w-[380px] lg:mx-0"
         />
       </motion.div>
 
-      <div className="space-y-4">
-        <p className="max-w-md text-lg leading-relaxed text-foreground/90 md:text-xl">
-          <span className="font-bold text-foreground">{intro.highlight}</span> {intro.text}
+      <div className="space-y-1">
+        <p className="max-w-sm text-3xl text-foreground">
+          <span className="font-bold">{intro.highlight}</span> {intro.text}
         </p>
 
-        <p className="text-base italic text-foreground/70 md:text-lg">{tagline}</p>
+        <p className="text-foreground/90 text-xl pb-3">{tagline}</p>
 
-        <p className="text-sm tracking-wide text-primary/80">
+        <p className="text-md tracking-wide text-foreground/70">
           {stack.map((technology, index) => (
             <Fragment key={`${technology}-${index}`}>
-              {index > 0 ? <span className="mx-1">·</span> : null}
+              {index > 0 ? (
+                <span className="mx-1 inline-block h-1 w-1 rounded-full bg-foreground/70 align-middle" aria-hidden />
+              ) : null}
               {technology}
             </Fragment>
           ))}
