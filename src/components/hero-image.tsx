@@ -15,28 +15,15 @@ export function HeroImage() {
       transition={{ duration: 1, delay: 0.2, ease: 'easeOut' }}
       className="relative h-full w-full overflow-hidden"
     >
-      <div className="absolute inset-0 lg:hidden">
-        <Image
-          src={heroImgSrc}
-          alt="Hero image"
-          width={2048}
-          height={1152}
-          priority
-          className="absolute bottom-0 left-1/2 h-auto w-[860px] max-w-none -translate-x-1/2 md:w-[1160px]"
-          sizes="(max-width: 767px) 860px, 1160px"
-        />
-      </div>
-
-      <div className="absolute inset-0 hidden lg:block">
-        <Image
-          src={heroImgSrc}
-          alt="Hero image"
-          fill
-          priority
-          className="object-cover object-[center_20%]"
-          sizes="100vw"
-        />
-      </div>
+      <Image
+        src={heroImgSrc}
+        alt="Hero image"
+        width={2048}
+        height={1152}
+        priority
+        className="absolute bottom-0 left-1/2 h-auto w-[860px] max-w-none -translate-x-1/2 md:w-[1160px] lg:inset-0 lg:h-full lg:w-full lg:max-w-full lg:translate-x-0 lg:object-cover lg:object-[center_20%]"
+        sizes="(max-width: 767px) 860px, (max-width: 1023px) 1160px, 100vw"
+      />
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-linear-to-b from-transparent via-black/40 to-black md:h-52 lg:h-[30vh] lg:via-black/32 lg:to-black" />
     </motion.div>

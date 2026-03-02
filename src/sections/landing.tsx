@@ -4,7 +4,7 @@ import { HeroContent } from '@/components/hero-content'
 import { HeroImage } from '@/components/hero-image'
 import { WatermarkText } from '@/components/watermark-text'
 
-export function HeroSection() {
+export function LandingSection() {
   return (
     <section className="relative overflow-hidden bg-background lg:min-h-screen">
       <div className="absolute inset-0 hidden bg-linear-to-br from-[hsl(182,30%,14%)] via-[hsl(182,30%,12%)] to-[hsl(185,25%,10%)] lg:block" />
