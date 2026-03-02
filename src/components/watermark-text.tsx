@@ -12,10 +12,10 @@ export function WatermarkText() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1.5, delay: 0.8, ease: 'easeOut' }}
-      className="pointer-events-none select-none overflow-hidden"
+      className="pointer-events-none select-none overflow-hidden px-2 md:px-3 lg:px-0"
       aria-hidden="true"
     >
-      <span className="block w-full whitespace-nowrap text-center font-bold uppercase leading-[0.8] text-foreground/20 text-[clamp(4rem,16vw,20rem)] tracking-[-0.03em]">
+      <span className="mx-auto block w-full max-w-[95vw] whitespace-nowrap text-center font-bold uppercase leading-[0.85] tracking-[-0.03em] text-foreground/14 text-[21vw] lg:max-w-full lg:text-foreground/20 lg:text-[clamp(4rem,16vw,20rem)]">
         {watermark}
       </span>
     </motion.div>

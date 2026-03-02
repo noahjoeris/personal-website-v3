@@ -13,16 +13,30 @@ export function HeroImage() {
       initial={{ opacity: 0, scale: 1.05 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1, delay: 0.2, ease: 'easeOut' }}
-      className="relative h-full w-full"
+      className="relative h-full w-full overflow-hidden"
     >
-      <Image
-        src={heroImgSrc}
-        alt="Hero image"
-        fill
-        priority
-        className="object-cover object-[center_20%]"
-        sizes="(max-width: 768px) 100vw, 60vw"
-      />
+      <div className="absolute inset-0 lg:hidden">
+        <Image
+          src={heroImgSrc}
+          alt="Hero image"
+          width={2048}
+          height={1152}
+          priority
+          className="absolute bottom-0 left-1/2 h-auto w-[860px] max-w-none -translate-x-1/2 md:w-[1160px]"
+          sizes="(max-width: 767px) 860px, 1160px"
+        />
+      </div>
+
+      <div className="absolute inset-0 hidden lg:block">
+        <Image
+          src={heroImgSrc}
+          alt="Hero image"
+          fill
+          priority
+          className="object-cover object-[center_20%]"
+          sizes="100vw"
+        />
+      </div>
     </motion.div>
   )
 }

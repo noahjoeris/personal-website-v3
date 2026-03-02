@@ -9,9 +9,9 @@ export function HeroSection() {
     <section className="relative overflow-hidden bg-black lg:min-h-screen">
       <div className="absolute inset-0 hidden bg-gradient-to-br from-[hsl(182,30%,14%)] via-[hsl(182,30%,12%)] to-[hsl(185,25%,10%)] lg:block" />
 
-      <div className="absolute inset-x-0 top-0 h-[62vh] min-h-[360px] bg-gradient-to-br from-[hsl(182,30%,14%)] via-[hsl(182,30%,12%)] to-[hsl(185,25%,10%)] lg:hidden" />
+      <div className="absolute inset-x-0 top-0 h-[460px] bg-gradient-to-br from-[hsl(182,30%,14%)] via-[hsl(182,30%,12%)] to-[hsl(185,25%,10%)] md:h-[620px] lg:hidden" />
 
-      <div className="relative h-[62vh] min-h-[360px] w-full lg:absolute lg:inset-0 lg:z-10 lg:h-full">
+      <div className="relative h-[460px] w-full md:h-[620px] lg:absolute lg:inset-0 lg:z-10 lg:h-full">
         <HeroImage />
 
         <div className="absolute bottom-0 left-0 right-0 z-20">

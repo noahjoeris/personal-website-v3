@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Big_Shoulders } from 'next/font/google'
 
 import { landingData } from '@/data/landing-data'
 
 import './globals.css'
 
-const inter = Inter({
+const bigShoulders = Big_Shoulders({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-big-shoulders',
 })
 
 export const metadata: Metadata = {
@@ -26,7 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>{children}</body>
+      <body className={`${bigShoulders.variable} font-sans antialiased`}>
+        {children}
+      </body>
     </html>
   )
 }
