@@ -1,5 +1,7 @@
 import Image from 'next/image'
+import { Fragment } from 'react'
 
+import { AnimatedDivider } from '@/components/animated-divider'
 import { workHistoryData } from '@/data/work-history-data'
 
 export function WorkHistorySection() {
@@ -19,33 +21,34 @@ export function WorkHistorySection() {
             </h2>
           </div>
 
-          <div className="border-t border-foreground/30 lg:col-span-8">
-            {workHistoryData.items.map(item => (
-              <article
-                key={`${item.company}-${item.duration}`}
-                className="flex flex-col gap-4 border-b border-foreground/30 py-6 md:flex-row md:items-center md:justify-between md:gap-6 md:py-7"
-              >
-                <div className="flex items-start gap-4 md:gap-5">
-                  <div className="relative mt-0.5 h-11 w-11 shrink-0 overflow-hidden rounded-sm border border-foreground/20 bg-black/40 md:h-12 md:w-12">
-                    <Image
-                      src={item.imgUrl}
-                      alt={`${item.company} logo`}
-                      fill
-                      className="object-contain p-1"
-                      sizes="48px"
-                    />
+          <div className="lg:col-span-8">
+            {workHistoryData.items.map((item, index) => (
+              <Fragment key={`${item.company}-${item.duration}`}>
+                <article className="flex flex-col gap-4 py-6 md:flex-row md:items-center md:justify-between md:gap-6 md:py-7">
+                  <div className="flex items-start gap-4 md:gap-5">
+                    <div className="relative mt-0.5 h-11 w-11 shrink-0 overflow-hidden rounded-sm border border-foreground/20 bg-black/40 md:h-12 md:w-12">
+                      <Image
+                        src={item.imgUrl}
+                        alt={`${item.company} logo`}
+                        fill
+                        className="object-contain p-1"
+                        sizes="48px"
+                      />
+                    </div>
+
+                    <div className="space-y-1 uppercase">
+                      <p className="text-xl leading-tight text-foreground/70 md:text-2xl">{item.company}</p>
+                      <p className="text-xl leading-none text-foreground md:text-2xl">{item.position}</p>
+                    </div>
                   </div>
 
-                  <div className="space-y-1 uppercase">
-                    <p className="text-xl leading-tight text-foreground/70 md:text-2xl">{item.company}</p>
-                    <p className="text-xl leading-none text-foreground md:text-2xl">{item.position}</p>
-                  </div>
-                </div>
+                  <p className="self-end text-right text-xl text-foreground/90 uppercase md:self-auto md:text-2xl lg:text-2xl">
+                    {item.duration}
+                  </p>
+                </article>
 
-                <p className="self-end text-right text-xl text-foreground/90 uppercase md:self-auto md:text-2xl lg:text-2xl">
-                  {item.duration}
-                </p>
-              </article>
+                <AnimatedDivider className="bg-foreground/30" delay={index * 0.06} />
+              </Fragment>
             ))}
           </div>
         </div>
