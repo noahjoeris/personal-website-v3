@@ -25,7 +25,7 @@ export function HeroImage() {
         sizes="(max-width: 767px) 860px, (max-width: 1023px) 1160px, 100vw"
       />
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-linear-to-b from-transparent via-black/40 to-black md:h-52 lg:h-[30vh] lg:via-black/32 lg:to-black" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-linear-to-b from-transparent via-background/40 to-background md:h-52 lg:h-[30vh] lg:via-background/32 lg:to-background" />
     </motion.div>
   )
 }

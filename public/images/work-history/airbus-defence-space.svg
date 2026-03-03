@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="airbusDefenceTitle airbusDefenceDesc">
+  <title id="airbusDefenceTitle">Airbus Defence and Space Placeholder</title>
+  <desc id="airbusDefenceDesc">Blue gradient tile with stylized A.</desc>
+  <defs>
+    <linearGradient id="airbusBlue" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1D4ED8" />
+      <stop offset="1" stop-color="#1E293B" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="8" fill="url(#airbusBlue)" />
+  <path d="M12 50L28 14H36L52 50H43L39 42H25L21 50H12ZM28 34H36L32 25L28 34Z" fill="#F8FAFC" />
+</svg>
