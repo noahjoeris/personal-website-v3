@@ -12,7 +12,7 @@ export function WorkHistorySection() {
       <div className="mx-auto w-full max-w-9xl">
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-4 lg:pt-4">
-            <h2 className="max-w-xs uppercase text-6xl text-foreground sm:text-7xl md:text-[clamp(5.2rem,12vw,14rem)] pr-2">
+            <h2 className="max-w-xs uppercase text-6xl text-foreground sm:text-7xl md:text-[clamp(5.2rem,12vw,14rem)] pr-2 tracking-tight">
               {titleLines.map(line => (
                 <span key={line} className="block">
                   {line}

@@ -1,5 +1,6 @@
 import { Navbar } from '@/components/navbar'
 import { LandingSection } from '@/sections/landing'
+import { PortfolioSection } from '@/sections/portfolio'
 import { QuoteSection } from '@/sections/quote'
 import { StatsSection } from '@/sections/stats'
 import { WorkHistorySection } from '@/sections/work-history'
@@ -12,6 +13,7 @@ export default function Page() {
       <QuoteSection />
       <WorkHistorySection />
       <StatsSection />
+      <PortfolioSection />
     </main>
   )
 }
