@@ -87,7 +87,7 @@ export function Navbar() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="fixed inset-x-0 top-0 z-50"
+      className="absolute inset-x-0 top-0 z-50"
     >
       <div className="px-5 py-3 sm:px-6 sm:py-4 md:px-10 lg:px-16">
         <nav className="relative flex items-center justify-between" aria-label="Main navigation">

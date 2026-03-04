@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Big_Shoulders } from 'next/font/google'
 
+import { Footer } from '@/components/footer'
 import { landingData } from '@/data/landing-data'
 
 import './globals.css'
@@ -27,7 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${bigShoulders.variable} font-sans antialiased`}>
-        {children}
+        <div className="flex min-h-screen flex-col">
+          <div className="flex-1">{children}</div>
+          <Footer />
+        </div>
       </body>
     </html>
   )
