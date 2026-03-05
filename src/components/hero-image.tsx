@@ -21,11 +21,11 @@ export function HeroImage() {
         width={2048}
         height={1152}
         priority
-        className="absolute bottom-0 left-1/2 h-auto w-[860px] max-w-none -translate-x-1/2 md:w-[1160px] lg:inset-0 lg:h-full lg:w-full lg:max-w-full lg:translate-x-0 lg:object-cover lg:object-[center_20%]"
+        className="absolute bottom-0 left-1/2 h-auto w-[860px] max-w-none -translate-x-1/2 tablet:w-[1160px] desktop:inset-0 desktop:h-full desktop:w-full desktop:max-w-full desktop:translate-x-0 desktop:object-cover desktop:object-[center_20%]"
         sizes="(max-width: 767px) 860px, (max-width: 1023px) 1160px, 100vw"
       />
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-linear-to-b from-transparent via-background/40 to-background md:h-52 lg:h-[30vh] lg:via-background/32 lg:to-background" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-linear-to-b from-transparent via-background/40 to-background tablet:h-52 desktop:h-[30vh] desktop:via-background/32 desktop:to-background" />
     </motion.div>
   )
 }

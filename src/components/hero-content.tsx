@@ -29,7 +29,7 @@ export function HeroContent() {
           width={500}
           height={200}
           priority
-          className="mx-auto h-auto w-[280px] invert md:w-[380px] lg:mx-0"
+          className="mx-auto h-auto w-[280px] invert tablet:w-[380px] desktop:mx-0"
         />
       </motion.div>
 

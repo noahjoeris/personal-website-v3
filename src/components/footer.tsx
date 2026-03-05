@@ -26,14 +26,14 @@ export function Footer() {
 
   return (
     <footer className="bg-background">
-      <div className="px-5 pt-3 sm:px-6 sm:pt-4 md:px-10 lg:px-16">
+      <div className="px-5 pt-3 tablet:pt-4 tablet:px-10 desktop:px-16">
         <AnimatedDivider className="bg-foreground/20" />
       </div>
 
-      <div className="mx-auto w-full max-w-7xl px-5 pb-10 pt-7 sm:px-6 md:px-10 md:pb-12 md:pt-8 lg:px-16">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <div className="mx-auto w-full max-w-7xl px-5 pb-10 pt-7 tablet:px-10 tablet:pb-12 tablet:pt-8 desktop:px-16">
+        <div className="flex flex-col gap-6 tablet:flex-row tablet:items-end tablet:justify-between">
           <section aria-labelledby="footer-contact-title" className="space-y-2">
-            <h2 id="footer-contact-title" className="text-2xl font-medium uppercase text-foreground md:text-3xl">
+            <h2 id="footer-contact-title" className="text-2xl font-medium uppercase text-foreground tablet:text-3xl">
               Contact me
             </h2>
 
@@ -58,7 +58,7 @@ export function Footer() {
             </ul>
           </section>
 
-          <p className="inline-flex w-fit items-center gap-2 text-xs uppercase tracking-[0.14em] text-foreground/70 md:text-sm">
+          <p className="inline-flex w-fit items-center gap-2 text-xs uppercase tracking-[0.14em] text-foreground/70 tablet:text-sm">
             <span>Made with</span>
             <span className="text-foreground/90" aria-hidden="true">
               ♥

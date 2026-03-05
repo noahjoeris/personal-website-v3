@@ -13,113 +13,132 @@ import { useEffect, useRef } from 'react'
 
 import { ProjectCompact } from '@/components/project-compact'
 import { type PortfolioProject, portfolioData } from '@/data/portfolio-data'
+import { matchesMinBreakpoint } from '@/lib/breakpoints'
 
 const LOCK_STEP_DIVISOR = 1500
-const WHEEL_STEP_LIMIT = 0.18
-const TOUCH_STEP_LIMIT = 0.2
-const KEYBOARD_STEP = 0.14
-const ACTIVATION_TOP_RATIO = 0.15
-const ACTIVATION_BOTTOM_RATIO = 0.85
+const STEP_LIMIT_BY_SOURCE = {
+  wheel: 0.18,
+  touch: 0.2,
+  keyboard: 0.14,
+} as const
+const SCENE_ACTIVATION_BOUNDS = {
+  topRatio: 0.15,
+  bottomRatio: 0.85,
+} as const
+
+const PROGRESS_MIN = 0
+const PROGRESS_MAX = 1
+const PROGRESS_EDGE_EPSILON = 0.001
+const SCROLL_LOCK_NUDGE = 2
+const KEYBOARD_DELTA = 220
+const MIN_SCROLL_DELTA_TO_LOCK = 0.5
+
+const SPRING_CONFIG = {
+  stiffness: 90,
+  damping: 24,
+  mass: 0.45,
+} as const
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
 }
 
-type ProjectParallaxCardProps = {
-  project: PortfolioProject
-  index: number
-  total: number
-  progress: MotionValue<number>
-  isEnabled: boolean
+type ScrollDirection = 'down' | 'up'
+type InputSource = keyof typeof STEP_LIMIT_BY_SOURCE
+
+type SavedBodyStyles = {
+  bodyOverflow: string
+  bodyPaddingRight: string
+  htmlOverflow: string
 }
 
-function ProjectParallaxCard({ project, index, total, progress, isEnabled }: ProjectParallaxCardProps) {
-  const anchor = total === 1 ? 0.5 : index / (total - 1)
-  const direction = index % 2 === 0 ? 1 : -1
-  const depth = 0.5 + (index % 3) * 0.18
+type UsePortfolioScrollLockArgs = {
+  isEnabled: boolean
+  sceneRef: { current: HTMLDivElement | null }
+  progress: MotionValue<number>
+}
 
-  const delta = useTransform(progress, value => value - anchor)
+type PortfolioHeadingProps = {
+  titleClassName: string
+  wrapperClassName?: string
+}
 
-  const x = useTransform(delta, value => (isEnabled ? value * -920 : 0))
-  const y = useTransform(delta, value => (isEnabled ? Math.sin(value * Math.PI * 0.9) * -120 * direction * depth : 0))
-  const scale = useTransform(delta, value => {
-    if (!isEnabled) {
-      return 1
-    }
+function isDesktopViewport() {
+  return matchesMinBreakpoint('tablet')
+}
 
-    return clamp(1 - Math.abs(value) * 0.6 * depth, 0.62, 1.06)
-  })
-  const rotateY = useTransform(delta, value => (isEnabled ? value * 54 * depth : 0))
-  const rotateZ = useTransform(delta, value => (isEnabled ? value * -9 * direction * depth : 0))
-  const opacity = useTransform(delta, value => (isEnabled ? clamp(1 - Math.abs(value) * 1.85, 0, 1) : 1))
-  const blur = useTransform(delta, value => (isEnabled ? Math.abs(value) * 11 : 0))
-  const filter = useMotionTemplate`blur(${blur}px)`
-  const zIndex = useTransform(delta, value => 100 - Math.round(Math.abs(value) * 100))
+function toScrollDirection(delta: number): ScrollDirection {
+  return delta > 0 ? 'down' : 'up'
+}
+
+function canAdvanceProgress(currentProgress: number, direction: ScrollDirection) {
+  if (direction === 'down') {
+    return currentProgress < PROGRESS_MAX - PROGRESS_EDGE_EPSILON
+  }
+
+  return currentProgress > PROGRESS_MIN + PROGRESS_EDGE_EPSILON
+}
+
+function getKeyboardDelta(event: KeyboardEvent) {
+  if (event.key === 'ArrowDown' || event.key === 'PageDown' || (event.key === ' ' && !event.shiftKey)) {
+    return KEYBOARD_DELTA
+  }
+
+  if (event.key === 'ArrowUp' || event.key === 'PageUp' || (event.key === ' ' && event.shiftKey)) {
+    return -KEYBOARD_DELTA
+  }
+
+  if (event.key === 'Home') {
+    return -LOCK_STEP_DIVISOR
+  }
+
+  if (event.key === 'End') {
+    return LOCK_STEP_DIVISOR
+  }
+
+  return null
+}
+
+function getProjectKey(project: PortfolioProject) {
+  return `${project.name}-${project.period}`
+}
+
+function PortfolioHeading({ titleClassName, wrapperClassName }: PortfolioHeadingProps) {
+  const headingWrapperClassName = ['mx-auto max-w-3xl text-center', wrapperClassName].filter(Boolean).join(' ')
 
   return (
-    <motion.div
-      className="absolute left-1/2 top-1/2 w-80 -translate-x-1/2 -translate-y-1/2 lg:w-84"
-      style={{ x, y, scale, rotateY, rotateZ, opacity, filter, zIndex, transformStyle: 'preserve-3d' }}
-    >
-      <ProjectCompact project={project} className="w-full" />
-    </motion.div>
+    <div className={headingWrapperClassName}>
+      <p className="text-lg uppercase">Explore my</p>
+      <h2 className={titleClassName}>Portfolio</h2>
+    </div>
   )
 }
 
-export function PortfolioSection() {
-  const projects = portfolioData.projects
-  const shouldReduceMotion = useReducedMotion()
-  const progress = useMotionValue(0)
-
-  const desktopSceneRef = useRef<HTMLDivElement>(null)
+function usePortfolioScrollLock({ isEnabled, sceneRef, progress }: UsePortfolioScrollLockArgs) {
   const isScrollLockedRef = useRef(false)
   const lockScrollYRef = useRef(0)
   const lastScrollYRef = useRef(0)
   const lastTouchYRef = useRef<number | null>(null)
-  const bodyStyleRef = useRef<{
-    bodyOverflow: string
-    bodyPaddingRight: string
-    htmlOverflow: string
-  } | null>(null)
-
-  const smoothProgress = useSpring(progress, {
-    stiffness: 90,
-    damping: 24,
-    mass: 0.45,
-  })
-
-  const isParallaxEnabled = !shouldReduceMotion
-  const titleY = useTransform(() => (isParallaxEnabled ? -smoothProgress.get() * 140 : 0))
-  const titleOpacity = useTransform(() => (isParallaxEnabled ? clamp(1 - smoothProgress.get() * 1.1, 0.18, 1) : 1))
-
-  const layerOneX = useTransform(() => (isParallaxEnabled ? (smoothProgress.get() - 0.5) * -420 : 0))
-  const layerOneY = useTransform(() => (isParallaxEnabled ? (smoothProgress.get() - 0.5) * 130 : 0))
-  const layerTwoX = useTransform(() => (isParallaxEnabled ? (smoothProgress.get() - 0.5) * 300 : 0))
-  const layerTwoY = useTransform(() => (isParallaxEnabled ? (smoothProgress.get() - 0.5) * -170 : 0))
-  const layerThreeX = useTransform(() => (isParallaxEnabled ? (smoothProgress.get() - 0.5) * -520 : 0))
-  const layerThreeY = useTransform(() => (isParallaxEnabled ? (smoothProgress.get() - 0.5) * -110 : 0))
-  const progressScale = useTransform(() => (isParallaxEnabled ? 0.08 + smoothProgress.get() * 0.92 : 1))
+  const savedBodyStylesRef = useRef<SavedBodyStyles | null>(null)
 
   useEffect(() => {
-    if (!isParallaxEnabled) {
+    if (!isEnabled) {
       return
     }
 
-    const sceneElement = desktopSceneRef.current
+    const sceneElement = sceneRef.current
 
     if (!sceneElement) {
       return
     }
 
-    const isDesktopViewport = () => window.matchMedia('(min-width: 768px)').matches
-
     const lockDocumentScroll = () => {
-      if (bodyStyleRef.current) {
+      if (savedBodyStylesRef.current) {
         return
       }
 
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
-      bodyStyleRef.current = {
+      savedBodyStylesRef.current = {
         bodyOverflow: document.body.style.overflow,
         bodyPaddingRight: document.body.style.paddingRight,
         htmlOverflow: document.documentElement.style.overflow,
@@ -134,7 +153,7 @@ export function PortfolioSection() {
     }
 
     const unlockDocumentScroll = () => {
-      const previousStyles = bodyStyleRef.current
+      const previousStyles = savedBodyStylesRef.current
 
       if (!previousStyles) {
         return
@@ -143,62 +162,53 @@ export function PortfolioSection() {
       document.body.style.overflow = previousStyles.bodyOverflow
       document.body.style.paddingRight = previousStyles.bodyPaddingRight
       document.documentElement.style.overflow = previousStyles.htmlOverflow
-      bodyStyleRef.current = null
+      savedBodyStylesRef.current = null
     }
 
-    const releaseLockAndContinue = (direction: 'down' | 'up') => {
+    const releaseLockAndContinue = (direction: ScrollDirection) => {
       isScrollLockedRef.current = false
       unlockDocumentScroll()
 
       requestAnimationFrame(() => {
-        const nextScrollY = lockScrollYRef.current + (direction === 'down' ? 2 : -2)
+        const nextScrollY = lockScrollYRef.current + (direction === 'down' ? SCROLL_LOCK_NUDGE : -SCROLL_LOCK_NUDGE)
         window.scrollTo({ top: nextScrollY, behavior: 'auto' })
       })
     }
 
-    const applyInputDelta = (rawDelta: number, source: 'wheel' | 'touch' | 'keyboard') => {
-      if (!isScrollLockedRef.current) {
+    const applyInputDelta = (rawDelta: number, source: InputSource) => {
+      if (!isScrollLockedRef.current || Math.abs(rawDelta) < PROGRESS_EDGE_EPSILON) {
         return
       }
 
-      if (Math.abs(rawDelta) < 0.001) {
-        return
-      }
-
-      const direction = rawDelta > 0 ? 'down' : 'up'
+      const direction = toScrollDirection(rawDelta)
       const currentProgress = progress.get()
 
-      if (direction === 'down' && currentProgress >= 0.999) {
-        releaseLockAndContinue('down')
+      if (!canAdvanceProgress(currentProgress, direction)) {
+        releaseLockAndContinue(direction)
         return
       }
 
-      if (direction === 'up' && currentProgress <= 0.001) {
-        releaseLockAndContinue('up')
-        return
-      }
-
-      const maxStep = source === 'wheel' ? WHEEL_STEP_LIMIT : source === 'touch' ? TOUCH_STEP_LIMIT : KEYBOARD_STEP
-      const nextProgress = clamp(currentProgress + clamp(rawDelta / LOCK_STEP_DIVISOR, -maxStep, maxStep), 0, 1)
+      const stepLimit = STEP_LIMIT_BY_SOURCE[source]
+      const normalizedDelta = clamp(rawDelta / LOCK_STEP_DIVISOR, -stepLimit, stepLimit)
+      const nextProgress = clamp(currentProgress + normalizedDelta, PROGRESS_MIN, PROGRESS_MAX)
       progress.set(nextProgress)
     }
 
-    const shouldLock = (direction: 'down' | 'up') => {
+    const shouldLockScene = (direction: ScrollDirection) => {
       if (!isDesktopViewport()) {
         return false
       }
 
       const rect = sceneElement.getBoundingClientRect()
-      const topThreshold = window.innerHeight * ACTIVATION_TOP_RATIO
-      const bottomThreshold = window.innerHeight * ACTIVATION_BOTTOM_RATIO
+      const topThreshold = window.innerHeight * SCENE_ACTIVATION_BOUNDS.topRatio
+      const bottomThreshold = window.innerHeight * SCENE_ACTIVATION_BOUNDS.bottomRatio
       const isSceneInFocus = rect.top <= topThreshold && rect.bottom >= bottomThreshold
 
       if (!isSceneInFocus) {
         return false
       }
 
-      const currentProgress = progress.get()
-      return direction === 'down' ? currentProgress < 0.999 : currentProgress > 0.001
+      return canAdvanceProgress(progress.get(), direction)
     }
 
     const engageLock = () => {
@@ -224,23 +234,17 @@ export function PortfolioSection() {
       const scrollDelta = currentY - lastScrollYRef.current
       lastScrollYRef.current = currentY
 
-      if (Math.abs(scrollDelta) < 0.5) {
+      if (Math.abs(scrollDelta) < MIN_SCROLL_DELTA_TO_LOCK) {
         return
       }
 
-      const direction = scrollDelta > 0 ? 'down' : 'up'
-
-      if (shouldLock(direction)) {
+      if (shouldLockScene(toScrollDirection(scrollDelta))) {
         engageLock()
       }
     }
 
     const handleWheel = (event: WheelEvent) => {
-      if (!isScrollLockedRef.current) {
-        return
-      }
-
-      if (event.ctrlKey) {
+      if (!isScrollLockedRef.current || event.ctrlKey) {
         return
       }
 
@@ -257,7 +261,7 @@ export function PortfolioSection() {
       }
 
       const touch = event.touches[0]
-      lastTouchYRef.current = touch ? touch.clientY : null
+      lastTouchYRef.current = touch?.clientY ?? null
     }
 
     const handleTouchMove = (event: TouchEvent) => {
@@ -289,17 +293,8 @@ export function PortfolioSection() {
         return
       }
 
-      let delta = 0
-
-      if (event.key === 'ArrowDown' || event.key === 'PageDown' || (event.key === ' ' && !event.shiftKey)) {
-        delta = 220
-      } else if (event.key === 'ArrowUp' || event.key === 'PageUp' || (event.key === ' ' && event.shiftKey)) {
-        delta = -220
-      } else if (event.key === 'Home') {
-        delta = -LOCK_STEP_DIVISOR
-      } else if (event.key === 'End') {
-        delta = LOCK_STEP_DIVISOR
-      } else {
+      const delta = getKeyboardDelta(event)
+      if (delta === null) {
         return
       }
 
@@ -337,26 +332,91 @@ export function PortfolioSection() {
       isScrollLockedRef.current = false
       unlockDocumentScroll()
     }
-  }, [isParallaxEnabled, progress])
+  }, [isEnabled, progress, sceneRef])
+}
+
+type ProjectParallaxCardProps = {
+  project: PortfolioProject
+  index: number
+  total: number
+  progress: MotionValue<number>
+  isEnabled: boolean
+}
+
+function ProjectParallaxCard({ project, index, total, progress, isEnabled }: ProjectParallaxCardProps) {
+  const anchor = total === 1 ? 0.5 : index / (total - 1)
+  const direction = index % 2 === 0 ? 1 : -1
+  const depth = 0.5 + (index % 3) * 0.18
+
+  const delta = useTransform(progress, value => value - anchor)
+
+  const x = useTransform(delta, value => (isEnabled ? value * -920 : 0))
+  const y = useTransform(delta, value => (isEnabled ? Math.sin(value * Math.PI * 0.9) * -120 * direction * depth : 0))
+  const scale = useTransform(delta, value => {
+    if (!isEnabled) {
+      return 1
+    }
+
+    return clamp(1 - Math.abs(value) * 0.6 * depth, 0.62, 1.06)
+  })
+  const rotateY = useTransform(delta, value => (isEnabled ? value * 54 * depth : 0))
+  const rotateZ = useTransform(delta, value => (isEnabled ? value * -9 * direction * depth : 0))
+  const opacity = useTransform(delta, value => (isEnabled ? clamp(1 - Math.abs(value) * 1.85, 0, 1) : 1))
+  const blur = useTransform(delta, value => (isEnabled ? Math.abs(value) * 11 : 0))
+  const filter = useMotionTemplate`blur(${blur}px)`
+  const zIndex = useTransform(delta, value => 100 - Math.round(Math.abs(value) * 100))
 
   return (
-    <section className="relative isolate overflow-hidden bg-background px-6 py-20 md:px-0 md:py-0">
-      <div className="mx-auto w-full max-w-9xl md:hidden">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-lg uppercase">Explore my</p>
-          <h2 className="text-6xl leading-none tracking-wide text-foreground uppercase sm:text-7xl lg:text-8xl">
-            Portfolio
-          </h2>
-        </div>
+    <motion.div
+      className="absolute left-1/2 top-1/2 w-80 -translate-x-1/2 -translate-y-1/2 desktop:w-84"
+      style={{ x, y, scale, rotateY, rotateZ, opacity, filter, zIndex, transformStyle: 'preserve-3d' }}
+    >
+      <ProjectCompact project={project} className="w-full" />
+    </motion.div>
+  )
+}
 
-        <div className="mt-10 flex flex-col items-center gap-6 md:hidden">
+export function PortfolioSection() {
+  const projects = portfolioData.projects
+  const shouldReduceMotion = useReducedMotion()
+  const progress = useMotionValue(0)
+  const projectCount = projects.length
+
+  const desktopSceneRef = useRef<HTMLDivElement>(null)
+  const isParallaxEnabled = !shouldReduceMotion
+  usePortfolioScrollLock({
+    isEnabled: isParallaxEnabled,
+    sceneRef: desktopSceneRef,
+    progress,
+  })
+
+  const smoothProgress = useSpring(progress, SPRING_CONFIG)
+  const centeredProgress = useTransform(smoothProgress, value => value - 0.5)
+
+  const titleY = useTransform(smoothProgress, value => (isParallaxEnabled ? -value * 140 : 0))
+  const titleOpacity = useTransform(smoothProgress, value => (isParallaxEnabled ? clamp(1 - value * 1.1, 0.18, 1) : 1))
+
+  const layerOneX = useTransform(centeredProgress, value => (isParallaxEnabled ? value * -420 : 0))
+  const layerOneY = useTransform(centeredProgress, value => (isParallaxEnabled ? value * 130 : 0))
+  const layerTwoX = useTransform(centeredProgress, value => (isParallaxEnabled ? value * 300 : 0))
+  const layerTwoY = useTransform(centeredProgress, value => (isParallaxEnabled ? value * -170 : 0))
+  const layerThreeX = useTransform(centeredProgress, value => (isParallaxEnabled ? value * -520 : 0))
+  const layerThreeY = useTransform(centeredProgress, value => (isParallaxEnabled ? value * -110 : 0))
+  const progressScale = useTransform(smoothProgress, value => (isParallaxEnabled ? 0.08 + value * 0.92 : 1))
+
+  return (
+    <section className="relative isolate overflow-hidden bg-background px-6 py-20 tablet:px-0 tablet:py-0">
+      <div className="mx-auto w-full max-w-9xl tablet:hidden">
+        <PortfolioHeading titleClassName="text-6xl leading-none tracking-wide text-foreground uppercase tablet:text-7xl desktop:text-8xl" />
+
+        <div className="mt-10 flex flex-col items-center gap-6 tablet:hidden">
           {projects.map(project => (
-            <ProjectCompact key={`${project.name}-${project.period}`} project={project} />
+            <ProjectCompact key={getProjectKey(project)} project={project} />
           ))}
         </div>
       </div>
 
-      <div ref={desktopSceneRef} className="relative z-20 hidden h-[80vh] touch-none md:block">
+      <div ref={desktopSceneRef} className="relative z-20 hidden h-[80vh] touch-none tablet:block">
         <div className="relative z-30 h-full overflow-hidden bg-background">
           <motion.div
             aria-hidden="true"
@@ -379,26 +439,26 @@ export function PortfolioSection() {
               style={{ y: titleY, opacity: titleOpacity }}
               className="pointer-events-none absolute inset-x-0 top-16"
             >
-              <div className="mx-auto max-w-3xl px-10 text-center lg:px-16">
-                <p className="text-lg uppercase">Explore my</p>
-                <h2 className="text-6xl text-foreground uppercase sm:text-7xl lg:text-9xl tracking-tight">Portfolio</h2>
-              </div>
+              <PortfolioHeading
+                wrapperClassName="px-10 desktop:px-16"
+                titleClassName="text-6xl text-foreground uppercase tablet:text-7xl desktop:text-9xl tracking-tight"
+              />
             </motion.div>
 
             <div className="relative h-full" style={{ perspective: 1400 }}>
               {projects.map((project, index) => (
                 <ProjectParallaxCard
-                  key={`${project.name}-${project.period}`}
+                  key={getProjectKey(project)}
                   project={project}
                   index={index}
-                  total={projects.length}
+                  total={projectCount}
                   progress={smoothProgress}
                   isEnabled={isParallaxEnabled}
                 />
               ))}
             </div>
 
-            <div className="pointer-events-none absolute inset-x-10 bottom-30 lg:inset-x-20">
+            <div className="pointer-events-none absolute inset-x-10 bottom-30 desktop:inset-x-20">
               <div className="h-px bg-foreground/25">
                 <motion.div style={{ scaleX: progressScale }} className="h-full origin-left bg-foreground/70" />
               </div>

@@ -89,9 +89,9 @@ export function Navbar() {
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className="absolute inset-x-0 top-0 z-50"
     >
-      <div className="px-5 py-3 sm:px-6 sm:py-4 md:px-10 lg:px-16">
+      <div className="px-5 py-3 tablet:py-4 tablet:px-10 desktop:px-16">
         <nav className="relative flex items-center justify-between" aria-label="Main navigation">
-          <ul className="hidden items-center gap-5 sm:flex md:gap-7">
+          <ul className="hidden items-center gap-5 tablet:flex tablet:gap-7">
             {landingData.navigation.map(link => {
               const isActive = isActivePath(pathname, link.href)
 
@@ -112,8 +112,8 @@ export function Navbar() {
             })}
           </ul>
 
-          <div className="ml-auto flex items-center gap-3 sm:gap-4">
-            <ul className="hidden items-center gap-3 sm:flex sm:gap-4">
+          <div className="ml-auto flex items-center gap-3 tablet:gap-4">
+            <ul className="hidden items-center gap-3 tablet:flex tablet:gap-4">
               {landingData.socials.map(social => (
                 <li key={social.label}>
                   <a
@@ -136,7 +136,7 @@ export function Navbar() {
 
             <button
               type="button"
-              className="inline-flex h-9 w-9 items-center justify-center text-foreground/90 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:hidden"
+              className="inline-flex h-9 w-9 items-center justify-center text-foreground/90 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring tablet:hidden"
               aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={isMobileMenuOpen}
               aria-controls={mobileMenuId}
@@ -160,7 +160,7 @@ export function Navbar() {
           </div>
         </nav>
 
-        <div className="mt-3 h-px w-full bg-foreground/20 sm:mt-4" />
+        <div className="mt-3 h-px w-full bg-foreground/20 tablet:mt-4" />
       </div>
 
       <AnimatePresence>
@@ -168,7 +168,7 @@ export function Navbar() {
           <motion.div
             id={mobileMenuId}
             ref={mobileMenuPanelRef}
-            className="fixed inset-x-0 top-0 z-60 border-b border-foreground/35 bg-background/25 px-5 pb-8 pt-5 text-foreground backdrop-blur-[1.5px] sm:hidden"
+            className="fixed inset-x-0 top-0 z-60 border-b border-foreground/35 bg-background/25 px-5 pb-8 pt-5 text-foreground backdrop-blur-[1.5px] tablet:hidden"
             initial={{ opacity: 0, y: -18 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
