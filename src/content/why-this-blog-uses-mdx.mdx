@@ -1,0 +1,33 @@
+import { defineBlogPostMetadata } from "@/data/blog-data";
+
+export const metadata = defineBlogPostMetadata({
+  title: "Why This Blog Uses MDX",
+  description:
+    "A small, typed, Git-native writing workflow fits this site better than a CMS.",
+  publishedAt: "2026-03-31",
+  tags: ["nextjs", "mdx", "architecture"],
+  status: "published",
+});
+
+A personal site does not need a full CMS by default. It needs a writing workflow that stays easy to maintain as the site evolves.
+
+For this project, MDX is the right baseline because it keeps content close to the codebase while still allowing room for richer technical posts later.
+
+## What This Setup Optimizes For
+
+- Posts live in Git and review cleanly.
+- Metadata stays next to the content it describes.
+- The site can stay static and simple for as long as possible.
+- React components are available when a post genuinely benefits from them.
+
+## Why Not Start With a CMS?
+
+The current site is a focused Next.js application without any backend infrastructure. Adding a CMS right away would introduce a database, admin workflows, deployment overhead, and a larger maintenance surface before those capabilities are actually needed.
+
+That trade-off makes sense when multiple editors, drafts, previews, or media workflows are important. It is unnecessary when the site is still in the single-author phase.
+
+## The Practical Rule
+
+Start with the smallest system that keeps publishing smooth.
+
+When the constraints change, the content model can evolve. Until then, the blog should stay boring in the best way: readable files, typed metadata, and predictable routing.
