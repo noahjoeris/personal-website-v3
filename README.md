@@ -1,7 +1,5 @@
 # Personal Website v3
 
-My personal portfolio and blog, built with Next.js 15, React 19, Tailwind CSS 4, and MDX.
-
 ## Pages
 
 - **/** — Landing page with work history, stats, and project gallery
