@@ -14,7 +14,7 @@ export function BlogPostCoverImage({ src, title, priority = false, className }: 
     <div
       className={cn('relative overflow-hidden rounded-md border border-foreground/10 bg-foreground/[0.03]', className)}
     >
-      <div className="aspect-[32/9]">
+      <div>
         <Image
           src={src}
           alt={`${title} cover image`}
