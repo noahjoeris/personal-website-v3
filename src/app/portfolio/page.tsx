@@ -3,11 +3,9 @@ import { PortfolioSection } from '@/sections/portfolio'
 
 export default function PortfolioPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen overflow-hidden bg-background text-foreground">
       <Navbar />
-      <div className="pt-20 tablet:pt-24">
-        <PortfolioSection />
-      </div>
+      <PortfolioSection standalonePage />
     </main>
   )
 }
