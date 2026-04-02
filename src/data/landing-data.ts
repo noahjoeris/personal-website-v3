@@ -1,4 +1,4 @@
-export type NavHref = '/' | '/about' | '/portfolio' | '/blog'
+export type NavHref = '/' | '/portfolio' | '/blog'
 export type SocialLabel = 'X' | 'LinkedIn' | 'GitHub'
 export type NavItem = LandingData['navigation'][number]
 export type SocialLink = LandingData['socials'][number]
@@ -42,10 +42,6 @@ export const landingData = {
       href: '/',
     },
     {
-      label: 'ABOUT ME',
-      href: '/about',
-    },
-    {
       label: 'PORTFOLIO',
       href: '/portfolio',
     },
@@ -58,17 +54,17 @@ export const landingData = {
     {
       label: 'X',
       iconSrc: '/icons/social/x.svg',
-      href: 'https://x.com/',
+      href: 'https://x.com/noahjoeris',
     },
     {
       label: 'LinkedIn',
       iconSrc: '/icons/social/linkedin.svg',
-      href: 'https://linkedin.com/',
+      href: 'https://www.linkedin.com/in/noahjoeris/',
     },
     {
       label: 'GitHub',
       iconSrc: '/icons/social/github.svg',
-      href: 'https://github.com/',
+      href: 'https://github.com/noahjoeris',
     },
   ],
   hero: {

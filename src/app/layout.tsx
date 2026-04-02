@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Big_Shoulders } from 'next/font/google'
 
 import { Footer } from '@/components/footer'
+import { GrainOverlay } from '@/components/grain-overlay'
 import { landingData } from '@/data/landing-data'
 
 import './globals.css'
@@ -32,6 +33,7 @@ export default function RootLayout({
           <div className="flex-1">{children}</div>
           <Footer />
         </div>
+        <GrainOverlay />
       </body>
     </html>
   )

@@ -13,7 +13,7 @@ export default function Page() {
       <QuoteSection />
       <WorkHistorySection />
       <StatsSection />
-      <PortfolioSection />
+      <PortfolioSection maxProjects={4} />
     </main>
   )
 }

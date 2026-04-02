@@ -1,5 +1,5 @@
 export type ISODate = `${number}-${number}-${number}`
-export type BlogPostTag = 'architecture' | 'bitcoin' | 'coding' | 'mdx' | 'nextjs' | 'personal-growth' | 'tech'
+export type BlogPostTag = 'architecture' | 'bitcoin' | 'blockchain' | 'coding' | 'mdx' | 'nextjs' | 'personal-growth' | 'tech'
 
 export type BlogPostMetadata = {
   title: string
