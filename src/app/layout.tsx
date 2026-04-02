@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { Big_Shoulders } from 'next/font/google'
 
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Footer } from '@/components/footer'
 import { GrainOverlay } from '@/components/grain-overlay'
 import { landingData } from '@/data/landing-data'
@@ -34,6 +36,8 @@ export default function RootLayout({
           <Footer />
         </div>
         <GrainOverlay />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
