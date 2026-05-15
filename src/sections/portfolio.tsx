@@ -116,7 +116,7 @@ export function PortfolioSection({ maxProjects, standalonePage }: PortfolioSecti
     <section
       ref={sectionRef}
       className={cn(
-        'relative isolate bg-background px-6 py-20 tablet:px-10 tablet:py-24 desktop:px-16 desktop:py-28',
+        'relative isolate overflow-hidden bg-background px-6 py-20 tablet:px-10 tablet:py-24 desktop:px-16 desktop:py-28',
         standalonePage && 'pt-32 tablet:pt-36 desktop:pt-40',
       )}
     >
