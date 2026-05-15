@@ -25,9 +25,24 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     return { title: 'Project not found' }
   }
 
+  const ogImages = [{ url: project.imgUrl }]
+
   return {
-    title: `${project.name} — Portfolio`,
+    title: project.name,
     description: project.shortDescription,
+    openGraph: {
+      type: 'article',
+      title: `${project.name} — Portfolio`,
+      description: project.shortDescription,
+      url: `/portfolio/${slug}`,
+      images: ogImages,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${project.name} — Portfolio`,
+      description: project.shortDescription,
+      images: ogImages,
+    },
   }
 }
 

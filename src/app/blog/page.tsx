@@ -6,7 +6,7 @@ import { blogData } from '@/data/blog-data'
 import { getPublishedBlogPosts } from '@/utils/blog'
 
 export const metadata: Metadata = {
-  title: `Blog | ${blogData.author}`,
+  title: 'Blog',
   description: blogData.description,
 }
 

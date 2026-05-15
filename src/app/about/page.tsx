@@ -1,4 +1,11 @@
+import type { Metadata } from 'next'
+
 import { Navbar } from '@/components/navbar'
+
+export const metadata: Metadata = {
+  title: 'About',
+  description: 'About Noah Joeris — software engineer building tools for privacy and freedom.',
+}
 
 export default function AboutPage() {
   return (
