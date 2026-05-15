@@ -43,7 +43,14 @@ Blog posts live at `src/content/*.mdx` — the filename becomes the slug, and ea
 
 ## Environment
 
-Set `NEXT_PUBLIC_SITE_URL` in production (e.g. `https://noahjoeris.com`) so OG metadata, sitemap, and robots.txt resolve to absolute URLs. Falls back to `VERCEL_URL`, then `http://localhost:3000`.
+The site URL used by OG metadata, sitemap, and robots.txt resolves in this order:
+
+1. `NEXT_PUBLIC_SITE_URL` — explicit override
+2. `VERCEL_PROJECT_PRODUCTION_URL` — your Vercel custom domain (auto-set, no config needed)
+3. `VERCEL_URL` — the per-deployment `*.vercel.app` URL (fallback)
+4. `http://localhost:3000` — local dev
+
+If you've added a custom domain in Vercel, no env var setup is needed.
 
 ## Built With
 
