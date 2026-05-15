@@ -100,9 +100,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <div className="grid gap-12 tablet:grid-cols-[1fr_280px] tablet:gap-16">
           <div className="space-y-6">
             <h2 className="text-sm uppercase tracking-[0.2em] text-foreground/50">About the project</h2>
-            <p className="text-xl leading-relaxed text-foreground/85 tablet:text-2xl">
-              {project.shortDescription}
-            </p>
+            <p className="text-xl leading-relaxed text-foreground/85 tablet:text-2xl">{project.shortDescription}</p>
             {project.description && (
               <div className="text-lg leading-relaxed text-foreground/70 [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_li]:text-foreground/70 [&_p]:leading-relaxed [&_p+p]:mt-4 [&_strong]:text-foreground/90">
                 <Markdown>{project.description}</Markdown>

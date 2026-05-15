@@ -1,0 +1,11 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: biome
+      glob: "*.{js,jsx,ts,tsx,mjs,cjs,css,json}"
+      run: pnpm exec biome check --diagnostic-level=error {staged_files}
+
+pre-push:
+  jobs:
+    - name: typecheck
+      run: pnpm typecheck

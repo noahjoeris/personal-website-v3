@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { cn } from '@/lib/utils'
 import { type BlogPostSummary, formatBlogPostDate } from '@/lib/blog'
+import { cn } from '@/lib/utils'
 
 import { BlogPostCoverImage } from './blog-post-cover-image'
 
