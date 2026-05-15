@@ -3,28 +3,14 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { type CSSProperties, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-import type { NavItem, SocialLink } from '@/data/landing-data'
+import { MaskIcon } from '@/components/mask-icon'
+import type { NavItem } from '@/data/landing-data'
 import { landingData } from '@/data/landing-data'
 import { cn } from '@/lib/utils'
 
 const mobileMenuId = 'mobile-nav-menu'
-
-function getSocialIconMask(iconSrc: SocialLink['iconSrc']): CSSProperties {
-  const maskUrl = `url("${iconSrc}")`
-
-  return {
-    WebkitMaskImage: maskUrl,
-    maskImage: maskUrl,
-    WebkitMaskRepeat: 'no-repeat',
-    maskRepeat: 'no-repeat',
-    WebkitMaskPosition: 'center',
-    maskPosition: 'center',
-    WebkitMaskSize: 'contain',
-    maskSize: 'contain',
-  }
-}
 
 function isActivePath(pathname: string, href: NavItem['href']) {
   if (href === '/') {
@@ -123,11 +109,7 @@ export function Navbar() {
                     className="text-foreground/70 transition-colors hover:text-foreground focus-visible:text-foreground"
                     aria-label={social.label}
                   >
-                    <span
-                      className="block h-5 w-5 bg-current"
-                      style={getSocialIconMask(social.iconSrc)}
-                      aria-hidden="true"
-                    />
+                    <MaskIcon src={social.iconSrc} className="h-5 w-5" />
                     <span className="sr-only">{social.label}</span>
                   </a>
                 </li>
@@ -259,11 +241,7 @@ export function Navbar() {
                     className="text-foreground/80 transition-colors hover:text-foreground focus-visible:text-foreground"
                     aria-label={social.label}
                   >
-                    <span
-                      className="block h-9 w-9 bg-current"
-                      style={getSocialIconMask(social.iconSrc)}
-                      aria-hidden="true"
-                    />
+                    <MaskIcon src={social.iconSrc} className="h-9 w-9" />
                     <span className="sr-only">{social.label}</span>
                   </a>
                 </li>

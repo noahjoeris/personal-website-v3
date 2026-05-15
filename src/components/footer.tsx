@@ -1,25 +1,11 @@
-import type { CSSProperties } from 'react'
-
 import { AnimatedDivider } from '@/components/animated-divider'
-import { landingData, type SocialLink } from '@/data/landing-data'
+import { MaskIcon } from '@/components/mask-icon'
+import { landingData } from '@/data/landing-data'
 
-function getSocialIconMask(iconSrc: SocialLink['iconSrc']): CSSProperties {
-  const maskUrl = `url("${iconSrc}")`
-
-  return {
-    WebkitMaskImage: maskUrl,
-    maskImage: maskUrl,
-    WebkitMaskRepeat: 'no-repeat',
-    maskRepeat: 'no-repeat',
-    WebkitMaskPosition: 'center',
-    maskPosition: 'center',
-    WebkitMaskSize: 'contain',
-    maskSize: 'contain',
-  }
-}
+const CONTACT_SOCIAL_LABELS = ['LinkedIn', 'X'] as const
 
 export function Footer() {
-  const contactSocials = (['LinkedIn', 'X'] as const).flatMap(label => {
+  const contactSocials = CONTACT_SOCIAL_LABELS.flatMap(label => {
     const social = landingData.socials.find(item => item.label === label)
     return social ? [social] : []
   })
@@ -46,11 +32,7 @@ export function Footer() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-base uppercase tracking-[0.04em] text-foreground/70 transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
-                    <span
-                      className="h-4 w-4 bg-current"
-                      style={getSocialIconMask(profile.iconSrc)}
-                      aria-hidden="true"
-                    />
+                    <MaskIcon src={profile.iconSrc} className="h-4 w-4" />
                     {profile.label}
                   </a>
                 </li>

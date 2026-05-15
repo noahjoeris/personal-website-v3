@@ -4,13 +4,14 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Fragment } from 'react'
 
 import { AnimatedDivider } from '@/components/animated-divider'
+import { Section } from '@/components/section'
 import { statsData } from '@/data/stats-data'
 
 export function StatsSection() {
   const shouldReduceMotion = useReducedMotion()
 
   return (
-    <section className="relative overflow-hidden bg-background px-6 py-20 tablet:px-10 tablet:py-24 desktop:px-16 desktop:py-28">
+    <Section>
       <div className="relative max-w-7xl">
         <h2 className="sr-only">{statsData.srTitle}</h2>
 
@@ -41,6 +42,6 @@ export function StatsSection() {
           ))}
         </div>
       </div>
-    </section>
+    </Section>
   )
 }

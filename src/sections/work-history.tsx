@@ -2,13 +2,14 @@ import Image from 'next/image'
 import { Fragment } from 'react'
 
 import { AnimatedDivider } from '@/components/animated-divider'
+import { Section } from '@/components/section'
 import { workHistoryData } from '@/data/work-history-data'
 
 export function WorkHistorySection() {
   const titleLines = workHistoryData.title.split(' ')
 
   return (
-    <section className="overflow-hidden bg-background px-6 py-20 tablet:px-10 tablet:py-24 desktop:px-16 desktop:py-28">
+    <Section>
       <div className="mx-auto w-full max-w-9xl">
         <div className="grid gap-10 desktop:grid-cols-12 desktop:gap-12">
           <div className="desktop:col-span-4 desktop:pt-4">
@@ -53,6 +54,6 @@ export function WorkHistorySection() {
           </div>
         </div>
       </div>
-    </section>
+    </Section>
   )
 }
