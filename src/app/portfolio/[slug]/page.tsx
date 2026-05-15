@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import Markdown from 'react-markdown'
 
 import { Navbar } from '@/components/navbar'
+import { ProjectHeroImage } from '@/components/project-hero-image'
 import { getProjectBySlug, portfolioData } from '@/data/portfolio-data'
 import { ProjectGallerySection } from '@/sections/project-gallery'
 
@@ -73,18 +73,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           {project.name}
         </span>
 
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
-          <div className="relative aspect-square w-[clamp(140px,22vw,280px)]">
-            <Image
-              src={project.imgUrl}
-              alt=""
-              fill
-              priority
-              className="object-contain drop-shadow-2xl"
-              sizes="(max-width: 768px) 45vw, 280px"
-            />
-          </div>
-        </div>
+        <ProjectHeroImage src={project.imgUrl} />
 
         <span
           aria-hidden="true"
