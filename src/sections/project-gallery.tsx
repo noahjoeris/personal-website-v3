@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { AnimatedRevealCard } from '@/components/animated-reveal-card'
 import { ParallaxGlows } from '@/components/parallax-glows'
 import { Section } from '@/components/section'
+import { SectionHeading } from '@/components/section-heading'
 import type { PortfolioImageUrl } from '@/data/portfolio-data'
 import { useSectionParallax } from '@/lib/hooks/use-section-parallax'
 
@@ -27,12 +28,7 @@ export function ProjectGallerySection({ gallery, projectName }: ProjectGallerySe
 
       <div className="mx-auto w-full max-w-9xl">
         <motion.div style={{ y: introY }} className="mb-12 tablet:mb-16 desktop:mb-20">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-lg uppercase">See the Full</p>
-            <h2 className="text-6xl leading-none tracking-tight text-foreground uppercase tablet:text-7xl desktop:text-[7.25rem]">
-              Gallery
-            </h2>
-          </div>
+          <SectionHeading eyebrow="See the Full" title="Gallery" />
         </motion.div>
 
         <div className="mx-auto max-w-3xl space-y-10 tablet:space-y-12 desktop:space-y-16">

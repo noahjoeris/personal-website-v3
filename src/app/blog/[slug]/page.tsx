@@ -7,8 +7,6 @@ import { Navbar } from '@/components/navbar'
 import { blogData } from '@/data/blog-data'
 import { formatBlogPostDate, getPublishedBlogPostBySlug, getPublishedBlogPosts } from '@/lib/blog'
 
-import styles from './blog-post-content.module.css'
-
 type BlogPostPageProps = {
   params: Promise<{
     slug: string
@@ -107,7 +105,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </ul>
         </header>
 
-        <article className={styles.content}>
+        <article className="blog-prose">
           <Content />
         </article>
       </section>

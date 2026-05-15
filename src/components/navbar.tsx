@@ -96,7 +96,7 @@ export function Navbar() {
       initial={shouldReduceMotion ? false : { opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="absolute inset-x-0 top-0 z-50"
+      className="absolute inset-x-0 top-0 z-[var(--z-nav)]"
     >
       <div className="px-5 py-3 tablet:py-4 tablet:px-10 desktop:px-16">
         <nav className="relative flex items-center justify-between" aria-label="Main navigation">
@@ -176,7 +176,7 @@ export function Navbar() {
             role="dialog"
             aria-modal="true"
             aria-labelledby={mobileMenuLabelId}
-            className="fixed inset-x-0 top-0 z-60 border-b border-foreground/35 bg-background/25 px-5 pb-8 pt-5 text-foreground backdrop-blur-[1.5px] tablet:hidden"
+            className="fixed inset-x-0 top-0 z-[var(--z-mobile-menu)] border-b border-foreground/35 bg-background/25 px-5 pb-8 pt-5 text-foreground backdrop-blur-[1.5px] tablet:hidden"
             initial={shouldReduceMotion ? false : { opacity: 0, y: -18 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -12 }}

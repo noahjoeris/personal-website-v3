@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 
 import { BlogPostCompact } from '@/components/blog-post-compact'
 import { Navbar } from '@/components/navbar'
+import { SectionHeading } from '@/components/section-heading'
 import { blogData } from '@/data/blog-data'
 import { getPublishedBlogPosts } from '@/lib/blog'
 
@@ -17,12 +18,7 @@ export default async function BlogPage() {
     <main id="main-content" className="min-h-screen bg-background text-foreground">
       <Navbar />
       <section className="mx-auto w-full max-w-4xl px-6 pb-20 pt-28 tablet:px-10 desktop:px-16">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-lg uppercase">Read my</p>
-          <h1 className="text-6xl leading-none tracking-tight text-foreground uppercase tablet:text-7xl desktop:text-[7.25rem]">
-            Blog
-          </h1>
-        </div>
+        <SectionHeading eyebrow="Read my" title="Blog" headingLevel="h1" />
         <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-foreground/80 tablet:text-center tablet:text-lg">
           {blogData.description}
         </p>
