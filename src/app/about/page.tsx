@@ -1,23 +1,29 @@
 import type { Metadata } from 'next'
 
 import { Navbar } from '@/components/navbar'
+import { AboutBitcoin } from '@/sections/about/bitcoin'
+import { AboutHero } from '@/sections/about/hero'
+import { AboutInterests } from '@/sections/about/interests'
+import { AboutManifesto } from '@/sections/about/manifesto'
+import { AboutStory } from '@/sections/about/story'
+import { AboutValues } from '@/sections/about/values'
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'About Noah Joeris — software engineer building tools for privacy and freedom.',
+  description:
+    'Noah Joeris. Full-stack software engineer building on Bitcoin. Cypherpunk values, financial freedom, open-source contribution.',
 }
 
 export default function AboutPage() {
   return (
     <main id="main-content" className="min-h-screen bg-background text-foreground">
       <Navbar />
-      <section className="mx-auto flex min-h-screen w-full max-w-4xl flex-col justify-center px-6 pb-16 pt-28 tablet:px-10 desktop:px-16">
-        <h1 className="text-4xl font-semibold tracking-tight tablet:text-5xl">About Me</h1>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-foreground/80 tablet:text-lg">
-          I build software that protects freedom and privacy. This page is a stub and will be expanded with background,
-          principles, and the work I am focused on.
-        </p>
-      </section>
+      <AboutHero />
+      <AboutStory />
+      <AboutManifesto />
+      <AboutBitcoin />
+      <AboutInterests />
+      <AboutValues />
     </main>
   )
 }
