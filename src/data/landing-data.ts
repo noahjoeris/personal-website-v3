@@ -1,4 +1,4 @@
-export type NavHref = '/' | '/portfolio' | '/blog'
+export type NavHref = '/' | '/about' | '/portfolio' | '/blog'
 export type SocialLabel = 'X' | 'LinkedIn' | 'GitHub'
 export type NavItem = LandingData['navigation'][number]
 export type SocialLink = LandingData['socials'][number]
@@ -40,6 +40,10 @@ export const landingData = {
     {
       label: 'HOME',
       href: '/',
+    },
+    {
+      label: 'ABOUT',
+      href: '/about',
     },
     {
       label: 'PORTFOLIO',

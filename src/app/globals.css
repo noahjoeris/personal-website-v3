@@ -8,6 +8,7 @@
   --breakpoint-tablet: 48rem;
   --breakpoint-desktop: 64rem;
   --font-sans: var(--font-big-shoulders), sans-serif;
+  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
   --color-background: #000000;
   --color-foreground: #ffffff;
   --color-foreground-muted: rgb(255 255 255 / 0.7);

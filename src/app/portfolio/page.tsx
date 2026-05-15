@@ -5,7 +5,7 @@ import { PortfolioSection } from '@/sections/portfolio'
 
 export const metadata: Metadata = {
   title: 'Portfolio',
-  description: 'Selected projects in web, blockchain, and cybersecurity engineering.',
+  description: 'Selected projects in Bitcoin, blockchain, and cybersecurity engineering.',
 }
 
 export default function PortfolioPage() {

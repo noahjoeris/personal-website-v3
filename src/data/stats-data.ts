@@ -13,7 +13,7 @@ export const statsData = {
   items: [
     {
       value: '6Y+',
-      description: 'SOFTWARE ENGINEERING EXPERIENCE IN CYBER SECURITY, CLOUD, WEB3 AND MORE',
+      description: 'SOFTWARE ENGINEERING EXPERIENCE IN CYBER SECURITY, CLOUD, CRYPTO AND MORE',
     },
     {
       value: '270H+',

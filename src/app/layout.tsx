@@ -1,7 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata, Viewport } from 'next'
-import { Big_Shoulders } from 'next/font/google'
+import { Big_Shoulders, IBM_Plex_Mono } from 'next/font/google'
 
 import { Footer } from '@/components/footer'
 import { GrainOverlay } from '@/components/grain-overlay'
@@ -15,6 +15,13 @@ const bigShoulders = Big_Shoulders({
   variable: '--font-big-shoulders',
   display: 'swap',
   weight: ['400', '500', '600', '700'],
+})
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  variable: '--font-plex-mono',
+  display: 'swap',
+  weight: ['400', '500', '600'],
 })
 
 export const metadata: Metadata = {
@@ -52,7 +59,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${bigShoulders.variable} font-sans antialiased`}>
+      <body className={`${bigShoulders.variable} ${plexMono.variable} font-sans antialiased`}>
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-foreground focus:px-4 focus:py-2 focus:text-background focus:outline-none focus:ring-2 focus:ring-primary"
