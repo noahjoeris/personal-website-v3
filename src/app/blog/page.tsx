@@ -14,7 +14,7 @@ export default async function BlogPage() {
   const posts = await getPublishedBlogPosts()
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main id="main-content" className="min-h-screen bg-background text-foreground">
       <Navbar />
       <section className="mx-auto w-full max-w-4xl px-6 pb-20 pt-28 tablet:px-10 desktop:px-16">
         <div className="mx-auto max-w-3xl text-center">

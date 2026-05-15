@@ -1,9 +1,9 @@
 'use client'
 
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { MaskIcon } from '@/components/mask-icon'
 import type { NavItem } from '@/data/landing-data'
@@ -11,6 +11,7 @@ import { landingData } from '@/data/landing-data'
 import { cn } from '@/lib/utils'
 
 const mobileMenuId = 'mobile-nav-menu'
+const mobileMenuLabelId = 'mobile-nav-menu-label'
 
 function isActivePath(pathname: string, href: NavItem['href']) {
   if (href === '/') {
@@ -22,10 +23,14 @@ function isActivePath(pathname: string, href: NavItem['href']) {
 
 export function Navbar() {
   const pathname = usePathname()
+  const shouldReduceMotion = useReducedMotion()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const mobileMenuPanelRef = useRef<HTMLDivElement>(null)
+  const menuToggleRef = useRef<HTMLButtonElement>(null)
+  const menuCloseRef = useRef<HTMLButtonElement>(null)
+  const wasMobileMenuOpen = useRef(false)
 
-  useEffect(() => {
+  const closeMobileMenu = useCallback(() => {
     setIsMobileMenuOpen(false)
   }, [])
 
@@ -44,11 +49,11 @@ export function Navbar() {
   }, [])
 
   useEffect(() => {
-    function handlePointerDown(event: PointerEvent) {
-      if (!isMobileMenuOpen) {
-        return
-      }
+    if (!isMobileMenuOpen) {
+      return
+    }
 
+    function handlePointerDown(event: PointerEvent) {
       const target = event.target as Node | null
       if (!target) {
         return
@@ -68,9 +73,27 @@ export function Navbar() {
     }
   }, [isMobileMenuOpen])
 
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      const previousOverflow = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      menuCloseRef.current?.focus()
+      wasMobileMenuOpen.current = true
+
+      return () => {
+        document.body.style.overflow = previousOverflow
+      }
+    }
+
+    if (wasMobileMenuOpen.current) {
+      menuToggleRef.current?.focus()
+      wasMobileMenuOpen.current = false
+    }
+  }, [isMobileMenuOpen])
+
   return (
     <motion.header
-      initial={{ opacity: 0, y: -20 }}
+      initial={shouldReduceMotion ? false : { opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className="absolute inset-x-0 top-0 z-50"
@@ -107,16 +130,16 @@ export function Navbar() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-foreground/70 transition-colors hover:text-foreground focus-visible:text-foreground"
-                    aria-label={social.label}
+                    aria-label={`${social.label} (opens in new tab)`}
                   >
                     <MaskIcon src={social.iconSrc} className="h-5 w-5" />
-                    <span className="sr-only">{social.label}</span>
                   </a>
                 </li>
               ))}
             </ul>
 
             <button
+              ref={menuToggleRef}
               type="button"
               className="inline-flex h-9 w-9 items-center justify-center text-foreground/90 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring tablet:hidden"
               aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
@@ -150,22 +173,28 @@ export function Navbar() {
           <motion.div
             id={mobileMenuId}
             ref={mobileMenuPanelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={mobileMenuLabelId}
             className="fixed inset-x-0 top-0 z-60 border-b border-foreground/35 bg-background/25 px-5 pb-8 pt-5 text-foreground backdrop-blur-[1.5px] tablet:hidden"
-            initial={{ opacity: 0, y: -18 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: -18 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
+            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -12 }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
           >
+            <h2 id={mobileMenuLabelId} className="sr-only">
+              Navigation menu
+            </h2>
+
             <div className="flex justify-end">
               <button
+                ref={menuCloseRef}
                 type="button"
                 className="inline-flex h-9 w-9 items-center justify-center text-foreground/90 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label="Close navigation menu"
                 aria-expanded={true}
                 aria-controls={mobileMenuId}
-                onClick={() => {
-                  setIsMobileMenuOpen(false)
-                }}
+                onClick={closeMobileMenu}
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -215,9 +244,7 @@ export function Navbar() {
                         isActive ? 'text-foreground' : 'text-foreground/85 hover:text-foreground',
                       )}
                       aria-current={isActive ? 'page' : undefined}
-                      onClick={() => {
-                        setIsMobileMenuOpen(false)
-                      }}
+                      onClick={closeMobileMenu}
                     >
                       {link.label}
                     </Link>
@@ -228,7 +255,7 @@ export function Navbar() {
 
             <motion.ul
               className="mt-8 flex items-center gap-6"
-              initial={{ opacity: 0, y: -6 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, ease: 'easeOut', delay: 0.1 }}
             >
@@ -239,10 +266,9 @@ export function Navbar() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-foreground/80 transition-colors hover:text-foreground focus-visible:text-foreground"
-                    aria-label={social.label}
+                    aria-label={`${social.label} (opens in new tab)`}
                   >
                     <MaskIcon src={social.iconSrc} className="h-9 w-9" />
-                    <span className="sr-only">{social.label}</span>
                   </a>
                 </li>
               ))}

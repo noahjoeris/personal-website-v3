@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import Image from 'next/image'
 import { Fragment } from 'react'
 
@@ -8,16 +8,17 @@ import { landingData } from '@/data/landing-data'
 
 export function HeroContent() {
   const { intro, tagline, stack, signatureImgSrc, srTitle } = landingData.hero
+  const shouldReduceMotion = useReducedMotion()
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
       className="space-y-8 text-left"
     >
       <motion.div
-        initial={{ opacity: 0, x: -40 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, x: -40 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
         className="relative"
@@ -25,7 +26,7 @@ export function HeroContent() {
         <h1 className="sr-only">{srTitle}</h1>
         <Image
           src={signatureImgSrc}
-          alt="Signature"
+          alt=""
           width={500}
           height={200}
           priority

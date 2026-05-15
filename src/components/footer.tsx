@@ -34,6 +34,7 @@ export function Footer() {
                   >
                     <MaskIcon src={profile.iconSrc} className="h-4 w-4" />
                     {profile.label}
+                    <span className="sr-only"> (opens in new tab)</span>
                   </a>
                 </li>
               ))}
