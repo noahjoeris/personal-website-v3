@@ -1,4 +1,14 @@
+'use client'
+
+import { usePathname } from 'next/navigation'
+
 export function GrainOverlay() {
+  const pathname = usePathname()
+
+  if (pathname?.startsWith('/blog/')) {
+    return null
+  }
+
   return (
     <div
       className="pointer-events-none fixed inset-0 z-9999 bg-repeat opacity-10"

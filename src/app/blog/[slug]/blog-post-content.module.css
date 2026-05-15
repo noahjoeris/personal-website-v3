@@ -1,7 +1,7 @@
 .content {
   margin-top: 2.5rem;
   max-width: none;
-  color: color-mix(in srgb, var(--color-foreground) 85%, transparent);
+  color: var(--color-foreground);
   font-size: 1.125rem;
   line-height: 1.75;
 }
