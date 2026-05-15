@@ -41,7 +41,7 @@ I went with **Umbrel** because it gets you to a working system fast. It has its 
 
 ![Bitcoin Full Node running on my server](/images/blog/bitcoin-node.webp)
 
-**Tailscale.** Private VPN overlay so I can reach my server from anywhere without exposing my home IP or opening router ports. MagicDNS lets me use friendly hostnames like `http://umbrel:2283` instead of memorizing IPs, and I can share individual machines with friends or family from the dashboard. I also use the server as an exit node when I want to route my traffic through home. Worth setting up ACLs so guests only see the apps you want them to.
+**Tailscale.** Private WireGuard-based mesh VPN — the one piece that makes self-hosting actually practical. Every device on my Tailnet reaches the server like it's on the local network: no exposed home IP, no router ports to open, no dynamic DNS to maintain. It also punches through CGNAT, so it works even when your ISP doesn't hand out a real public IP. I run the server as an exit node to route traffic through home when I'm on untrusted Wi-Fi, and the share feature lets me hand individual machines to friends or family without exposing the rest of the Tailnet. Worth setting up ACLs early to limit what guests can see.
 
 **Gluetun (WireGuard).** Extra privacy layer for outbound traffic. Gluetun runs as a Docker container with a WireGuard config from my VPN provider, and I route the containers I care about through it. Cleaner and more reliable than running a VPN client at the host level.
 
