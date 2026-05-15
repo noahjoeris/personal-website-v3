@@ -68,7 +68,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         <span
           aria-hidden="true"
-          className="z-0 select-none text-center text-[clamp(6rem,15vw,15rem)] font-bold uppercase leading-none tracking-tight text-foreground"
+          className="z-0 select-none text-center text-[clamp(3.5rem,15vw,15rem)] font-bold uppercase leading-none tracking-tight text-foreground"
         >
           {project.name}
         </span>
@@ -88,7 +88,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute z-20 select-none text-center text-[clamp(6rem,15vw,15rem)] font-bold uppercase leading-none tracking-tight text-transparent"
+          className="pointer-events-none absolute z-20 select-none text-center text-[clamp(3.5rem,15vw,15rem)] font-bold uppercase leading-none tracking-tight text-transparent"
           style={{ WebkitTextStroke: '2px rgba(255,255,255,0.9)', paintOrder: 'stroke fill' }}
         >
           {project.name}

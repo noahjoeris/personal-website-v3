@@ -14,9 +14,15 @@ export const workHistoryData = {
   title: 'WORK HISTORY',
   items: [
     {
+      company: 'OPEN SOURCE',
+      position: 'BITCOIN ENGINEER',
+      duration: '2026-PRESENT',
+      imgUrl: '/images/work-history/bitcoin.svg',
+    },
+    {
       company: 'VELOCITY LABS',
       position: 'FULL STACK BLOCKCHAIN ENGINEER',
-      duration: '2024-PRESENT',
+      duration: '2024-2026',
       imgUrl: '/images/work-history/velocity-labs.png',
     },
     {

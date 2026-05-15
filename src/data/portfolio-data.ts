@@ -25,6 +25,28 @@ export function getProjectBySlug(slug: string): PortfolioProject | undefined {
 export const portfolioData = {
   projects: [
     {
+      slug: 'reorg-playground',
+      name: 'Reorg Playground',
+      imgUrl: '/images/portfolio/reorg-playground/reorg.webp',
+      shortDescription: 'Bitcoin tool for exploring forks, tip divergence, and reorg behavior.',
+      description: `**Reorg Playground** is a **Bitcoin developer tool** for exploring forks, tip divergence, and reorg behavior across multiple node backends. Deeper reorgs are rare on the live network, which lets fork/reorg edge cases slip through pre-production testing in wallets, explorers, and Bitcoin-integrated systems. With Reorg Playground, you can watch network state in near real time and deliberately produce blocks, isolate nodes, and create competing branches in development environments (Regtest and custom Signet).
+
+A hosted view-only deployment is available at [reorgplayground.app](https://reorgplayground.app) for observing live Mainnet and Testnet state.
+
+Key features:
+* 🪵 Interactive block-header graph with forks, competing tips, and collapsible sections
+* 🔌 Multi-backend node observation: Bitcoin Core, Electrum, Esplora, btcd
+* 📈 Observed stale-rate metric with configurable rolling windows
+* ⚡ Trigger Reorg button — pick a node and depth, create a reorg in two clicks (Regtest & custom Signet)
+* 🕸️ Node Connection Manager — inspect peer links, shape P2P topology, isolate nodes, toggle networking
+* ⚙️ Config-driven networks and nodes via \`config.toml\`, header history persisted in SQLite`,
+      links: ['https://github.com/noahjoeris/reorg-playground', 'https://reorgplayground.app'],
+      period: 'Feb 2026 - Present',
+      projectType: 'Bitcoin, Developer Tool, Open Source',
+      techUsed: 'Rust, Axum, Tokio, SQLite, Typescript, React, Vite, Tailwind, shadcn/ui, React Flow',
+      gallery: [],
+    },
+    {
       slug: 'turtle',
       name: 'Turtle',
       imgUrl: '/images/portfolio/turtle/turtle.svg',
