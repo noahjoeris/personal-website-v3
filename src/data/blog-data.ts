@@ -1,5 +1,14 @@
 export type ISODate = `${number}-${number}-${number}`
-export type BlogPostTag = 'architecture' | 'bitcoin' | 'blockchain' | 'coding' | 'mdx' | 'nextjs' | 'personal-growth' | 'tech'
+
+export type BlogPostTag =
+  | 'architecture'
+  | 'bitcoin'
+  | 'blockchain'
+  | 'coding'
+  | 'mdx'
+  | 'nextjs'
+  | 'personal-growth'
+  | 'tech'
 
 export type BlogPostMetadata = {
   title: string
@@ -28,4 +37,21 @@ export const blogData = {
  */
 export function defineBlogPostMetadata(metadata: BlogPostMetadata): BlogPostMetadata {
   return metadata
+}
+
+export function isBlogPostMetadata(value: unknown): value is BlogPostMetadata {
+  if (typeof value !== 'object' || value === null) {
+    return false
+  }
+
+  const candidate = value as Record<string, unknown>
+
+  return (
+    typeof candidate.title === 'string' &&
+    typeof candidate.description === 'string' &&
+    typeof candidate.publishedAt === 'string' &&
+    Array.isArray(candidate.tags) &&
+    (candidate.status === 'draft' || candidate.status === 'published') &&
+    (candidate.coverImageSrc === undefined || typeof candidate.coverImageSrc === 'string')
+  )
 }

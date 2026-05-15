@@ -4,7 +4,7 @@ import { readdir } from 'node:fs/promises'
 import path from 'node:path'
 import { type ComponentType, cache } from 'react'
 
-import type { BlogPostMetadata } from '@/data/blog-data'
+import { type BlogPostMetadata, isBlogPostMetadata } from '@/data/blog-data'
 
 type BlogPostModule = {
   default: ComponentType
@@ -16,10 +16,8 @@ type BlogPostFileName = `${string}.mdx`
 const blogPostsDirectoryPath = path.join(process.cwd(), 'src/content')
 const blogPostFileExtension = '.mdx'
 
-export type BlogPostSlug = string
-
 export type BlogPostSummary = BlogPostMetadata & {
-  slug: BlogPostSlug
+  slug: string
 }
 
 export type BlogPost = BlogPostSummary & {
@@ -36,12 +34,25 @@ function isBlogPostFileName(fileName: string): fileName is BlogPostFileName {
   return fileName.endsWith(blogPostFileExtension)
 }
 
-function getSlugFromFileName(fileName: BlogPostFileName): BlogPostSlug {
+function getSlugFromFileName(fileName: BlogPostFileName): string {
   return fileName.slice(0, -blogPostFileExtension.length)
 }
 
 async function loadBlogPostModule(fileName: BlogPostFileName): Promise<BlogPostModule> {
-  return (await import(`@/content/${fileName}`)) as BlogPostModule
+  const imported: unknown = await import(`@/content/${fileName}`)
+
+  if (
+    typeof imported !== 'object' ||
+    imported === null ||
+    !('default' in imported) ||
+    typeof imported.default !== 'function' ||
+    !('metadata' in imported) ||
+    !isBlogPostMetadata(imported.metadata)
+  ) {
+    throw new Error(`Invalid blog post module: ${fileName} must export a default component and a metadata object`)
+  }
+
+  return imported as BlogPostModule
 }
 
 function comparePostsByPublishDateDescending(firstPost: BlogPostSummary, secondPost: BlogPostSummary) {

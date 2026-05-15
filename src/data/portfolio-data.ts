@@ -5,12 +5,12 @@ export type PortfolioProject = {
   name: string
   imgUrl: PortfolioImageUrl
   shortDescription: string
-  description: string
+  description?: string
   links: readonly string[]
   period: string
   projectType: string
   techUsed: string
-  client: string
+  client?: string
   gallery: readonly PortfolioImageUrl[]
 }
 
@@ -90,7 +90,6 @@ Key projects:
       period: 'Jan 2024 - Feb 2024',
       projectType: 'Blockchain Infrastructure, Cryptography',
       techUsed: 'Rust, Substrate, Polkadot, XCM',
-      client: '',
       gallery: [],
     },
     {

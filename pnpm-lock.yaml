@@ -8,12 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@mdx-js/loader':
-        specifier: ^3.1.1
-        version: 3.1.1
-      '@mdx-js/react':
-        specifier: ^3.1.1
-        version: 3.1.1(@types/react@19.2.14)(react@19.2.4)
       '@next/mdx':
         specifier: ^15.5.12
         version: 15.5.12(@mdx-js/loader@3.1.1)(@mdx-js/react@3.1.1(@types/react@19.2.14)(react@19.2.4))
@@ -1284,6 +1278,7 @@ snapshots:
       source-map: 0.7.6
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   '@mdx-js/mdx@3.1.1':
     dependencies:
@@ -1314,12 +1309,14 @@ snapshots:
       vfile: 6.0.3
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   '@mdx-js/react@3.1.1(@types/react@19.2.14)(react@19.2.4)':
     dependencies:
       '@types/mdx': 2.0.13
       '@types/react': 19.2.14
       react: 19.2.4
+    optional: true
 
   '@next/env@15.5.12': {}
 
@@ -1493,10 +1490,13 @@ snapshots:
   acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:
       acorn: 8.16.0
+    optional: true
 
-  acorn@8.16.0: {}
+  acorn@8.16.0:
+    optional: true
 
-  astring@1.9.0: {}
+  astring@1.9.0:
+    optional: true
 
   bail@2.0.2: {}
 
@@ -1520,7 +1520,8 @@ snapshots:
 
   clsx@2.1.1: {}
 
-  collapse-white-space@2.1.0: {}
+  collapse-white-space@2.1.0:
+    optional: true
 
   comma-separated-tokens@2.0.3: {}
 
@@ -1553,6 +1554,7 @@ snapshots:
       devlop: 1.1.0
       estree-util-visit: 2.0.0
       unist-util-position-from-estree: 2.0.0
+    optional: true
 
   esast-util-from-js@2.0.1:
     dependencies:
@@ -1560,10 +1562,12 @@ snapshots:
       acorn: 8.16.0
       esast-util-from-estree: 2.0.0
       vfile-message: 4.0.3
+    optional: true
 
   estree-util-attach-comments@3.0.0:
     dependencies:
       '@types/estree': 1.0.8
+    optional: true
 
   estree-util-build-jsx@3.0.1:
     dependencies:
@@ -1571,6 +1575,7 @@ snapshots:
       devlop: 1.1.0
       estree-util-is-identifier-name: 3.0.0
       estree-walker: 3.0.3
+    optional: true
 
   estree-util-is-identifier-name@3.0.0: {}
 
@@ -1578,21 +1583,25 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.8
       devlop: 1.1.0
+    optional: true
 
   estree-util-to-js@2.0.0:
     dependencies:
       '@types/estree-jsx': 1.0.5
       astring: 1.9.0
       source-map: 0.7.6
+    optional: true
 
   estree-util-visit@2.0.0:
     dependencies:
       '@types/estree-jsx': 1.0.5
       '@types/unist': 3.0.3
+    optional: true
 
   estree-walker@3.0.3:
     dependencies:
       '@types/estree': 1.0.8
+    optional: true
 
   extend@3.0.2: {}
 
@@ -1627,6 +1636,7 @@ snapshots:
       zwitch: 2.0.4
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   hast-util-to-jsx-runtime@2.3.6:
     dependencies:
@@ -1726,7 +1736,8 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  markdown-extensions@2.0.0: {}
+  markdown-extensions@2.0.0:
+    optional: true
 
   mdast-util-from-markdown@2.0.3:
     dependencies:
@@ -1782,6 +1793,7 @@ snapshots:
       mdast-util-to-markdown: 2.1.2
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   mdast-util-mdxjs-esm@2.0.1:
     dependencies:
@@ -1856,6 +1868,7 @@ snapshots:
       micromark-util-events-to-acorn: 2.0.3
       micromark-util-symbol: 2.0.1
       micromark-util-types: 2.0.2
+    optional: true
 
   micromark-extension-mdx-jsx@3.0.2:
     dependencies:
@@ -1869,10 +1882,12 @@ snapshots:
       micromark-util-symbol: 2.0.1
       micromark-util-types: 2.0.2
       vfile-message: 4.0.3
+    optional: true
 
   micromark-extension-mdx-md@2.0.0:
     dependencies:
       micromark-util-types: 2.0.2
+    optional: true
 
   micromark-extension-mdxjs-esm@3.0.0:
     dependencies:
@@ -1885,6 +1900,7 @@ snapshots:
       micromark-util-types: 2.0.2
       unist-util-position-from-estree: 2.0.0
       vfile-message: 4.0.3
+    optional: true
 
   micromark-extension-mdxjs@3.0.0:
     dependencies:
@@ -1896,6 +1912,7 @@ snapshots:
       micromark-extension-mdxjs-esm: 3.0.0
       micromark-util-combine-extensions: 2.0.1
       micromark-util-types: 2.0.2
+    optional: true
 
   micromark-factory-destination@2.0.1:
     dependencies:
@@ -1921,6 +1938,7 @@ snapshots:
       micromark-util-types: 2.0.2
       unist-util-position-from-estree: 2.0.0
       vfile-message: 4.0.3
+    optional: true
 
   micromark-factory-space@2.0.1:
     dependencies:
@@ -1983,6 +2001,7 @@ snapshots:
       micromark-util-symbol: 2.0.1
       micromark-util-types: 2.0.2
       vfile-message: 4.0.3
+    optional: true
 
   micromark-util-html-tag-name@2.0.1: {}
 
@@ -2122,6 +2141,7 @@ snapshots:
       '@types/estree': 1.0.8
       estree-util-build-jsx: 3.0.1
       vfile: 6.0.3
+    optional: true
 
   recma-jsx@1.0.1(acorn@8.16.0):
     dependencies:
@@ -2131,6 +2151,7 @@ snapshots:
       recma-parse: 1.0.0
       recma-stringify: 1.0.0
       unified: 11.0.5
+    optional: true
 
   recma-parse@1.0.0:
     dependencies:
@@ -2138,6 +2159,7 @@ snapshots:
       esast-util-from-js: 2.0.1
       unified: 11.0.5
       vfile: 6.0.3
+    optional: true
 
   recma-stringify@1.0.0:
     dependencies:
@@ -2145,6 +2167,7 @@ snapshots:
       estree-util-to-js: 2.0.0
       unified: 11.0.5
       vfile: 6.0.3
+    optional: true
 
   rehype-recma@1.0.0:
     dependencies:
@@ -2153,6 +2176,7 @@ snapshots:
       hast-util-to-estree: 3.1.3
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   remark-mdx@3.1.1:
     dependencies:
@@ -2160,6 +2184,7 @@ snapshots:
       micromark-extension-mdxjs: 3.0.0
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   remark-parse@11.0.0:
     dependencies:
@@ -2270,6 +2295,7 @@ snapshots:
   unist-util-position-from-estree@2.0.0:
     dependencies:
       '@types/unist': 3.0.3
+    optional: true
 
   unist-util-position@5.0.0:
     dependencies:

@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { BlogPostCoverImage } from '@/components/blog-post-cover-image'
 import { Navbar } from '@/components/navbar'
 import { blogData } from '@/data/blog-data'
-import { formatBlogPostDate, getPublishedBlogPostBySlug, getPublishedBlogPosts } from '@/utils/blog'
+import { formatBlogPostDate, getPublishedBlogPostBySlug, getPublishedBlogPosts } from '@/lib/blog'
 
 import styles from './blog-post-content.module.css'
 

@@ -103,7 +103,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <p className="text-xl leading-relaxed text-foreground/85 tablet:text-2xl">
               {project.shortDescription}
             </p>
-            {project.description !== 'todo' && (
+            {project.description && (
               <div className="text-lg leading-relaxed text-foreground/70 [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_li]:text-foreground/70 [&_p]:leading-relaxed [&_p+p]:mt-4 [&_strong]:text-foreground/90">
                 <Markdown>{project.description}</Markdown>
               </div>
@@ -123,10 +123,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <h3 className="text-sm uppercase tracking-[0.2em] text-foreground/50">Tech</h3>
               <p className="mt-1 text-lg">{project.techUsed}</p>
             </div>
-            <div>
-              <h3 className="text-sm uppercase tracking-[0.2em] text-foreground/50">Client</h3>
-              <p className="mt-1 text-lg">{project.client}</p>
-            </div>
+            {project.client && (
+              <div>
+                <h3 className="text-sm uppercase tracking-[0.2em] text-foreground/50">Client</h3>
+                <p className="mt-1 text-lg">{project.client}</p>
+              </div>
+            )}
             {project.links.length > 0 && (
               <div>
                 <h3 className="text-sm uppercase tracking-[0.2em] text-foreground/50">Links</h3>

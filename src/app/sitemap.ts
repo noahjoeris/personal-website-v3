@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 
 import { portfolioData } from '@/data/portfolio-data'
 import { siteUrl } from '@/lib/site'
-import { getPublishedBlogPosts } from '@/utils/blog'
+import { getPublishedBlogPosts } from '@/lib/blog'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()

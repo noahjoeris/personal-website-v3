@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { BlogPostCompact } from '@/components/blog-post-compact'
 import { Navbar } from '@/components/navbar'
 import { blogData } from '@/data/blog-data'
-import { getPublishedBlogPosts } from '@/utils/blog'
+import { getPublishedBlogPosts } from '@/lib/blog'
 
 export const metadata: Metadata = {
   title: 'Blog',
