@@ -34,14 +34,14 @@ export function PortfolioSection({ maxProjects }: PortfolioSectionProps) {
         <div className="mx-auto max-w-3xl space-y-10 tablet:space-y-12 desktop:space-y-16">
           {projects.map((project, index) => (
             <AnimatedRevealCard key={`${project.name}-${project.period}`} index={index}>
-              <div className="mb-4 flex items-center justify-between px-1 text-sm uppercase tracking-[0.18em] text-foreground/55">
+              <div className="mb-4 flex max-w-72 items-center justify-between px-1 text-sm uppercase tracking-[0.18em] text-foreground/55">
                 <span>{String(index + 1).padStart(2, '0')}</span>
                 <span>{project.period}</span>
               </div>
 
               <ProjectCompact
                 project={project}
-                className="max-w-none shadow-[0_24px_64px_rgba(0,0,0,0.28)] transition-transform duration-500 ease-out"
+                className="shadow-[0_24px_64px_rgba(0,0,0,0.28)] transition-transform duration-500 ease-out"
               />
             </AnimatedRevealCard>
           ))}

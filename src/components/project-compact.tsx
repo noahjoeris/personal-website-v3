@@ -22,7 +22,7 @@ export function ProjectCompact({ project, className }: ProjectCompactProps) {
     <Link href={`/portfolio/${project.slug}`} aria-labelledby={titleId}>
       <article
         className={cn(
-          'group relative aspect-square w-full max-w-84 overflow-hidden rounded-md border border-foreground/25 bg-black',
+          'group relative aspect-square w-full max-w-72 overflow-hidden rounded-md border border-foreground/25 bg-black',
           className,
         )}
       >
@@ -31,7 +31,7 @@ export function ProjectCompact({ project, className }: ProjectCompactProps) {
           alt=""
           fill
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 group-active:scale-105 group-focus-within:scale-105"
-          sizes="(max-width: 640px) 90vw, 336px"
+          sizes="(max-width: 640px) 90vw, 288px"
         />
 
         <div
