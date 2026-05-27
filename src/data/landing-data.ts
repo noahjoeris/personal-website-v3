@@ -33,8 +33,7 @@ export type LandingData = {
 export const landingData = {
   metadata: {
     title: 'Noah Joeris | Bitcoin Software Engineer',
-    description:
-      'Cypherpunk protecting human freedom with software. Bitcoin software engineer focused on open-source Bitcoin systems.',
+    description: 'Cypherpunk. Open-source. Freedom tech.',
   },
   navigation: [
     {
