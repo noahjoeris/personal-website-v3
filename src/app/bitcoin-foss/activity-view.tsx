@@ -306,7 +306,7 @@ function ActivityStatsGrid({ stats }: { stats: ActivityStats }) {
   return (
     <dl className="mt-12 grid grid-cols-2 gap-3 tablet:grid-cols-5">
       {statItems.map(([label, key]) => (
-        <div key={label} className="rounded-md border border-foreground/12 bg-foreground/[0.03] px-4 py-4">
+        <div key={label} className="rounded-md border border-foreground/12 bg-foreground/[0.03] px-4 py-4 text-center">
           <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-foreground/55 tablet:tracking-[0.18em]">
             {label}
           </dt>
