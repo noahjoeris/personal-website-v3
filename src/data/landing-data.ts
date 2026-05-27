@@ -26,15 +26,15 @@ export type LandingData = {
       text: string
     }
     tagline: string
-    stack: readonly string[]
     watermark: string
   }
 }
 
 export const landingData = {
   metadata: {
-    title: 'Noah Joeris | Software Engineer',
-    description: 'Cypherpunk protecting human freedom with software. React, Rust, Bitcoin.',
+    title: 'Noah Joeris | Bitcoin Software Engineer',
+    description:
+      'Cypherpunk protecting human freedom with software. Bitcoin software engineer focused on open-source Bitcoin systems.',
   },
   navigation: [
     {
@@ -72,15 +72,14 @@ export const landingData = {
     },
   ],
   hero: {
-    srTitle: 'Noah Joeris - Software Engineer',
+    srTitle: 'Noah Joeris - Bitcoin Software Engineer',
     signatureImgSrc: '/images/signature.png',
     heroImgSrc: '/images/noah-hero.avif',
     intro: {
-      highlight: 'Cypherpunk',
-      text: 'protecting human freedom with software',
+      highlight: 'Building',
+      text: 'Bitcoin software',
     },
-    tagline: '– leading by example through discipline',
-    stack: ['React', 'Rust', 'Bitcoin'],
+    tagline: 'Cypherpunk. Open-source. Freedom tech.',
     watermark: 'NOAH JOERIS',
   },
 } as const satisfies LandingData

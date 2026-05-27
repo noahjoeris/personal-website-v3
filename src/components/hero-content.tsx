@@ -2,12 +2,11 @@
 
 import { motion, useReducedMotion } from 'framer-motion'
 import Image from 'next/image'
-import { Fragment } from 'react'
 
 import { landingData } from '@/data/landing-data'
 
 export function HeroContent() {
-  const { intro, tagline, stack, signatureImgSrc, srTitle } = landingData.hero
+  const { intro, tagline, signatureImgSrc, srTitle } = landingData.hero
   const shouldReduceMotion = useReducedMotion()
 
   return (
@@ -34,23 +33,12 @@ export function HeroContent() {
         />
       </motion.div>
 
-      <div className="space-y-1">
-        <p className="max-w-sm text-3xl text-foreground">
-          <span className="font-bold">{intro.highlight}</span> {intro.text}
+      <div className="space-y-2">
+        <p className="max-w-md font-semibold text-3xl leading-tight text-foreground tablet:text-4xl">
+          {intro.highlight} {intro.text}
         </p>
 
-        <p className="text-foreground/90 text-xl pb-3">{tagline}</p>
-
-        <p className="text-md tracking-wide text-foreground/70">
-          {stack.map((technology, index) => (
-            <Fragment key={`${technology}-${index}`}>
-              {index > 0 ? (
-                <span className="mx-1 inline-block h-1 w-1 rounded-full bg-foreground/70 align-middle" aria-hidden />
-              ) : null}
-              {technology}
-            </Fragment>
-          ))}
-        </p>
+        {tagline ? <p className="max-w-sm pb-3 text-foreground/75 text-lg tablet:text-xl">{tagline}</p> : null}
       </div>
     </motion.div>
   )
