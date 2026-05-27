@@ -1,4 +1,4 @@
-export type NavHref = '/' | '/about' | '/portfolio' | '/blog'
+export type NavHref = '/' | '/about' | '/portfolio' | '/blog' | '/bitcoin-foss'
 export type SocialLabel = 'X' | 'LinkedIn' | 'GitHub'
 export type NavItem = LandingData['navigation'][number]
 export type SocialLink = LandingData['socials'][number]
@@ -52,6 +52,10 @@ export const landingData = {
     {
       label: 'BLOG',
       href: '/blog',
+    },
+    {
+      label: 'FOSS',
+      href: '/bitcoin-foss',
     },
   ],
   socials: [
