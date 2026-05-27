@@ -7,7 +7,7 @@ import { type BtcFossEvent, type BtcFossEventType, btcFossEventTypes } from './t
 
 const feedUrl = 'https://noahjoeris.github.io/btc_foss/feed.json'
 const profileUrl = 'https://github.com/noahjoeris'
-const pageTitle = 'Bitcoin/FOSS'
+const pageTitle = 'Bitcoin Open Source'
 
 type BtcFossFeed = {
   generated_at: string
@@ -26,7 +26,7 @@ type FeedState =
 
 export const metadata: Metadata = {
   title: pageTitle,
-  description: 'Bitcoin and open-source contribution activity by Noah Joeris.',
+  description: 'Bitcoin open-source contribution activity by Noah Joeris.',
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -141,9 +141,6 @@ export default async function BitcoinFossPage() {
       <Navbar />
       <section className="mx-auto w-full max-w-5xl px-6 pb-20 pt-28 tablet:px-10 desktop:px-16">
         <SectionHeading eyebrow="Proof of work" title={pageTitle} headingLevel="h1" />
-        <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-foreground/80 tablet:text-center tablet:text-lg">
-          Recent Bitcoin and open-source contribution activity, pulled from GitHub and refreshed hourly.
-        </p>
 
         {feedState.status === 'error' ? (
           <div className="mt-14 rounded-md border border-foreground/12 bg-foreground/[0.03] px-6 py-8 text-center">
@@ -162,7 +159,7 @@ export default async function BitcoinFossPage() {
           <BitcoinFossActivityView events={events} generatedAt={feedState.feed.generated_at} />
         ) : (
           <div className="mt-14 rounded-md border border-foreground/12 bg-foreground/[0.03] px-6 py-8 text-center">
-            <p className="text-lg uppercase text-foreground">No Bitcoin FOSS activity found yet.</p>
+            <p className="text-lg uppercase text-foreground">No Bitcoin open-source activity found yet.</p>
           </div>
         )}
       </section>

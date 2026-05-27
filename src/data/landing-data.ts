@@ -54,7 +54,7 @@ export const landingData = {
       href: '/blog',
     },
     {
-      label: 'FOSS',
+      label: 'Bitcoin OSS',
       href: '/bitcoin-foss',
     },
   ],
