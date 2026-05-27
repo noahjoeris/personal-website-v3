@@ -308,7 +308,7 @@ function ActivityGroupCard({ group }: { group: ActivityGroup }) {
 
 function ActivityStatsGrid({ stats }: { stats: ActivityStats }) {
   return (
-    <dl className="mt-12 grid grid-cols-2 gap-3 tablet:grid-cols-5">
+    <dl className="mx-auto mt-12 grid max-w-4xl grid-cols-2 gap-3 tablet:grid-cols-4">
       {statItems.map(([label, key]) => (
         <div key={label} className="rounded-md border border-foreground/12 bg-foreground/[0.03] px-4 py-4 text-center">
           <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-foreground/55 tablet:tracking-[0.18em]">
