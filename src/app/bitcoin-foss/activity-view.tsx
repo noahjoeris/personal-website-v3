@@ -50,9 +50,13 @@ const activityDateFormatter = new Intl.DateTimeFormat('en-US', {
 })
 
 const updatedDateFormatter = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
+  day: 'numeric',
+  hour: '2-digit',
+  hourCycle: 'h23',
+  minute: '2-digit',
+  month: 'short',
   timeZone: 'UTC',
+  year: 'numeric',
 })
 
 const typeLabels: Record<BtcFossEventType, string> = {
@@ -141,7 +145,7 @@ function formatUpdatedAt(value: string): string {
     return 'Unknown date'
   }
 
-  return `${updatedDateFormatter.format(date)} UTC`
+  return `${updatedDateFormatter.format(date).replace(' at ', ', ')} UTC`
 }
 
 function repoOwner(repo: string): string {
@@ -532,8 +536,8 @@ export function BitcoinFossActivityView({ events, generatedAt }: ActivityViewPro
 
   return (
     <>
-      <p className="mt-8 text-center font-mono text-xs uppercase tracking-[0.18em] text-foreground/55">
-        Updated {formatUpdatedAt(generatedAt)}
+      <p className="mt-4 text-center font-mono text-[0.68rem] uppercase tracking-[0.12em] text-foreground/50 tablet:text-xs tablet:tracking-[0.18em]">
+        Feed updated {formatUpdatedAt(generatedAt)}
       </p>
 
       <ActivityStatsGrid stats={stats} />
