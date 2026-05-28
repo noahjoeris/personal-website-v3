@@ -113,7 +113,7 @@ function parseFeed(value: unknown): BtcFossFeed | null {
 async function getFeed(): Promise<FeedState> {
   try {
     const res = await fetch(feedUrl, {
-      next: { revalidate: 3600 },
+      next: { revalidate: 300 },
     })
 
     if (!res.ok) {
