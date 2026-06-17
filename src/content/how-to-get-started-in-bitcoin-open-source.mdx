@@ -1,0 +1,135 @@
+import { defineBlogPostMetadata } from "@/data/blog-data";
+
+export const metadata = defineBlogPostMetadata({
+  title: "Getting Started in Bitcoin Open Source",
+  description: "A practical path into Bitcoin open source and how I entered.",
+  publishedAt: "2026-06-17",
+  tags: ["bitcoin", "open-source"],
+  status: "published",
+});
+
+Bitcoin open source feels hard to enter alone. Mostly because of uncertainty about where to start. It's messy and very different from a normal job.
+
+The path is simple:
+
+- learn enough Bitcoin to be useful
+- pick one project
+- contribute for free for a while
+- become reliable and known
+- then think about funding
+
+## 1. Do not start by quitting your job
+
+If you have a day job, keep it.
+
+Getting funded can take months. Maybe longer. You need time to build trust, context, and proof of work.
+
+Best setup:
+
+- contribute nights/weekends
+- keep income stable
+- avoid desperation
+- only go full-time if you have serious runway
+
+I burned savings doing this full-time. I do not think that is necessary for most people.
+
+## 2. Get help if you can
+
+You can do this alone, but accountability helps a lot.
+
+Programs like Chaincode Labs BOSS or Bitshala help because they give structure, peers, and pressure to keep going.
+
+Not required. Just useful.
+
+## 3. Pick a project deliberately
+
+Choose based on:
+
+- language you want to write
+- technical depth you want
+- area you care about
+- maintainer responsiveness
+- possible funding fit
+
+Some good places to look:
+
+- **Bitcoin Core**
+- **BTCPay Server**
+- **Rust Bitcoin ecosystem**: `rust-bitcoin`, `miniscript`, BDK, Kyoto, etc.
+- **Lightning**: LDK, LND, Core Lightning
+- **Privacy**: Payjoin, Silent Payments, CoinJoin tooling
+
+## 4. Expect chaos
+
+At first everything feels overwhelming:
+
+- many issues and open PRs
+- unclear priorities
+- unfamiliar review culture
+- huge codebase
+- context hidden in old PRs, calls, and chats
+
+This is normal.
+
+Best ways through:
+
+- join project calls if they exist
+- read and understand PRs
+- use LLMs to explain unfamiliar code and concepts
+- take notes
+- understand the codebase at a high level
+- review changes
+- help maintainers with things they care about
+- never annoy maintainers. Be proactive first; later you can ask more questions.
+
+Your first goal is to become useful and seen.
+
+## 5. Contribute before expecting funding
+
+Grants usually come after proof of work.
+
+Plan for months of unpaid contribution. Use that time to:
+
+- land small PRs
+- review others' PRs
+- understand project priorities
+- build relationships with maintainers
+- show you can finish work without hand-holding
+- identify long-term improvements you can work on and put in your grant proposal
+
+A strong signal is when maintainers are willing to recommend you.
+
+## 6. Apply for funding after you have momentum
+
+Once you have proof of work, write a grant proposal.
+
+Include:
+
+- one larger feature or improvement
+- ongoing maintenance work: reviews, issues, tests, docs, releases
+
+Ask maintainers for feedback before applying, especially about your direction/goals.
+
+Funding sources to check:
+
+- OpenSats
+- Human Rights Foundation
+- BDK Foundation
+- Spiral
+
+They have application windows and different priorities, so check current status before planning around any of them.
+
+## My path
+
+Roughly:
+
+- started with Bitshala cohorts
+- learned enough Bitcoin to not be completely lost
+- did the Chaincode Labs BOSS Challenge 2026
+- got introduced to open source projects
+- started contributing to BDK
+- joined bi-weekly calls
+- helped maintainers with real problems. Slowly built context and trust.
+- applied for a grant
+
+Pick a project. Show up consistently. Be useful before asking for anything.

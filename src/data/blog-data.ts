@@ -7,6 +7,7 @@ export type BlogPostTag =
   | 'coding'
   | 'mdx'
   | 'nextjs'
+  | 'open-source'
   | 'personal-growth'
   | 'tech'
 
