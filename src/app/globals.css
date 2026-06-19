@@ -52,6 +52,24 @@ body {
   color: var(--color-foreground);
 }
 
+/* Keep SSR content visible until React hydrates (Edge tracking prevention, slow JS, blocked
+ * scripts). Framer Motion renders intro elements at opacity:0; if hydration never runs they would
+ * stay invisible and the page would look blank. The `.js-hydrated` class is added on hydration
+ * (see HydrationFallback), after which Framer Motion takes over and animates normally. */
+html:not(.js-hydrated) [style*="opacity: 0"],
+html:not(.js-hydrated) [style*="opacity:0"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (scripting: none) {
+  [style*="opacity: 0"],
+  [style*="opacity:0"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @utility text-balance {
   text-wrap: balance;
 }

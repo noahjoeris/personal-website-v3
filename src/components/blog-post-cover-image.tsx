@@ -10,8 +10,11 @@ type BlogPostCoverImageProps = {
 }
 
 export function BlogPostCoverImage({ src, title, priority = false, className }: BlogPostCoverImageProps) {
+  // Inline `position` safeguards against Tailwind CSS not applying (older/blocked browsers):
+  // without a positioned ancestor the fill image would cover the whole viewport.
   return (
     <div
+      style={{ position: 'relative' }}
       className={cn('relative overflow-hidden rounded-md border border-foreground/10 bg-foreground/[0.03]', className)}
     >
       <div>

@@ -93,7 +93,12 @@ export function AboutHero() {
               <div className="absolute -left-3 -top-3 z-10 hidden h-6 w-6 border-l-2 border-t-2 border-primary tablet:block" />
               <div className="absolute -bottom-3 -right-3 z-10 hidden h-6 w-6 border-b-2 border-r-2 border-primary tablet:block" />
 
-              <div className="relative aspect-[4/5] w-full overflow-hidden bg-foreground/5">
+              {/* Inline `position` safeguards against Tailwind not applying: a fill image without a
+                  positioned ancestor would cover the whole viewport. */}
+              <div
+                style={{ position: 'relative' }}
+                className="relative aspect-[4/5] w-full overflow-hidden bg-foreground/5"
+              >
                 <Image
                   src={portraitImgSrc}
                   alt={`Portrait of ${name}`}

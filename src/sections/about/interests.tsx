@@ -33,7 +33,12 @@ export function AboutInterests() {
               transition={{ duration: 0.7, delay: index * 0.1, ease: 'easeOut' }}
               className="group flex flex-col"
             >
-              <div className="relative mx-auto aspect-[4/5] w-3/4 overflow-hidden border border-foreground/15">
+              {/* Inline `position` safeguards against Tailwind not applying: a fill image without a
+                  positioned ancestor would cover the whole viewport. */}
+              <div
+                style={{ position: 'relative' }}
+                className="relative mx-auto aspect-[4/5] w-3/4 overflow-hidden border border-foreground/15"
+              >
                 <Image
                   src={item.imgSrc}
                   alt=""

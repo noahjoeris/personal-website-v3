@@ -5,6 +5,7 @@ import { Big_Shoulders, IBM_Plex_Mono } from 'next/font/google'
 
 import { Footer } from '@/components/footer'
 import { GrainOverlay } from '@/components/grain-overlay'
+import { HydrationFallback } from '@/components/hydration-fallback'
 import { landingData } from '@/data/landing-data'
 import { siteName, siteUrl } from '@/lib/site'
 
@@ -37,11 +38,13 @@ export const metadata: Metadata = {
     title: landingData.metadata.title,
     description: landingData.metadata.description,
     url: '/',
+    images: [{ url: '/images/about/me.webp', alt: siteName }],
   },
   twitter: {
     card: 'summary_large_image',
     title: landingData.metadata.title,
     description: landingData.metadata.description,
+    images: ['/images/about/me.webp'],
   },
 }
 
@@ -59,6 +62,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Inline so the dark background/text survive even if the Tailwind/global CSS bundle
+            fails to load (e.g. blocked stylesheet) — prevents a flash of an unstyled white page. */}
+        <style>{'html,body{background-color:#000;color:#fff;margin:0}'}</style>
+      </head>
       <body className={`${bigShoulders.variable} ${plexMono.variable} font-sans antialiased`}>
         <a
           href="#main-content"
@@ -71,6 +79,7 @@ export default function RootLayout({
           <Footer />
         </div>
         <GrainOverlay />
+        <HydrationFallback />
         <Analytics />
         <SpeedInsights />
       </body>

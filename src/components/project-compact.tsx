@@ -20,7 +20,11 @@ export function ProjectCompact({ project, className }: ProjectCompactProps) {
 
   return (
     <Link href={`/portfolio/${project.slug}`} aria-labelledby={titleId}>
+      {/* Inline `position` + size safeguard against Tailwind CSS not applying (older/blocked
+          browsers): without a positioned, sized ancestor a fill image uses the viewport as its
+          containing block and covers the whole page. Inline values mirror the Tailwind classes. */}
       <article
+        style={{ position: 'relative', aspectRatio: '1 / 1', width: '100%', maxWidth: '18rem' }}
         className={cn(
           'group relative aspect-square w-full max-w-72 overflow-hidden rounded-md border border-foreground/25 bg-black',
           className,
@@ -53,6 +57,7 @@ export function ProjectCompact({ project, className }: ProjectCompactProps) {
               {galleryPreview.map(gallerySrc => (
                 <li
                   key={gallerySrc}
+                  style={{ position: 'relative' }}
                   className="relative h-15 w-19 shrink-0 overflow-hidden rounded-xs border border-foreground/30 bg-foreground/10"
                 >
                   <Image src={gallerySrc} alt="" fill className="object-cover" sizes="64px" />

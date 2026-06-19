@@ -29,7 +29,12 @@ export function AboutBitcoin() {
             transition={{ duration: 0.9, ease: 'easeOut' }}
             className="desktop:col-span-5"
           >
-            <div className="relative aspect-[4/5] w-full overflow-hidden border border-foreground/15">
+            {/* Inline `position` safeguards against Tailwind not applying: a fill image without a
+                positioned ancestor would cover the whole viewport. */}
+            <div
+              style={{ position: 'relative' }}
+              className="relative aspect-[4/5] w-full overflow-hidden border border-foreground/15"
+            >
               <Image src={primaryImgSrc} alt="" fill sizes="(max-width: 1023px) 100vw, 42vw" className="object-cover" />
               <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-background/60 via-transparent to-transparent" />
             </div>
@@ -78,7 +83,10 @@ export function AboutBitcoin() {
             </p>
           </div>
           <div className="desktop:col-span-7">
-            <div className="relative aspect-[16/10] w-full overflow-hidden border border-foreground/15">
+            <div
+              style={{ position: 'relative' }}
+              className="relative aspect-[16/10] w-full overflow-hidden border border-foreground/15"
+            >
               <Image
                 src={secondaryImgSrc}
                 alt=""
