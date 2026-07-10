@@ -251,14 +251,43 @@ function visibleActivityEvents(events: BtcFossEvent[]): BtcFossEvent[] {
   return showCommitActivity ? events : events.filter(event => event.event_type !== 'commit')
 }
 
+const statusLabels: Record<string, string> = {
+  MERGED: 'Merged',
+  OPEN: 'Open',
+  CLOSED: 'Closed',
+  APPROVED: 'Approved',
+  CHANGES_REQUESTED: 'Changes requested',
+  COMMENTED: 'Commented',
+}
+
+function formatStatusLabel(status: string): string {
+  const key = status.trim().toUpperCase()
+
+  if (key.length === 0) {
+    return ''
+  }
+
+  return (
+    statusLabels[key] ??
+    key
+      .toLowerCase()
+      .split('_')
+      .filter(part => part.length > 0)
+      .map(part => `${part[0]?.toUpperCase() ?? ''}${part.slice(1)}`)
+      .join(' ')
+  )
+}
+
 function StatusBadge({ status }: { status: string }) {
-  if (status.trim().length === 0) {
+  const label = formatStatusLabel(status)
+
+  if (label.length === 0) {
     return null
   }
 
   return (
     <p className="w-fit rounded-md border border-foreground/12 px-3 py-1 font-mono text-xs uppercase tracking-[0.18em] text-foreground/65">
-      {status}
+      {label}
     </p>
   )
 }
@@ -281,7 +310,7 @@ function ActivityGroupCard({ group }: { group: ActivityGroup }) {
             <span aria-hidden="true">/</span>
             <span>{formatActivityDate(primary.occurred_at)}</span>
           </div>
-          <h2 className="mt-3 text-2xl font-semibold leading-tight text-foreground tablet:text-3xl">
+          <h2 className="mt-3 text-xl font-semibold leading-snug text-foreground tablet:text-2xl">
             <a
               href={group.href}
               target="_blank"
