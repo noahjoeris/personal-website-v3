@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Navbar } from '@/components/navbar'
 import { SectionHeading } from '@/components/section-heading'
 import { BitcoinFossActivityView } from './activity-view'
+import { FeedError } from './feed-error'
 import { type BtcFossEvent, type BtcFossEventType, btcFossEventTypes } from './types'
 
 const feedUrl = 'https://noahjoeris.github.io/btc_foss/feed.json'
@@ -139,27 +140,25 @@ export default async function BitcoinFossPage() {
   return (
     <main id="main-content" className="min-h-screen bg-background text-foreground">
       <Navbar />
-      <section className="mx-auto w-full max-w-5xl px-6 pb-20 pt-28 tablet:px-10 desktop:px-16">
-        <SectionHeading eyebrow="Proof of work" title={pageTitle} headingLevel="h1" />
+      <section className="mx-auto w-full max-w-5xl px-6 pb-20 pt-24 tablet:px-10 desktop:px-16">
+        <SectionHeading eyebrow="Proof of work" title={pageTitle} headingLevel="h1" size="compact" />
 
         {feedState.status === 'error' ? (
+          <FeedError profileUrl={profileUrl} />
+        ) : events.length > 0 ? (
+          <BitcoinFossActivityView events={events} generatedAt={feedState.feed.generated_at} profileUrl={profileUrl} />
+        ) : (
           <div className="mt-14 rounded-md border border-foreground/12 bg-foreground/[0.03] px-6 py-8 text-center">
-            <p className="text-lg uppercase text-foreground">Activity feed unavailable right now.</p>
+            <p className="text-lg uppercase text-foreground">No Bitcoin open-source activity found yet.</p>
             <a
               href={profileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-flex text-sm uppercase tracking-[0.18em] text-primary-light transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="mt-4 inline-flex font-mono text-xs uppercase tracking-wide text-primary-light transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              View GitHub profile
+              GitHub profile
               <span className="sr-only"> (opens in new tab)</span>
             </a>
-          </div>
-        ) : events.length > 0 ? (
-          <BitcoinFossActivityView events={events} generatedAt={feedState.feed.generated_at} />
-        ) : (
-          <div className="mt-14 rounded-md border border-foreground/12 bg-foreground/[0.03] px-6 py-8 text-center">
-            <p className="text-lg uppercase text-foreground">No Bitcoin open-source activity found yet.</p>
           </div>
         )}
       </section>

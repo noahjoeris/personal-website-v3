@@ -9,9 +9,13 @@ export function GrainOverlay() {
     return null
   }
 
+  // Data-heavy activity feed: lower grain for readability (~4% vs default 10%).
+  const isDataHeavyRoute = pathname === '/bitcoin-foss' || pathname?.startsWith('/bitcoin-foss/')
+  const opacityClass = isDataHeavyRoute ? 'opacity-[0.04]' : 'opacity-10'
+
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[var(--z-grain)] bg-repeat opacity-10"
+      className={`pointer-events-none fixed inset-0 z-[var(--z-grain)] bg-repeat ${opacityClass}`}
       style={{ backgroundImage: 'url(/grain.gif)' }}
       aria-hidden
     />

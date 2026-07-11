@@ -1,79 +1,45 @@
 'use client'
 
-import { type RefObject, useEffect, useMemo, useRef, useState } from 'react'
+import { useId, useMemo, useState } from 'react'
 
-import { type BtcFossEvent, type BtcFossEventType, btcFossEventTypes } from './types'
+import {
+  type ActivityThread,
+  allValue,
+  eventCountBadge,
+  feedDateRange,
+  filterEvents,
+  filterEventsByProjectAndSearch,
+  formatActivityDate,
+  formatStatusLabel,
+  formatUpdatedAt,
+  groupEventsToThreads,
+  groupThreadsByMonth,
+  overviewCounts,
+  overviewTypeOptions,
+  pageSize,
+  paginateThreads,
+  repoOwner,
+  repositoryOptionsForOrg,
+  resolveRepositoryAfterOrgChange,
+  statusTone,
+  type TypeFilter,
+  typeLabelForThread,
+  uniqueSorted,
+  visibleActivityEvents,
+} from './activity-helpers'
+import type { BtcFossEvent, BtcFossEventType } from './types'
 
 type ActivityViewProps = {
   events: BtcFossEvent[]
   generatedAt: string
+  profileUrl: string
 }
 
-type FilterValue = 'all'
-type TypeFilter = BtcFossEventType | FilterValue
-
-type ActivityGroup = {
-  kind: 'single' | 'comment_group'
-  key: string
-  primary: BtcFossEvent
-  events: BtcFossEvent[]
-  title: string
-  href: string
-}
-
-type ActivityStats = {
-  pullRequests: number
-  issues: number
-  comments: number
-  reviews: number
-}
-
-const allValue: FilterValue = 'all'
-const pageSize = 25
-const showCommitActivity = false
-const statItems = [
-  ['Pull requests', 'pullRequests'],
-  ['Reviews', 'reviews'],
-  ['Issues', 'issues'],
-  ['Comments', 'comments'],
-] as const satisfies readonly [string, keyof ActivityStats][]
-const visibleEventTypes = btcFossEventTypes.filter(type => showCommitActivity || type !== 'commit')
-const filterLabelClass = 'font-mono text-xs uppercase tracking-[0.18em] text-foreground/55'
+const filterLabelClass = 'font-mono text-xs uppercase tracking-wide text-foreground/65'
 const filterControlClass =
-  'h-11 rounded-md border border-foreground/12 bg-background px-4 font-mono text-xs text-foreground transition-colors hover:border-foreground/30 focus-visible:border-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
-const filterButtonClass = `${filterControlClass} inline-flex items-center justify-center uppercase tracking-[0.14em] text-foreground/65 aria-pressed:border-primary-light aria-pressed:text-primary-light`
-
-// UTC keeps static rendering and hydration stable across server and visitor time zones.
-const activityDateFormatter = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'medium',
-  timeZone: 'UTC',
-})
-
-const updatedDateFormatter = new Intl.DateTimeFormat('en-US', {
-  day: 'numeric',
-  hour: '2-digit',
-  hourCycle: 'h23',
-  minute: '2-digit',
-  month: 'short',
-  timeZone: 'UTC',
-  year: 'numeric',
-})
-
-const typeLabels: Record<BtcFossEventType, string> = {
-  pull_request: 'pull request',
-  issue: 'issue',
-  commit: 'commit',
-  review: 'review',
-  comment: 'comment',
-}
-
-const pluralTypeLabels: Record<BtcFossEventType, string> = {
-  pull_request: 'pull requests',
-  issue: 'issues',
-  commit: 'commits',
-  review: 'reviews',
-  comment: 'comments',
-}
+  'h-10 rounded-md border border-foreground/12 bg-background px-3 font-mono text-xs text-foreground transition-colors hover:border-foreground/30 focus-visible:border-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+const filterButtonClass = `${filterControlClass} inline-flex items-center justify-center uppercase tracking-wide text-foreground/65 aria-pressed:border-primary-light aria-pressed:text-primary-light`
+const metaClass = 'font-mono text-xs uppercase tracking-wide text-foreground/65'
 
 function EventTypeIcon({ type }: { type: BtcFossEventType }) {
   return (
@@ -118,493 +84,444 @@ function EventTypeIcon({ type }: { type: BtcFossEventType }) {
   )
 }
 
-function getTimestamp(value: string): number {
-  const timestamp = Date.parse(value)
-  return Number.isNaN(timestamp) ? 0 : timestamp
-}
-
-function parseDate(value: string): Date | null {
-  const timestamp = Date.parse(value)
-  return Number.isNaN(timestamp) ? null : new Date(timestamp)
-}
-
-function formatActivityDate(value: string): string {
-  const date = parseDate(value)
-
-  if (!date) {
-    return 'Unknown date'
-  }
-
-  return activityDateFormatter.format(date)
-}
-
-function formatUpdatedAt(value: string): string {
-  const date = parseDate(value)
-
-  if (!date) {
-    return 'Unknown date'
-  }
-
-  return `${updatedDateFormatter.format(date).replace(' at ', ', ')} UTC`
-}
-
-function repoOwner(repo: string): string {
-  return repo.split('/')[0] ?? repo
-}
-
-function uniqueSorted(values: string[]): string[] {
-  return [...new Set(values)].sort((first, second) => first.localeCompare(second))
-}
-
-function baseThreadTitle(event: BtcFossEvent): string {
-  return event.thread_title ?? event.title.replace(/^Commented on /, '').replace(/^Reviewed /, '')
-}
-
-function groupKey(event: BtcFossEvent): string {
-  // Comments collapse by GitHub thread. PRs, reviews, and issues stay visible rows.
-  if (event.event_type === 'comment' && event.thread_id) {
-    return `thread:${event.thread_id}`
-  }
-
-  return `${event.event_type}:${event.id}`
-}
-
-function groupTypeLabel(events: BtcFossEvent[], primary: BtcFossEvent): string {
-  return events.length > 1 ? pluralTypeLabels[primary.event_type] : typeLabels[primary.event_type]
-}
-
-function groupComposition(events: BtcFossEvent[]): string {
-  const primary = events[0]
-
-  if (!primary) {
-    return ''
-  }
-
-  return `${events.length} ${pluralTypeLabels[primary.event_type]}`
-}
-
-function groupTitle(events: BtcFossEvent[], primary: BtcFossEvent): string {
-  if (events.length === 1) {
-    return primary.title
-  }
-
-  return `${events.length} ${groupTypeLabel(events, primary)} on ${baseThreadTitle(primary)}`
-}
-
-function groupHref(events: BtcFossEvent[], primary: BtcFossEvent): string {
-  if (events.length > 1 && primary.thread_url) {
-    return primary.thread_url
-  }
-
-  return primary.url
-}
-
-function groupEvents(events: BtcFossEvent[]): ActivityGroup[] {
-  const groups = new Map<string, BtcFossEvent[]>()
-  const sortedEvents = events
-    .slice()
-    .sort((first, second) => getTimestamp(second.occurred_at) - getTimestamp(first.occurred_at))
-
-  for (const event of sortedEvents) {
-    const key = groupKey(event)
-    const group = groups.get(key)
-
-    if (group) {
-      group.push(event)
-    } else {
-      groups.set(key, [event])
-    }
-  }
-
-  return [...groups.entries()].flatMap(([key, group]) => {
-    const primary = group[0]
-
-    if (!primary) {
-      return []
-    }
-
-    return {
-      kind: group.length > 1 && primary.event_type === 'comment' ? 'comment_group' : 'single',
-      key,
-      primary,
-      events: group,
-      title: groupTitle(group, primary),
-      href: groupHref(group, primary),
-    }
-  })
-}
-
-function countByType(events: BtcFossEvent[], type: BtcFossEventType): number {
-  return events.reduce((count, event) => count + Number(event.event_type === type), 0)
-}
-
-function getActivityStats(events: BtcFossEvent[]): ActivityStats {
-  return {
-    pullRequests: countByType(events, 'pull_request'),
-    issues: countByType(events, 'issue'),
-    comments: countByType(events, 'comment'),
-    reviews: countByType(events, 'review'),
-  }
-}
-
-function visibleActivityEvents(events: BtcFossEvent[]): BtcFossEvent[] {
-  return showCommitActivity ? events : events.filter(event => event.event_type !== 'commit')
-}
-
-const statusLabels: Record<string, string> = {
-  MERGED: 'Merged',
-  OPEN: 'Open',
-  CLOSED: 'Closed',
-  APPROVED: 'Approved',
-  CHANGES_REQUESTED: 'Changes requested',
-  COMMENTED: 'Commented',
-}
-
-function formatStatusLabel(status: string): string {
-  const key = status.trim().toUpperCase()
-
-  if (key.length === 0) {
-    return ''
-  }
-
+function ExternalLinkIcon({ className }: { className?: string }) {
   return (
-    statusLabels[key] ??
-    key
-      .toLowerCase()
-      .split('_')
-      .filter(part => part.length > 0)
-      .map(part => `${part[0]?.toUpperCase() ?? ''}${part.slice(1)}`)
-      .join(' ')
+    <svg
+      className={`h-3.5 w-3.5 shrink-0 text-foreground/55 transition-colors group-hover:text-primary-light group-focus-within:text-primary-light ${className ?? ''}`}
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M6 3H3.5A1.5 1.5 0 0 0 2 4.5v8A1.5 1.5 0 0 0 3.5 14h8A1.5 1.5 0 0 0 13 12.5V10" />
+      <path d="M9 2h5v5" />
+      <path d="M14 2 7.5 8.5" />
+    </svg>
+  )
+}
+
+function FilterIcon() {
+  return (
+    <svg
+      className="h-4 w-4"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M2 3.5h12l-4.5 5.2V13l-3-1.5V8.7L2 3.5z" />
+    </svg>
   )
 }
 
 function StatusBadge({ status }: { status: string }) {
   const label = formatStatusLabel(status)
-
   if (label.length === 0) {
     return null
   }
 
+  const tone = statusTone(status)
+  const toneClass =
+    tone === 'positive'
+      ? 'border-primary/40 text-primary-light'
+      : tone === 'amber'
+        ? 'border-amber-400/40 text-amber-300'
+        : 'border-foreground/12 text-foreground/65'
+
   return (
-    <p className="w-fit rounded-md border border-foreground/12 px-3 py-1 font-mono text-xs uppercase tracking-[0.18em] text-foreground/65">
+    <span
+      className={`w-fit shrink-0 rounded border px-1.5 py-0.5 font-mono text-xs uppercase tracking-wide ${toneClass}`}
+    >
       {label}
-    </p>
+    </span>
   )
 }
 
-function ActivityGroupCard({ group }: { group: ActivityGroup }) {
-  const { primary } = group
-  const isCommentGroup = group.kind === 'comment_group'
+/** Compact type label for narrow meta rows (mobile). */
+function shortTypeLabel(thread: ActivityThread): string {
+  if (thread.type === 'pull_request') {
+    return thread.eventCount > 1 ? 'PRs' : 'PR'
+  }
+  return typeLabelForThread(thread)
+}
+
+function ActivityThreadRow({ thread }: { thread: ActivityThread }) {
+  const badge = eventCountBadge(thread)
+  const statusLabel = formatStatusLabel(thread.status)
+  const typeLabel = typeLabelForThread(thread)
+  const hasStatus = statusLabel.length > 0
 
   return (
-    <article className="rounded-md border border-foreground/12 bg-foreground/[0.03] px-5 py-5 transition-colors hover:border-foreground/25 hover:bg-foreground/[0.05]">
-      <div className="grid gap-4 tablet:grid-cols-[minmax(0,1fr)_auto] tablet:items-start">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-xs uppercase tracking-[0.16em] text-foreground/55">
-            <span className="inline-flex items-center gap-2">
-              <EventTypeIcon type={primary.event_type} />
-              {groupTypeLabel(group.events, primary)}
-            </span>
-            <span aria-hidden="true">/</span>
-            <span className="normal-case tracking-normal">{primary.repo}</span>
-            <span aria-hidden="true">/</span>
-            <span>{formatActivityDate(primary.occurred_at)}</span>
-          </div>
-          <h2 className="mt-3 text-xl font-semibold leading-snug text-foreground tablet:text-2xl">
-            <a
-              href={group.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-primary-light focus-visible:text-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              {group.title}
-              <span className="sr-only"> (opens in new tab)</span>
-            </a>
+    <article className="group relative px-3 py-3 transition-colors hover:bg-foreground/[0.05] focus-within:bg-foreground/[0.05] active:bg-foreground/[0.05]">
+      <a
+        href={thread.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="absolute inset-0 z-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+      >
+        <span className="sr-only">{thread.title} (opens in new tab)</span>
+      </a>
+
+      <div className="pointer-events-none relative z-10 min-w-0">
+        <div className="flex items-start gap-2">
+          <h2 className="min-w-0 flex-1 break-words text-lg font-semibold leading-snug text-foreground transition-colors group-hover:text-primary-light group-focus-within:text-primary-light tablet:text-xl">
+            {thread.title}
+            <ExternalLinkIcon className="ml-1.5 inline-block align-[-0.125em]" />
           </h2>
-        </div>
-        <div className="flex flex-wrap gap-2 tablet:justify-end">
-          {isCommentGroup ? (
-            <p className="w-fit rounded-md border border-foreground/12 px-3 py-1 font-mono text-xs uppercase tracking-[0.18em] text-foreground/65">
-              {groupComposition(group.events)}
-            </p>
+          {hasStatus ? (
+            <span className="hidden shrink-0 pt-0.5 tablet:inline-flex">
+              <StatusBadge status={thread.status} />
+            </span>
           ) : null}
-          {!isCommentGroup ? <StatusBadge status={primary.status} /> : null}
+        </div>
+
+        {/* Mobile: facts, then repo on its own line — no free wrap soup. */}
+        <div className="mt-1.5 grid gap-1 tablet:hidden">
+          {hasStatus ? <StatusBadge status={thread.status} /> : null}
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className={`inline-flex shrink-0 items-center gap-1.5 ${metaClass}`}>
+              <EventTypeIcon type={thread.type} />
+              {shortTypeLabel(thread)}
+            </span>
+            <span className="text-foreground/25" aria-hidden="true">
+              ·
+            </span>
+            <time className={`shrink-0 ${metaClass}`} dateTime={thread.latestTimestamp}>
+              {formatActivityDate(thread.latestTimestamp)}
+            </time>
+            {badge ? (
+              <>
+                <span className="text-foreground/25" aria-hidden="true">
+                  ·
+                </span>
+                <span className={`shrink-0 ${metaClass} rounded border border-foreground/12 px-1.5 py-0.5`}>
+                  {badge}
+                </span>
+              </>
+            ) : null}
+          </div>
+          <span className={`min-w-0 break-all ${metaClass} normal-case tracking-normal`}>{thread.repository}</span>
+        </div>
+
+        {/* Tablet+: single meta line. */}
+        <div className="mt-1.5 hidden min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1 tablet:flex">
+          <span className={`inline-flex shrink-0 items-center gap-1.5 ${metaClass}`}>
+            <EventTypeIcon type={thread.type} />
+            {typeLabel}
+          </span>
+          <span className={`min-w-0 break-all ${metaClass} normal-case tracking-normal`}>{thread.repository}</span>
+          <time className={`shrink-0 ${metaClass}`} dateTime={thread.latestTimestamp}>
+            {formatActivityDate(thread.latestTimestamp)}
+          </time>
+          {badge ? (
+            <span className={`shrink-0 ${metaClass} rounded border border-foreground/12 px-1.5 py-0.5`}>{badge}</span>
+          ) : null}
         </div>
       </div>
     </article>
   )
 }
 
-function ActivityStatsGrid({ stats }: { stats: ActivityStats }) {
-  return (
-    <dl className="mx-auto mt-12 grid max-w-4xl grid-cols-2 gap-3 tablet:grid-cols-4">
-      {statItems.map(([label, key]) => (
-        <div key={label} className="rounded-md border border-foreground/12 bg-foreground/[0.03] px-4 py-4 text-center">
-          <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-foreground/55 tablet:tracking-[0.18em]">
-            {label}
-          </dt>
-          <dd className="mt-2 text-3xl font-semibold leading-none text-foreground tablet:text-4xl">{stats[key]}</dd>
-        </div>
-      ))}
-    </dl>
-  )
-}
-
-function ActivityFilters({
-  typeFilter,
-  orgFilter,
-  repoFilter,
-  orgOptions,
-  repoOptions,
-  onTypeChange,
-  onOrgChange,
-  onRepoChange,
+function TypeOverview({
+  selected,
+  counts,
+  onChange,
 }: {
-  typeFilter: TypeFilter
-  orgFilter: string
-  repoFilter: string
-  orgOptions: string[]
-  repoOptions: string[]
-  onTypeChange: (value: TypeFilter) => void
-  onOrgChange: (value: string) => void
-  onRepoChange: (value: string) => void
+  selected: TypeFilter
+  counts: ReturnType<typeof overviewCounts>
+  onChange: (value: TypeFilter) => void
 }) {
   return (
-    <section className="mt-8 grid gap-5 border-y border-foreground/12 py-5">
-      <div>
-        <p id="btc-foss-type-filter" className={filterLabelClass}>
-          Type
-        </p>
-        <div role="group" aria-labelledby="btc-foss-type-filter" className="mt-3 flex flex-wrap gap-2">
-          {[
-            { label: 'All', value: allValue },
-            ...visibleEventTypes.map(type => ({ label: pluralTypeLabels[type], value: type })),
-          ].map(option => (
-            <button
-              key={option.value}
-              type="button"
-              aria-pressed={typeFilter === option.value}
-              onClick={() => onTypeChange(option.value)}
-              className={filterButtonClass}
-            >
-              <span className="inline-flex items-center gap-2">
-                {option.value === allValue ? null : <EventTypeIcon type={option.value} />}
-                {option.label}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
+    <div role="group" aria-label="Activity type" className="flex flex-wrap gap-2">
+      {overviewTypeOptions.map(option => {
+        const count = counts[option.value]
 
-      <div className="grid gap-5 tablet:grid-cols-[minmax(0,1fr)_minmax(14rem,22rem)]">
-        <div>
-          <p id="btc-foss-org-filter" className={filterLabelClass}>
-            Org
-          </p>
-          <div role="group" aria-labelledby="btc-foss-org-filter" className="mt-3 flex flex-wrap gap-2">
-            {[allValue, ...orgOptions].map(org => (
-              <button
-                key={org}
-                type="button"
-                aria-pressed={orgFilter === org}
-                onClick={() => onOrgChange(org)}
-                className={filterButtonClass}
-              >
-                {org === allValue ? 'All orgs' : <span className="normal-case tracking-normal">{org}</span>}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <label className={`grid content-start gap-3 ${filterLabelClass}`}>
-          Repo
-          <select
-            value={repoFilter}
-            onChange={event => onRepoChange(event.target.value)}
-            className={`${filterControlClass} w-full normal-case tracking-normal`}
-          >
-            <option value={allValue}>All repos</option>
-            {repoOptions.map(repo => (
-              <option key={repo} value={repo}>
-                {repo}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-    </section>
-  )
-}
-
-function ActivityList({
-  groups,
-  hasMore,
-  loadMoreRef,
-  onLoadMore,
-}: {
-  groups: ActivityGroup[]
-  hasMore: boolean
-  loadMoreRef: RefObject<HTMLDivElement | null>
-  onLoadMore: () => void
-}) {
-  if (groups.length === 0) {
-    return (
-      <div className="mt-5 rounded-md border border-foreground/12 bg-foreground/[0.03] px-6 py-8 text-center">
-        <p className="text-lg uppercase text-foreground">No activity matches these filters.</p>
-      </div>
-    )
-  }
-
-  return (
-    <>
-      <ol className="mt-5 grid gap-4">
-        {groups.map(group => (
-          <li key={group.key}>
-            <ActivityGroupCard group={group} />
-          </li>
-        ))}
-      </ol>
-
-      {hasMore ? (
-        <div ref={loadMoreRef} className="mt-8 flex justify-center">
+        return (
           <button
+            key={option.value}
             type="button"
-            onClick={onLoadMore}
-            className="rounded-md border border-foreground/12 px-4 py-3 font-mono text-xs uppercase tracking-[0.18em] text-foreground/65 transition-colors hover:border-foreground/30 hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            aria-label={`${option.label}: ${count}`}
+            aria-pressed={selected === option.value}
+            onClick={() => onChange(option.value)}
+            className="inline-flex h-9 items-center gap-2 rounded-md border border-foreground/12 bg-foreground/[0.03] px-3 transition-colors hover:border-foreground/30 focus-visible:border-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-pressed:border-primary-light aria-pressed:bg-foreground/[0.06]"
           >
-            Load more
+            <span
+              className={`font-mono text-xs uppercase tracking-wide ${
+                selected === option.value ? 'text-primary-light' : 'text-foreground/65'
+              }`}
+            >
+              <span className="tablet:hidden">{option.value === 'pull_request' ? 'PRs' : option.label}</span>
+              <span className="hidden tablet:inline">{option.label}</span>
+            </span>
+            <span className="font-mono text-xs text-foreground">{count}</span>
           </button>
-        </div>
-      ) : null}
-    </>
+        )
+      })}
+    </div>
   )
 }
 
-export function BitcoinFossActivityView({ events, generatedAt }: ActivityViewProps) {
+export function BitcoinFossActivityView({ events, generatedAt, profileUrl }: ActivityViewProps) {
+  const searchId = useId()
+  const orgId = useId()
+  const repoId = useId()
+  const projectDetailsId = useId()
+
   const [typeFilter, setTypeFilter] = useState<TypeFilter>(allValue)
+  const [search, setSearch] = useState('')
   const [orgFilter, setOrgFilter] = useState<string>(allValue)
   const [repoFilter, setRepoFilter] = useState<string>(allValue)
+  const [showProjectFilters, setShowProjectFilters] = useState(false)
   const [visibleCount, setVisibleCount] = useState(pageSize)
-  const loadMoreRef = useRef<HTMLDivElement | null>(null)
-  const lastAutoLoadScrollY = useRef(0)
-
-  const orgOptions = useMemo(() => uniqueSorted(events.map(event => repoOwner(event.repo))), [events])
-  const repoOptions = useMemo(() => {
-    const repos = events
-      .filter(event => orgFilter === allValue || repoOwner(event.repo) === orgFilter)
-      .map(event => event.repo)
-
-    return uniqueSorted(repos)
-  }, [events, orgFilter])
 
   const visibleEvents = useMemo(() => visibleActivityEvents(events), [events])
-  const stats = useMemo(() => getActivityStats(visibleEvents), [visibleEvents])
+  const orgOptions = useMemo(() => uniqueSorted(visibleEvents.map(event => repoOwner(event.repo))), [visibleEvents])
+  const repoOptions = useMemo(() => repositoryOptionsForOrg(visibleEvents, orgFilter), [visibleEvents, orgFilter])
+
+  const projectFilteredEvents = useMemo(
+    () =>
+      filterEventsByProjectAndSearch(visibleEvents, {
+        search,
+        organization: orgFilter,
+        repository: repoFilter,
+      }),
+    [visibleEvents, search, orgFilter, repoFilter],
+  )
+
+  const typeCounts = useMemo(() => overviewCounts(projectFilteredEvents), [projectFilteredEvents])
 
   const filteredEvents = useMemo(
     () =>
-      visibleEvents.filter(event => {
-        const matchesType = typeFilter === allValue || event.event_type === typeFilter
-        const matchesOrg = orgFilter === allValue || repoOwner(event.repo) === orgFilter
-        const matchesRepo = repoFilter === allValue || event.repo === repoFilter
-
-        return matchesType && matchesOrg && matchesRepo
+      filterEvents(visibleEvents, {
+        type: typeFilter,
+        search,
+        organization: orgFilter,
+        repository: repoFilter,
       }),
-    [orgFilter, repoFilter, typeFilter, visibleEvents],
+    [visibleEvents, typeFilter, search, orgFilter, repoFilter],
   )
 
-  const groups = useMemo(() => groupEvents(filteredEvents), [filteredEvents])
-  const visibleGroups = groups.slice(0, visibleCount)
-  const hasMore = visibleGroups.length < groups.length
-  const hasActiveFilters = typeFilter !== allValue || orgFilter !== allValue || repoFilter !== allValue
+  const threads = useMemo(() => groupEventsToThreads(filteredEvents), [filteredEvents])
+  const { visible, hasMore, nextPageSize } = paginateThreads(threads, visibleCount)
+  const monthSections = useMemo(() => groupThreadsByMonth(visible), [visible])
 
-  useEffect(() => {
+  const dateRange = useMemo(() => feedDateRange(visibleEvents), [visibleEvents])
+  const updatedLabel = formatUpdatedAt(generatedAt)
+
+  const hasActiveFilters =
+    typeFilter !== allValue || search.trim().length > 0 || orgFilter !== allValue || repoFilter !== allValue
+
+  function resetPagination() {
     setVisibleCount(pageSize)
-    lastAutoLoadScrollY.current = window.scrollY
-  }, [orgFilter, repoFilter, typeFilter])
+  }
 
-  useEffect(() => {
-    const loadMoreElement = loadMoreRef.current
+  function selectType(value: TypeFilter) {
+    setTypeFilter(value)
+    resetPagination()
+  }
 
-    if (!loadMoreElement || !hasMore) {
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      entries => {
-        if (!entries[0]?.isIntersecting) {
-          return
-        }
-
-        const currentScrollY = window.scrollY
-
-        if (currentScrollY <= lastAutoLoadScrollY.current + 64) {
-          return
-        }
-
-        lastAutoLoadScrollY.current = currentScrollY
-        setVisibleCount(count => Math.min(count + pageSize, groups.length))
-      },
-      { rootMargin: '100px' },
-    )
-
-    observer.observe(loadMoreElement)
-
-    return () => observer.disconnect()
-  }, [groups.length, hasMore])
+  function selectSearch(value: string) {
+    setSearch(value)
+    resetPagination()
+  }
 
   function selectOrg(org: string) {
     setOrgFilter(org)
-    setRepoFilter(allValue)
+    setRepoFilter(resolveRepositoryAfterOrgChange(visibleEvents, org, repoFilter))
+    resetPagination()
+  }
+
+  function selectRepo(repo: string) {
+    setRepoFilter(repo)
+    resetPagination()
   }
 
   function resetFilters() {
     setTypeFilter(allValue)
+    setSearch('')
     setOrgFilter(allValue)
     setRepoFilter(allValue)
+    setShowProjectFilters(false)
+    resetPagination()
   }
+
+  const projectSelects = (
+    <div className="grid gap-4 tablet:grid-cols-2">
+      <label htmlFor={orgId} className={`grid content-start gap-2 ${filterLabelClass}`}>
+        Organization
+        <select
+          id={orgId}
+          value={orgFilter}
+          onChange={event => selectOrg(event.target.value)}
+          className={`${filterControlClass} w-full normal-case tracking-normal`}
+        >
+          <option value={allValue}>All organizations</option>
+          {orgOptions.map(org => (
+            <option key={org} value={org}>
+              {org}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label htmlFor={repoId} className={`grid content-start gap-2 ${filterLabelClass}`}>
+        Repository
+        <select
+          id={repoId}
+          value={repoFilter}
+          onChange={event => selectRepo(event.target.value)}
+          className={`${filterControlClass} w-full normal-case tracking-normal`}
+        >
+          <option value={allValue}>All repositories</option>
+          {repoOptions.map(repo => (
+            <option key={repo} value={repo}>
+              {repo}
+            </option>
+          ))}
+        </select>
+      </label>
+    </div>
+  )
 
   return (
     <>
-      <p className="mt-4 text-center font-mono text-[0.68rem] uppercase tracking-[0.12em] text-foreground/50 tablet:text-xs tablet:tracking-[0.18em]">
-        Feed updated {formatUpdatedAt(generatedAt)}
-      </p>
+      <div className="mt-3 text-center">
+        <p className="font-mono text-xs leading-relaxed tracking-wide text-foreground/65">
+          {dateRange ? <span className="inline-block">{dateRange.label}</span> : null}
+          {dateRange && updatedLabel ? (
+            <span className="mx-1.5 inline-block text-foreground/35" aria-hidden="true">
+              ·
+            </span>
+          ) : null}
+          {updatedLabel ? <span className="inline-block">Updated {updatedLabel}</span> : null}
+          {dateRange || updatedLabel ? (
+            <span className="mx-1.5 inline-block text-foreground/35" aria-hidden="true">
+              ·
+            </span>
+          ) : null}
+          <a
+            href={profileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block text-primary-light transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            GitHub profile
+            <span className="sr-only"> (opens in new tab)</span>
+          </a>
+        </p>
+      </div>
 
-      <ActivityStatsGrid stats={stats} />
+      <section className="mt-6" aria-label="Activity overview and filters">
+        <TypeOverview selected={typeFilter} counts={typeCounts} onChange={selectType} />
 
-      <ActivityFilters
-        typeFilter={typeFilter}
-        orgFilter={orgFilter}
-        repoFilter={repoFilter}
-        orgOptions={orgOptions}
-        repoOptions={repoOptions}
-        onTypeChange={setTypeFilter}
-        onOrgChange={selectOrg}
-        onRepoChange={setRepoFilter}
-      />
+        <div className="mt-3 border-y border-foreground/12 py-3">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+            <label htmlFor={searchId} className="min-w-0">
+              <span className="sr-only">Search activity</span>
+              <input
+                id={searchId}
+                type="search"
+                value={search}
+                onChange={event => selectSearch(event.target.value)}
+                placeholder="Title or repository"
+                autoComplete="off"
+                className={`${filterControlClass} w-full normal-case tracking-normal placeholder:text-foreground/40`}
+              />
+            </label>
+            <button
+              type="button"
+              aria-label={
+                orgFilter !== allValue || repoFilter !== allValue ? 'Project filters (active)' : 'Project filters'
+              }
+              aria-expanded={showProjectFilters}
+              aria-controls={projectDetailsId}
+              onClick={() => setShowProjectFilters(current => !current)}
+              className={`${filterButtonClass} relative h-10 w-10 shrink-0 px-0`}
+            >
+              <FilterIcon />
+              {orgFilter !== allValue || repoFilter !== allValue ? (
+                <span
+                  className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-primary-light"
+                  aria-hidden="true"
+                />
+              ) : null}
+            </button>
+          </div>
 
-      <div className="mt-10 flex flex-wrap items-center justify-between gap-3">
-        {groups.length > 0 ? (
-          <p className="font-mono text-xs uppercase tracking-[0.18em] text-foreground/55">
-            Showing {groups.length} contributions
-          </p>
-        ) : null}
-        {hasActiveFilters ? (
+          {showProjectFilters ? (
+            <div id={projectDetailsId} className="mt-3">
+              {projectSelects}
+            </div>
+          ) : null}
+        </div>
+      </section>
+
+      {hasActiveFilters && threads.length > 0 ? (
+        <div className="mt-5 flex justify-end">
           <button
             type="button"
             onClick={resetFilters}
-            className="font-mono text-xs uppercase tracking-[0.18em] text-primary-light transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="font-mono text-xs uppercase tracking-wide text-primary-light transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            Reset filters
+            Clear filters
           </button>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
 
-      <ActivityList
-        groups={visibleGroups}
-        hasMore={hasMore}
-        loadMoreRef={loadMoreRef}
-        onLoadMore={() => setVisibleCount(count => Math.min(count + pageSize, groups.length))}
-      />
+      {threads.length === 0 ? (
+        <div className="mt-5 rounded-md border border-foreground/12 bg-foreground/[0.03] px-4 py-8 text-center tablet:px-6">
+          <p className="text-base uppercase leading-snug text-foreground tablet:text-lg">
+            No activity matches these filters.
+          </p>
+          <button
+            type="button"
+            onClick={resetFilters}
+            className="mt-4 font-mono text-xs uppercase tracking-wide text-primary-light transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Clear filters
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="mt-5 grid gap-8">
+            {monthSections.map(section => (
+              <section key={section.key} aria-labelledby={`month-${section.key}`}>
+                <h3
+                  id={`month-${section.key}`}
+                  className="mb-4 font-mono text-xs uppercase tracking-wide text-foreground/65"
+                >
+                  {section.heading}
+                </h3>
+                <ol className="divide-y divide-foreground/12 overflow-hidden rounded-md border border-foreground/12 bg-foreground/[0.03]">
+                  {section.threads.map(thread => (
+                    <li key={thread.key}>
+                      <ActivityThreadRow thread={thread} />
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            ))}
+          </div>
+
+          {hasMore ? (
+            <div className="mt-8 flex justify-center">
+              <button
+                type="button"
+                onClick={() => setVisibleCount(count => Math.min(count + pageSize, threads.length))}
+                className="rounded-md border border-foreground/12 px-4 py-3 font-mono text-xs uppercase tracking-wide text-foreground/65 transition-colors hover:border-foreground/30 hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                Show next {nextPageSize}
+              </button>
+            </div>
+          ) : null}
+        </>
+      )}
     </>
   )
 }
