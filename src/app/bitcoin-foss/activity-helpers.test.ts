@@ -355,7 +355,7 @@ describe('status helpers', () => {
     expect(statusTone('MERGED')).toBe('positive')
     expect(statusTone('OPEN')).toBe('positive')
     expect(statusTone('APPROVED')).toBe('positive')
-    expect(statusTone('CHANGES_REQUESTED')).toBe('amber')
+    expect(statusTone('CHANGES_REQUESTED')).toBe('positive')
     expect(statusTone('CLOSED')).toBe('neutral')
     expect(statusTone('COMMENTED')).toBe('neutral')
     expect(statusTone('')).toBe('neutral')

@@ -128,11 +128,7 @@ function StatusBadge({ status }: { status: string }) {
 
   const tone = statusTone(status)
   const toneClass =
-    tone === 'positive'
-      ? 'border-primary/40 text-primary-light'
-      : tone === 'amber'
-        ? 'border-amber-400/40 text-amber-300'
-        : 'border-foreground/12 text-foreground/65'
+    tone === 'positive' ? 'border-primary/40 text-primary-light' : 'border-foreground/12 text-foreground/65'
 
   return (
     <span

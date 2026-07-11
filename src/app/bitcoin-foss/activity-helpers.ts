@@ -64,12 +64,10 @@ const statusLabels: Record<string, string> = {
   COMMENTED: 'Commented',
 }
 
-/** Positive statuses — teal/primary. */
-const positiveStatuses = new Set(['MERGED', 'OPEN', 'APPROVED'])
-/** Attention statuses — amber. */
-const amberStatuses = new Set(['CHANGES_REQUESTED'])
+/** Highlighted statuses — teal/primary. Everything else is neutral. */
+const positiveStatuses = new Set(['MERGED', 'OPEN', 'APPROVED', 'CHANGES_REQUESTED'])
 
-export type StatusTone = 'positive' | 'amber' | 'neutral'
+export type StatusTone = 'positive' | 'neutral'
 
 // UTC keeps static rendering and hydration stable across server and visitor time zones.
 // Short form for row metadata; month headings already supply year context.
@@ -249,13 +247,7 @@ export function formatStatusLabel(status: string): string {
 
 export function statusTone(status: string): StatusTone {
   const key = status.trim().toUpperCase()
-  if (positiveStatuses.has(key)) {
-    return 'positive'
-  }
-  if (amberStatuses.has(key)) {
-    return 'amber'
-  }
-  return 'neutral'
+  return positiveStatuses.has(key) ? 'positive' : 'neutral'
 }
 
 export function eventCountBadge(thread: ActivityThread): string | null {
