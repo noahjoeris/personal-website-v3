@@ -1,81 +1,61 @@
 'use client'
 
 import { motion, useReducedMotion } from 'framer-motion'
-import { Fragment } from 'react'
 
 import { aboutData } from '@/data/about-data'
 
-const REVEAL_EASE = [0.19, 1, 0.22, 1] as const
-
 export function AboutValues() {
-  const { section, topic, items } = aboutData.values
+  const { title, items, closer } = aboutData.values
   const shouldReduceMotion = useReducedMotion()
 
   return (
     <section
       aria-labelledby="about-values-title"
-      className="relative isolate overflow-hidden bg-background px-6 py-24 tablet:px-10 tablet:py-32 desktop:px-16"
+      className="relative overflow-hidden border-t border-foreground/15 px-6 py-24 tablet:px-10 tablet:py-32 desktop:px-16"
     >
-      <div className="mx-auto w-full max-w-9xl">
-        <div className="border-b border-foreground/15 pb-6 tablet:pb-8">
-          <p className="font-mono text-xs uppercase tracking-[0.28em] text-foreground/55 tablet:text-sm">
-            <span className="text-primary">{section}</span>
-            <span className="mx-3 inline-block h-px w-8 bg-foreground/40 align-middle" />
-            <span>{topic}</span>
-          </p>
+      <div className="relative mx-auto w-full max-w-[88rem]">
+        <div className="border-b border-foreground/20 pb-12 tablet:pb-16">
           <h2
             id="about-values-title"
-            className="mt-4 text-6xl uppercase leading-[0.88] tracking-tight text-foreground tablet:text-7xl desktop:text-[clamp(5rem,9vw,10rem)]"
+            className="text-6xl uppercase leading-[0.84] tracking-tight tablet:text-8xl desktop:text-[8.5rem]"
           >
-            Code of <span className="text-primary">conduct</span>
+            {title}
           </h2>
         </div>
 
-        <ol className="mt-8 tablet:mt-12">
+        <ol className="grid border-l border-foreground/20 tablet:grid-cols-2">
           {items.map((item, index) => (
-            <Fragment key={item.numeral}>
-              <motion.li
-                initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.7, delay: index * 0.06, ease: REVEAL_EASE }}
-                className="group grid gap-4 py-10 tablet:grid-cols-12 tablet:gap-8 tablet:py-14"
+            <motion.li
+              key={item.numeral}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.7, delay: index * 0.08, ease: 'easeOut' }}
+              className="relative min-h-80 overflow-hidden border-b border-r border-foreground/20 p-7 tablet:min-h-96 tablet:p-10"
+            >
+              <span
+                aria-hidden
+                className="absolute -bottom-8 right-3 font-mono text-[11rem] leading-none text-primary/[0.08] tablet:text-[15rem]"
               >
-                <div className="flex items-baseline gap-4 tablet:col-span-3 tablet:flex-col tablet:gap-2">
-                  <span className="font-mono text-xs uppercase tracking-[0.28em] text-foreground/55">
-                    {String(index + 1).padStart(2, '0')} / 04
-                  </span>
-                  <span className="font-mono text-7xl leading-none text-primary tablet:text-[clamp(5rem,9vw,9rem)]">
-                    {item.numeral}
-                  </span>
-                </div>
-
-                <div className="tablet:col-span-9">
-                  <h3 className="text-5xl uppercase leading-[0.88] tracking-tight text-foreground tablet:text-7xl desktop:text-[clamp(4rem,7vw,7.5rem)]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-4 font-mono text-sm uppercase tracking-[0.2em] text-primary tablet:text-base">
-                    “{item.epigram}”
-                  </p>
-                  <p className="mt-5 max-w-2xl text-lg leading-relaxed text-foreground/80 tablet:text-xl">
-                    {item.description}
-                  </p>
-                </div>
-              </motion.li>
-
-              {index < items.length - 1 && (
-                <motion.div
-                  aria-hidden
-                  initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scaleX: 0 }}
-                  whileInView={{ opacity: 1, scaleX: 1 }}
-                  viewport={{ once: true, amount: 0.9 }}
-                  transition={{ duration: 1.1, ease: 'easeOut' }}
-                  className="h-px origin-left bg-foreground/25"
-                />
-              )}
-            </Fragment>
+                {item.numeral}
+              </span>
+              <span className="font-mono text-xs uppercase tracking-[0.24em] text-primary-light">
+                [{String(index + 1).padStart(2, '0')}]
+              </span>
+              <h3 className="mt-12 text-5xl uppercase leading-none tablet:text-6xl">{item.title}</h3>
+              <p className="mt-5 font-mono text-sm uppercase tracking-[0.16em] text-primary-light">“{item.epigram}”</p>
+              <p className="relative mt-6 max-w-xl text-lg leading-relaxed text-foreground/70 tablet:text-xl">
+                {item.description}
+              </p>
+            </motion.li>
           ))}
         </ol>
+
+        <div className="mt-24 border-t border-foreground/20 pt-7 tablet:mt-32">
+          <p className="text-balance text-4xl uppercase leading-none text-foreground/90 tablet:text-6xl">
+            {closer[0]} <span className="text-primary-light">{closer[1]}</span>
+          </p>
+        </div>
       </div>
     </section>
   )

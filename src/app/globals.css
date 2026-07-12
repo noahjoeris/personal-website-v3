@@ -75,6 +75,37 @@ html:not(.js-hydrated) [style*="opacity:0"] {
 }
 
 @layer components {
+  .about-hero-portrait {
+    width: 82%;
+    max-width: 18rem;
+  }
+
+  .about-bitcoin-artwork {
+    width: 74%;
+    max-width: 26rem;
+  }
+
+  @media (min-width: 48rem) and (max-width: 63.999rem) {
+    .about-hero-portrait {
+      width: 72%;
+      max-width: 26rem;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .about-hero-portrait {
+      width: 100%;
+      max-width: 36rem;
+    }
+
+    .about-bitcoin-artwork {
+      width: 100%;
+      max-width: none;
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
   .blog-prose {
     margin-top: 2.5rem;
     max-width: none;

@@ -3,59 +3,75 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import Image from 'next/image'
 
-import { Section } from '@/components/section'
-import { SectionHeading } from '@/components/section-heading'
 import { aboutData } from '@/data/about-data'
 
 export function AboutInterests() {
-  const { section, eyebrow, title, items } = aboutData.interests
+  const { title, items } = aboutData.interests
   const shouldReduceMotion = useReducedMotion()
 
   return (
-    <Section aria-labelledby="about-interests-title">
-      <div className="mx-auto w-full max-w-9xl">
-        <div className="mb-10 border-b border-foreground/15 pb-5 font-mono text-xs uppercase tracking-[0.28em] text-foreground/55 tablet:text-sm">
-          <span className="inline-flex items-center gap-3">
-            <span className="text-primary">{section}</span>
-            <span className="hidden h-px w-8 bg-foreground/40 tablet:inline-block" />
-            <span>Off the keyboard</span>
-          </span>
+    <section
+      aria-labelledby="about-interests-title"
+      className="relative overflow-hidden px-6 py-24 tablet:px-10 tablet:py-32 desktop:px-16"
+    >
+      <div className="mx-auto w-full max-w-[88rem]">
+        <div className="border-b border-foreground/20 pb-12 tablet:pb-16">
+          <div>
+            <h2
+              id="about-interests-title"
+              className="text-balance text-6xl uppercase leading-[0.84] tracking-tight tablet:text-8xl desktop:text-[8.5rem]"
+            >
+              {title}
+            </h2>
+          </div>
         </div>
-        <SectionHeading eyebrow={eyebrow} title={title} className="mb-14 tablet:mb-20" />
 
-        <div className="grid gap-10 tablet:grid-cols-3 tablet:gap-8 desktop:gap-12">
+        <div className="mt-16 grid gap-8 tablet:mt-24 tablet:grid-cols-12 tablet:items-start">
           {items.map((item, index) => (
             <motion.article
-              key={item.title}
-              initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 32 }}
+              key={item.number}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 35 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.7, delay: index * 0.1, ease: 'easeOut' }}
-              className="group flex flex-col"
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.75, delay: index * 0.1, ease: 'easeOut' }}
+              className={
+                index === 0
+                  ? 'group mx-auto w-full max-w-[17rem] tablet:col-span-5 tablet:mx-0 tablet:max-w-none'
+                  : index === 1
+                    ? 'group mx-auto w-full max-w-[15rem] tablet:col-span-3 tablet:mx-0 tablet:mt-24 tablet:max-w-none'
+                    : 'group mx-auto w-full max-w-[17rem] tablet:col-span-4 tablet:mx-0 tablet:mt-10 tablet:max-w-none'
+              }
             >
-              {/* Inline `position` safeguards against Tailwind not applying: a fill image without a
-                  positioned ancestor would cover the whole viewport. */}
               <div
-                style={{ position: 'relative' }}
-                className="relative mx-auto aspect-[4/5] w-3/4 overflow-hidden border border-foreground/15"
+                className={
+                  index === 1
+                    ? 'relative aspect-[3/5] overflow-hidden border border-foreground/20'
+                    : 'relative aspect-[4/5] overflow-hidden border border-foreground/20'
+                }
               >
                 <Image
                   src={item.imgSrc}
                   alt=""
                   fill
-                  sizes="(max-width: 767px) 100vw, 32vw"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                  sizes="(max-width: 767px) 100vw, 42vw"
+                  className="object-cover grayscale-[35%] contrast-110 transition duration-700 ease-out group-hover:scale-[1.035] group-hover:grayscale-0"
                 />
-                <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-background/55 via-transparent to-transparent" />
-                <span className="absolute bottom-4 left-5 text-3xl uppercase tracking-tight text-foreground tablet:text-4xl">
-                  {item.title}
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent"
+                />
+                <span className="absolute left-5 top-5 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/70 tablet:text-xs">
+                  [{item.number}]
                 </span>
+                <h3 className="absolute bottom-5 left-5 text-4xl uppercase leading-none tablet:text-5xl">
+                  {item.title}
+                </h3>
               </div>
-              <p className="mt-5 text-base leading-relaxed text-foreground/80 tablet:text-lg">{item.description}</p>
+              <p className="mt-5 max-w-md text-lg leading-relaxed text-foreground/65">{item.description}</p>
             </motion.article>
           ))}
         </div>
       </div>
-    </Section>
+    </section>
   )
 }

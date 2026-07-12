@@ -1,167 +1,102 @@
 'use client'
 
 import { motion, useReducedMotion } from 'framer-motion'
+import Image from 'next/image'
 
 import { aboutData } from '@/data/about-data'
 
 const REVEAL_EASE = [0.19, 1, 0.22, 1] as const
 
 export function AboutManifesto() {
-  const { section, topic, primary, rule, declaration, pillars, closer, signature } = aboutData.manifesto
+  const { title, body, conviction, closer, principles, signoff, imgSrc } = aboutData.manifesto
   const shouldReduceMotion = useReducedMotion()
 
   return (
     <section
       aria-labelledby="about-manifesto-title"
-      className="relative isolate overflow-hidden bg-background px-6 py-28 tablet:px-10 tablet:py-36 desktop:px-16 desktop:py-44"
+      className="relative isolate overflow-hidden border-y border-foreground/15 bg-[#021d1c]"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.06]"
-        style={{
-          backgroundImage:
-            'repeating-linear-gradient(90deg, transparent 0 calc(100% / 12 - 1px), color-mix(in srgb, var(--color-foreground) 60%, transparent) calc(100% / 12 - 1px) calc(100% / 12))',
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[36rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,var(--color-primary-dark)_0%,transparent_70%)] opacity-25 blur-3xl"
+        className="absolute inset-0 -z-10 opacity-30 bg-[radial-gradient(75%_65%_at_70%_35%,var(--color-primary-dark)_0%,transparent_75%)]"
       />
 
-      <div className="mx-auto w-full max-w-7xl">
-        <div className="border-b border-foreground/15 pb-5 font-mono text-xs uppercase tracking-[0.28em] text-foreground/55 tablet:text-sm">
-          <span className="inline-flex items-center gap-3">
-            <span className="text-primary">{section}</span>
-            <span className="hidden h-px w-8 bg-foreground/40 tablet:inline-block" />
-            <span>{topic}</span>
-          </span>
-        </div>
-
-        <h2 id="about-manifesto-title" className="sr-only">
-          {rule}
-        </h2>
-
-        <motion.p
-          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.8, ease: REVEAL_EASE }}
-          className="mt-12 font-mono text-xs uppercase tracking-[0.32em] text-foreground/55 tablet:mt-16"
-        >
-          A mission, not a job.
-        </motion.p>
-
+      <div className="mx-auto grid w-full max-w-[96rem] desktop:grid-cols-2">
         <motion.div
-          initial="hidden"
-          whileInView="visible"
+          initial={shouldReduceMotion ? false : { opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.25 }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
-          }}
-          className="mt-4 uppercase leading-[0.92] tracking-tight text-foreground"
-        >
-          {primary.map((line, i) => {
-            const isHighlight = line === 'freedom.' || line === 'fiat system.'
-            return (
-              <motion.p
-                key={`${i}-${line}`}
-                variants={{
-                  hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 28 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: REVEAL_EASE } },
-                }}
-                className={
-                  isHighlight
-                    ? 'text-primary text-[clamp(3.2rem,9vw,9rem)] tablet:pl-12 desktop:pl-24'
-                    : 'text-[clamp(3.2rem,9vw,9rem)]'
-                }
-              >
-                {line}
-              </motion.p>
-            )
-          })}
-        </motion.div>
-
-        <div className="my-14 flex items-center gap-6 tablet:my-20">
-          <motion.span
-            aria-hidden
-            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scaleX: 0 }}
-            whileInView={{ opacity: 1, scaleX: 1 }}
-            viewport={{ once: true, amount: 0.8 }}
-            transition={{ duration: 1, ease: 'easeOut' }}
-            className="h-px flex-1 origin-left bg-foreground/30"
-          />
-          <span className="font-mono text-xs uppercase tracking-[0.3em] text-foreground/55">§</span>
-          <motion.span
-            aria-hidden
-            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scaleX: 0 }}
-            whileInView={{ opacity: 1, scaleX: 1 }}
-            viewport={{ once: true, amount: 0.8 }}
-            transition={{ duration: 1, ease: 'easeOut' }}
-            className="h-px flex-1 origin-right bg-foreground/30"
-          />
-        </div>
-
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.25 }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.08 } },
-          }}
-          className="grid gap-10 tablet:grid-cols-12 tablet:gap-12"
-        >
-          <div className="tablet:col-span-7">
-            {declaration.map((line, i) => (
-              <motion.p
-                key={`${i}-${line}`}
-                variants={{
-                  hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 24 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: REVEAL_EASE } },
-                }}
-                className="text-balance uppercase leading-[0.98] tracking-tight text-foreground/95 text-[clamp(2.4rem,5.5vw,5rem)]"
-              >
-                {line}
-              </motion.p>
-            ))}
-          </div>
-
-          <motion.ul
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.2 } },
-            }}
-            className="tablet:col-span-5 tablet:border-l tablet:border-foreground/15 tablet:pl-8"
-          >
-            {pillars.map((pillar, i) => (
-              <motion.li
-                key={pillar}
-                variants={{
-                  hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: -12 },
-                  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: 'easeOut' } },
-                }}
-                className="flex items-baseline gap-4 py-2 text-xl leading-tight text-foreground tablet:text-2xl"
-              >
-                <span className="font-mono text-xs text-primary tabular-nums">0{i + 1}</span>
-                <span>{pillar}</span>
-              </motion.li>
-            ))}
-          </motion.ul>
-        </motion.div>
-
-        <motion.div
-          initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.9, ease: REVEAL_EASE }}
-          className="mt-20 flex flex-col gap-4 border-t border-foreground/15 pt-10 tablet:mt-28 tablet:flex-row tablet:items-end tablet:justify-between"
+          className="about-bitcoin-artwork relative mx-auto aspect-[2/3] self-start overflow-hidden border-b border-foreground/15 bg-background desktop:border-b-0 desktop:border-r"
         >
-          <p className="text-balance uppercase leading-[0.95] tracking-tight text-foreground text-[clamp(2.5rem,7vw,6rem)]">
-            {closer}
+          <Image
+            src={imgSrc}
+            alt="Illustration of a person carrying a flaming Bitcoin torch"
+            fill
+            sizes="(max-width: 1023px) 100vw, 50vw"
+            className="object-contain grayscale contrast-125"
+          />
+          <div aria-hidden className="absolute inset-0 bg-primary-dark/45 mix-blend-color" />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-linear-to-t from-[#021d1c] via-transparent to-background/20"
+          />
+          <p className="absolute bottom-6 left-6 font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/65 tablet:bottom-10 tablet:left-10 tablet:text-xs">
+            Protect financial freedom / Challenge the broken fiat system
           </p>
-          <p className="font-mono text-xs uppercase tracking-[0.3em] text-foreground/55 tablet:text-sm">{signature}</p>
         </motion.div>
+
+        <div className="flex flex-col px-6 py-20 tablet:px-10 tablet:py-28 desktop:px-16 desktop:py-24">
+          <h2 id="about-manifesto-title" className="uppercase leading-[0.8] tracking-[-0.04em]">
+            <span className="block text-[clamp(4.5rem,9vw,9rem)]">{title[0]}</span>
+            <span className="ml-[0.15em] block text-primary-light text-[clamp(4.5rem,9vw,9rem)]">{title[1]}</span>
+          </h2>
+
+          <motion.p
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.75, ease: 'easeOut' }}
+            className="mt-12 max-w-2xl text-2xl leading-tight text-foreground tablet:text-3xl"
+          >
+            {body}
+          </motion.p>
+          <motion.p
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.75, delay: 0.1, ease: 'easeOut' }}
+            className="mt-6 max-w-2xl text-lg leading-relaxed text-foreground/70 tablet:text-xl"
+          >
+            {conviction}
+          </motion.p>
+
+          <motion.p
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.75, delay: 0.15, ease: 'easeOut' }}
+            className="mt-6 max-w-2xl text-lg leading-relaxed text-foreground/70 tablet:text-xl"
+          >
+            {closer}
+          </motion.p>
+
+          <ol className="mt-14 grid border-l border-t border-foreground/20 tablet:grid-cols-2">
+            {principles.map(principle => (
+              <li
+                key={principle.number}
+                className="min-h-32 border-b border-r border-foreground/20 p-5 last:tablet:col-span-2 tablet:min-h-40 tablet:p-7"
+              >
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary-light tablet:text-xs">
+                  [{principle.number}]
+                </span>
+                <p className="mt-5 text-2xl uppercase leading-tight tablet:text-3xl">{principle.title}</p>
+              </li>
+            ))}
+          </ol>
+
+          <p className="mt-12 text-4xl uppercase leading-none text-primary-light tablet:text-5xl">{signoff}</p>
+        </div>
       </div>
     </section>
   )

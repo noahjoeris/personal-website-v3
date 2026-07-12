@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 
 import { Navbar } from '@/components/navbar'
-import { AboutBitcoin } from '@/sections/about/bitcoin'
 import { AboutHero } from '@/sections/about/hero'
 import { AboutInterests } from '@/sections/about/interests'
 import { AboutManifesto } from '@/sections/about/manifesto'
@@ -21,7 +20,6 @@ export default function AboutPage() {
       <AboutHero />
       <AboutStory />
       <AboutManifesto />
-      <AboutBitcoin />
       <AboutInterests />
       <AboutValues />
     </main>

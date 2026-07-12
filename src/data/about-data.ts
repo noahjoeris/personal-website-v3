@@ -1,7 +1,13 @@
 export type AboutInterest = {
+  number: string
   title: string
   description: string
   imgSrc: `/images/about/${string}`
+}
+
+export type AboutPrinciple = {
+  number: string
+  title: string
 }
 
 export type AboutValue = {
@@ -11,149 +17,118 @@ export type AboutValue = {
   description: string
 }
 
-export type AboutMeta = {
-  label: string
-  value: string
-}
-
 export type AboutChapter = {
-  num: string
+  number: string
   period: string
-  tag: string
   place: string
+  title: string
   body: string
 }
 
 export type AboutData = {
   hero: {
-    section: string
-    topic: string
     name: string
-    role: string
+    title: readonly [string, string]
+    intro: string
     portraitImgSrc: `/images/about/${string}`
-    figLabel: string
-    meta: readonly AboutMeta[]
     status: string
+    signals: readonly string[]
   }
   story: {
-    section: string
-    topic: string
+    title: string
+    introduction: string
     chapters: readonly AboutChapter[]
   }
   manifesto: {
-    section: string
-    topic: string
-    primary: readonly string[]
-    rule: string
-    declaration: readonly string[]
-    pillars: readonly string[]
-    closer: string
-    signature: string
-  }
-  bitcoin: {
-    section: string
-    eyebrow: string
-    title: string
-    lead: string
+    title: readonly [string, string]
     body: string
+    conviction: string
     closer: string
-    primaryImgSrc: `/images/about/${string}`
-    secondaryImgSrc: `/images/about/${string}`
+    principles: readonly AboutPrinciple[]
+    signoff: string
+    imgSrc: `/images/about/${string}`
   }
   interests: {
-    section: string
-    eyebrow: string
     title: string
     items: readonly AboutInterest[]
   }
   values: {
-    section: string
-    topic: string
+    title: string
     items: readonly AboutValue[]
+    closer: readonly [string, string]
   }
 }
 
 export const aboutData = {
   hero: {
-    section: '§ 01',
-    topic: 'Identity',
     name: 'Noah Joeris',
-    role: 'Full-Stack Software Engineer · Bitcoin-only',
+    title: ['Noah', 'Joeris'],
+    intro: 'Bitcoin Software Engineer',
     portraitImgSrc: '/images/about/me.webp',
-    figLabel: 'Fig. 01 · N.J., on record 2026',
-    meta: [
-      { label: 'Role', value: 'Full-Stack Software Engineer' },
-      { label: 'Field', value: 'Bitcoin Open Source' },
-      { label: 'Stack', value: 'React · Rust · Bitcoin' },
-    ],
-    status: 'Status: Building · Location: Unknown · Mode: Open Source',
+    status: 'Status: Building',
+    signals: ['Bitcoin open source', 'React + Rust'],
   },
   story: {
-    section: '§ 02',
-    topic: 'The Path',
+    title: 'Career path.',
+    introduction: 'From Airbus cybersecurity and Web3 to Bitcoin open source.',
     chapters: [
       {
-        num: '01',
-        period: '2019 / 2024',
-        tag: 'Pre-crypto',
-        place: 'Airbus · Germany',
+        number: '01',
+        period: '2019—2024',
+        place: 'Germany',
+        title: 'Airbus',
         body: 'Almost five years at Airbus. Built an automated cyber-attack detection tool for the Security Operations Center and a company-wide innovation knowledge platform. Learned to ship serious software inside a serious organisation.',
       },
       {
-        num: '02',
-        period: '2024 / 2026',
-        tag: 'Web3',
-        place: 'Polkadot · Hong Kong / Remote',
+        number: '02',
+        period: '2024—2026',
+        place: 'Remote',
+        title: 'Polkadot',
         body: 'Polkadot Blockchain Academy graduate. Built Turtle, a universal bridge that moved over $10M, along with early blockspace marketplace tooling. Learned what works, what doesn’t, and where the real signal is. It’s why I’m Bitcoin-only now.',
       },
       {
-        num: '03',
+        number: '03',
         period: 'Since 2026',
-        tag: 'Present',
-        place: 'Bitcoin · Open Source',
-        body: 'Deep in the protocol. Contributing to BDK (Bitcoin Dev Kit) and building Reorg Playground for exploring fork and reorg behavior.',
+        place: 'Open source',
+        title: 'Bitcoin',
+        body: 'Completed Chaincode Labs’ BOSS Challenge in 2026, which brought me into Bitcoin open-source development. Now contributing to BDK (Bitcoin Dev Kit).',
       },
     ],
   },
   manifesto: {
-    section: '§ 03',
-    topic: 'Mission Brief',
-    primary: ['Protect financial', 'freedom.', 'Challenge the broken', 'fiat system.'],
-    rule: 'A mission, not a job',
-    declaration: ['Bitcoin is the only chain', 'with a real shot at', 'lasting success.'],
-    pillars: ['Strengthen Bitcoin', 'Contribute to open source', 'Live by cypherpunk values'],
-    closer: 'Everything else is noise.',
-    signature: 'NJ · 2026',
-  },
-  bitcoin: {
-    section: '§ 04',
-    eyebrow: 'Why',
-    title: 'Bitcoin',
-    lead: 'Fiat is a crime. Inflation is theft disguised as policy.',
-    body: 'It forces people into gambling on markets just to keep up, widens inequality, and punishes anyone without assets. The poor pay first. Bitcoin is the antidote: separation of money and state, predictable monetary policy, incorruptible digital property. It gives people back control that was stolen from them long before they were born.',
+    title: ['Why', 'Bitcoin.'],
+    body: 'Fiat is a crime. Inflation is theft disguised as policy.',
+    conviction:
+      'It forces people into gambling on markets just to keep up, widens inequality, and punishes anyone without assets. The poor pay first. Bitcoin is the antidote: separation of money and state, predictable monetary policy, incorruptible digital property. It gives people back control that was stolen from them long before they were born.',
     closer:
       'I tried the rest. Smart contract chains promise the world and ship complexity, oracle trust, and an endless parade of exploits. Bitcoin earns its conviction by doing less, harder. That’s the fight worth fighting.',
-    primaryImgSrc: '/images/about/bitcoin1.webp',
-    secondaryImgSrc: '/images/about/bitcoin2.webp',
+    principles: [
+      { number: '01', title: 'Strengthen Bitcoin' },
+      { number: '02', title: 'Contribute to open source' },
+      { number: '03', title: 'Live by cypherpunk values' },
+    ],
+    signoff: 'Everything else is noise.',
+    imgSrc: '/images/about/bitcoin1.webp',
   },
   interests: {
-    section: '§ 05',
-    eyebrow: 'Off the keyboard',
-    title: 'Interests',
+    title: 'Interests.',
     items: [
       {
+        number: '01',
         title: 'Calisthenics',
         description:
           'I train to do the impossible: handstand push-ups, front levers, endless pull-ups. All to practice discipline. Extraordinary strength is just the side effect.',
         imgSrc: '/images/about/hobby1.webp',
       },
       {
+        number: '02',
         title: 'Biohacking',
         description:
           'I like feeling superhuman. Ice baths, Bulletproof diet, supplements, tracking everything. If it boosts my performance, I’m in.',
         imgSrc: '/images/about/hobby3.webp',
       },
       {
+        number: '03',
         title: 'Reading',
         description:
           'My curiosity doesn’t shut up: philosophy, Stoicism, Bitcoin, biohacking, tech, personal growth. Books that shaped me: Meditations, Broken Money, Letting Go, The Book of Satoshi.',
@@ -162,8 +137,7 @@ export const aboutData = {
     ],
   },
   values: {
-    section: '§ 06',
-    topic: 'Code of Conduct',
+    title: 'Values.',
     items: [
       {
         numeral: 'I',
@@ -192,5 +166,6 @@ export const aboutData = {
           'Living beyond myself, choosing virtue, helping others, doing the right thing even when it’s harder. The Stoic path.',
       },
     ],
+    closer: ['Keep moving.', 'Keep questioning.'],
   },
 } as const satisfies AboutData
