@@ -25,6 +25,18 @@ export function getProjectBySlug(slug: string): PortfolioProject | undefined {
 export const portfolioData = {
   projects: [
     {
+      slug: 'bdk',
+      name: 'Bitcoin Dev Kit',
+      imgUrl: '/images/portfolio/bdk/bdk.png',
+      shortDescription: 'Open-source contributions to Bitcoin wallet development libraries.',
+      description: `Bitcoin Dev Kit (BDK) is an open-source collection of Rust libraries for building Bitcoin wallets and applications. As a contributor, I develop new features and provide ongoing maintenance.`,
+      links: ['https://github.com/bitcoindevkit'],
+      period: 'Mar 2026 - Present',
+      projectType: 'Bitcoin, Open Source, Wallet Development',
+      techUsed: 'Rust, Bitcoin',
+      gallery: [],
+    },
+    {
       slug: 'reorg-playground',
       name: 'Reorg Playground',
       imgUrl: '/images/portfolio/reorg-playground/reorg.webp',
@@ -44,18 +56,6 @@ Key features:
       period: 'Feb 2026 - Present',
       projectType: 'Bitcoin, Developer Tool, Open Source',
       techUsed: 'Rust, Axum, Tokio, SQLite, Typescript, React, Vite, Tailwind, shadcn/ui, React Flow',
-      gallery: [],
-    },
-    {
-      slug: 'bdk',
-      name: 'Bitcoin Dev Kit (BDK)',
-      imgUrl: '/images/portfolio/bdk/bdk.png',
-      shortDescription: 'Open-source contributions to Bitcoin wallet development libraries.',
-      description: `Bitcoin Dev Kit (BDK) is an open-source collection of Rust libraries for building Bitcoin wallets and applications. As a contributor, I develop new features and provide ongoing maintenance.`,
-      links: ['https://github.com/bitcoindevkit'],
-      period: '2026 - Present',
-      projectType: 'Bitcoin, Open Source, Wallet Development',
-      techUsed: 'Rust, Bitcoin',
       gallery: [],
     },
     {
