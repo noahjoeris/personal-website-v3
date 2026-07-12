@@ -47,6 +47,18 @@ Key features:
       gallery: [],
     },
     {
+      slug: 'bdk',
+      name: 'Bitcoin Dev Kit (BDK)',
+      imgUrl: '/images/portfolio/bdk/bdk.png',
+      shortDescription: 'Open-source contributions to Bitcoin wallet development libraries.',
+      description: `Bitcoin Dev Kit (BDK) is an open-source collection of Rust libraries for building Bitcoin wallets and applications. As a contributor, I develop new features and provide ongoing maintenance.`,
+      links: ['https://github.com/bitcoindevkit'],
+      period: '2026 - Present',
+      projectType: 'Bitcoin, Open Source, Wallet Development',
+      techUsed: 'Rust, Bitcoin',
+      gallery: [],
+    },
+    {
       slug: 'turtle',
       name: 'Turtle',
       imgUrl: '/images/portfolio/turtle/turtle.svg',
