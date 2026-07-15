@@ -9,9 +9,9 @@ export function GrainOverlay() {
     return null
   }
 
-  // Data-heavy activity feed: lower grain for readability (~4% vs default 10%).
+  // Keep dense indexes restrained; the blog landing page gets slightly more texture.
   const isDataHeavyRoute = pathname === '/bitcoin-foss' || pathname?.startsWith('/bitcoin-foss/')
-  const opacityClass = isDataHeavyRoute ? 'opacity-[0.04]' : 'opacity-10'
+  const opacityClass = pathname === '/blog' ? 'opacity-[0.07]' : isDataHeavyRoute ? 'opacity-[0.05]' : 'opacity-10'
 
   return (
     <div

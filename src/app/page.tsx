@@ -1,4 +1,5 @@
 import { Navbar } from '@/components/navbar'
+import { BlogPreviewSection } from '@/sections/blog-preview'
 import { LandingSection } from '@/sections/landing'
 import { PortfolioSection } from '@/sections/portfolio'
 import { QuoteSection } from '@/sections/quote'
@@ -14,6 +15,7 @@ export default function Page() {
       <WorkHistorySection />
       <StatsSection />
       <PortfolioSection maxProjects={4} />
+      <BlogPreviewSection />
     </main>
   )
 }
