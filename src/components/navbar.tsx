@@ -35,9 +35,36 @@ export function Navbar() {
   }, [])
 
   useEffect(() => {
+    if (!isMobileMenuOpen) {
+      return
+    }
+
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         setIsMobileMenuOpen(false)
+        return
+      }
+
+      if (event.key !== 'Tab') {
+        return
+      }
+
+      const focusableElements = [
+        ...(mobileMenuPanelRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])') ?? []),
+      ].filter(element => element.offsetParent !== null)
+      const firstFocusableElement = focusableElements[0]
+      const lastFocusableElement = focusableElements.at(-1)
+
+      if (!firstFocusableElement || !lastFocusableElement) {
+        return
+      }
+
+      if (event.shiftKey && document.activeElement === firstFocusableElement) {
+        event.preventDefault()
+        lastFocusableElement.focus()
+      } else if (!event.shiftKey && document.activeElement === lastFocusableElement) {
+        event.preventDefault()
+        firstFocusableElement.focus()
       }
     }
 
@@ -45,31 +72,6 @@ export function Navbar() {
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!isMobileMenuOpen) {
-      return
-    }
-
-    function handlePointerDown(event: PointerEvent) {
-      const target = event.target as Node | null
-      if (!target) {
-        return
-      }
-
-      if (mobileMenuPanelRef.current?.contains(target)) {
-        return
-      }
-
-      setIsMobileMenuOpen(false)
-    }
-
-    document.addEventListener('pointerdown', handlePointerDown)
-
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown)
     }
   }, [isMobileMenuOpen])
 
@@ -100,6 +102,13 @@ export function Navbar() {
     >
       <div className="px-5 py-3 tablet:py-4 tablet:px-10 desktop:px-16">
         <nav className="relative flex items-center justify-between" aria-label="Main navigation">
+          <Link
+            href="/"
+            className="inline-flex min-h-11 items-center rounded-sm text-lg font-semibold uppercase tracking-[0.08em] text-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring tablet:hidden"
+          >
+            Noah Joeris
+          </Link>
+
           <ul className="hidden items-center gap-5 tablet:flex tablet:gap-7">
             {landingData.navigation.map(link => {
               const isActive = isActivePath(pathname, link.href)
@@ -109,7 +118,7 @@ export function Navbar() {
                   <Link
                     href={link.href}
                     className={cn(
-                      'text-lg font-medium transition-colors',
+                      'rounded-sm text-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                       isActive ? 'text-foreground' : 'text-foreground/70 hover:text-foreground',
                     )}
                     aria-current={isActive ? 'page' : undefined}
@@ -129,7 +138,7 @@ export function Navbar() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-foreground/70 transition-colors hover:text-foreground focus-visible:text-foreground"
+                    className="rounded-sm text-foreground/70 transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label={`${social.label} (opens in new tab)`}
                   >
                     <MaskIcon src={social.iconSrc} className="h-5 w-5" />
@@ -141,7 +150,7 @@ export function Navbar() {
             <button
               ref={menuToggleRef}
               type="button"
-              className="inline-flex h-9 w-9 items-center justify-center text-foreground/90 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring tablet:hidden"
+              className="inline-flex h-11 w-11 items-center justify-center text-foreground/90 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring tablet:hidden"
               aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={isMobileMenuOpen}
               aria-controls={mobileMenuId}
@@ -176,7 +185,7 @@ export function Navbar() {
             role="dialog"
             aria-modal="true"
             aria-labelledby={mobileMenuLabelId}
-            className="fixed inset-x-0 top-0 z-[var(--z-mobile-menu)] border-b border-foreground/35 bg-background/25 px-5 pb-8 pt-5 text-foreground backdrop-blur-[1.5px] tablet:hidden"
+            className="fixed inset-0 z-[var(--z-mobile-menu)] overflow-y-auto bg-background/95 px-5 pb-8 pt-5 text-foreground backdrop-blur-md tablet:hidden"
             initial={shouldReduceMotion ? false : { opacity: 0, y: -18 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -12 }}
@@ -190,10 +199,8 @@ export function Navbar() {
               <button
                 ref={menuCloseRef}
                 type="button"
-                className="inline-flex h-9 w-9 items-center justify-center text-foreground/90 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex h-11 w-11 items-center justify-center text-foreground/90 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label="Close navigation menu"
-                aria-expanded={true}
-                aria-controls={mobileMenuId}
                 onClick={closeMobileMenu}
               >
                 <svg
@@ -231,16 +238,20 @@ export function Navbar() {
                 return (
                   <motion.li
                     key={link.href}
-                    variants={{
-                      closed: { opacity: 0, y: -8 },
-                      open: { opacity: 1, y: 0 },
-                    }}
+                    variants={
+                      shouldReduceMotion
+                        ? { closed: { opacity: 1 }, open: { opacity: 1 } }
+                        : {
+                            closed: { opacity: 0, y: -8 },
+                            open: { opacity: 1, y: 0 },
+                          }
+                    }
                     transition={{ duration: 0.18, ease: 'easeOut' }}
                   >
                     <Link
                       href={link.href}
                       className={cn(
-                        'block text-[34px] font-medium leading-[0.98] tracking-[0.035em] transition-colors',
+                        'block rounded-sm text-[34px] font-medium leading-[0.98] tracking-[0.035em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                         isActive ? 'text-foreground' : 'text-foreground/85 hover:text-foreground',
                       )}
                       aria-current={isActive ? 'page' : undefined}
@@ -265,7 +276,7 @@ export function Navbar() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-foreground/80 transition-colors hover:text-foreground focus-visible:text-foreground"
+                    className="rounded-sm text-foreground/80 transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     aria-label={`${social.label} (opens in new tab)`}
                   >
                     <MaskIcon src={social.iconSrc} className="h-9 w-9" />
