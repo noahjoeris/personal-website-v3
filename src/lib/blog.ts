@@ -1,10 +1,11 @@
 import 'server-only'
 
-import { readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { type ComponentType, cache } from 'react'
 
 import { type BlogPostMetadata, isBlogPostMetadata } from '@/data/blog-data'
+import { type BlogHeading, estimateBlogReadingMinutes, extractBlogHeadings } from '@/lib/blog-content'
 
 type BlogPostModule = {
   default: ComponentType
@@ -18,10 +19,12 @@ const blogPostFileExtension = '.mdx'
 
 export type BlogPostSummary = BlogPostMetadata & {
   slug: string
+  readingMinutes: number
 }
 
 export type BlogPost = BlogPostSummary & {
   Content: ComponentType
+  headings: BlogHeading[]
 }
 
 export function formatBlogPostDate(date: string) {
@@ -68,11 +71,16 @@ const loadAllBlogPosts = cache(async (): Promise<BlogPost[]> => {
   const blogPostFileNames = fileNames.filter(isBlogPostFileName)
   const posts = await Promise.all(
     blogPostFileNames.map(async fileName => {
-      const module = await loadBlogPostModule(fileName)
+      const [module, source] = await Promise.all([
+        loadBlogPostModule(fileName),
+        readFile(path.join(blogPostsDirectoryPath, fileName), 'utf8'),
+      ])
 
       return {
         slug: getSlugFromFileName(fileName),
         ...module.metadata,
+        readingMinutes: estimateBlogReadingMinutes(source),
+        headings: extractBlogHeadings(source),
         Content: module.default,
       }
     }),
@@ -82,7 +90,9 @@ const loadAllBlogPosts = cache(async (): Promise<BlogPost[]> => {
 })
 
 export async function getPublishedBlogPosts(): Promise<BlogPostSummary[]> {
-  return (await loadAllBlogPosts()).filter(isPublishedPost).map(({ Content: _content, ...postPreview }) => postPreview)
+  return (await loadAllBlogPosts())
+    .filter(isPublishedPost)
+    .map(({ Content: _content, headings: _headings, ...postPreview }) => postPreview)
 }
 
 export async function getPublishedBlogPostBySlug(slug: string): Promise<BlogPost | null> {
