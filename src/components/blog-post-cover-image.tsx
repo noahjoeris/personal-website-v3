@@ -4,29 +4,26 @@ import { cn } from '@/lib/utils'
 
 type BlogPostCoverImageProps = {
   src: `/images/blog/${string}`
-  title: string
   priority?: boolean
   className?: string
 }
 
-export function BlogPostCoverImage({ src, title, priority = false, className }: BlogPostCoverImageProps) {
-  // Inline `position` safeguards against Tailwind CSS not applying (older/blocked browsers):
-  // without a positioned ancestor the fill image would cover the whole viewport.
+export function BlogPostCoverImage({ src, priority = false, className }: BlogPostCoverImageProps) {
   return (
     <div
-      style={{ position: 'relative' }}
-      className={cn('relative overflow-hidden rounded-md border border-foreground/10 bg-foreground/[0.03]', className)}
+      className={cn(
+        'relative aspect-[16/9] overflow-hidden rounded-md border border-foreground/10 bg-foreground/[0.03]',
+        className,
+      )}
     >
-      <div>
-        <Image
-          src={src}
-          alt={`${title} cover image`}
-          fill
-          priority={priority}
-          className="object-cover object-center"
-          sizes="(max-width: 767px) 100vw, (max-width: 1023px) 80vw, 896px"
-        />
-      </div>
+      <Image
+        src={src}
+        alt=""
+        fill
+        priority={priority}
+        className="object-cover object-center"
+        sizes="(max-width: 767px) calc(100vw - 3rem), (max-width: 1023px) calc(100vw - 5rem), 896px"
+      />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-linear-to-b from-transparent via-background/10 to-background/45" />
     </div>
   )
