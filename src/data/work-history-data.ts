@@ -1,8 +1,8 @@
 export type WorkHistoryItem = {
   company: string
   position: string
-  duration: string
-  imgUrl: `/images/work-history/${string}`
+  startYear: number
+  endYear: number | 'present'
 }
 
 export type WorkHistoryData = {
@@ -16,32 +16,32 @@ export const workHistoryData = {
     {
       company: 'OPEN SOURCE',
       position: 'BITCOIN ENGINEER',
-      duration: '2026-PRESENT',
-      imgUrl: '/images/work-history/bitcoin.svg',
+      startYear: 2026,
+      endYear: 'present',
     },
     {
       company: 'VELOCITY LABS',
       position: 'FULL STACK BLOCKCHAIN ENGINEER',
-      duration: '2024-2026',
-      imgUrl: '/images/work-history/velocity-labs.png',
+      startYear: 2024,
+      endYear: 2026,
     },
     {
       company: 'FREELANCE',
       position: 'WEB3 ENGINEER',
-      duration: '2024',
-      imgUrl: '/images/work-history/freelance.ico',
+      startYear: 2024,
+      endYear: 2024,
     },
     {
       company: 'AIRBUS DEFENCE AND SPACE',
       position: 'SOFTWARE ENGINEER',
-      duration: '2023-2024',
-      imgUrl: '/images/work-history/airbus-defence-space.jpeg',
+      startYear: 2023,
+      endYear: 2024,
     },
     {
       company: 'AIRBUS CYBERSECURITY',
       position: 'WORKING STUDENT - CYBER SECURITY',
-      duration: '2019-2023',
-      imgUrl: '/images/work-history/airbus-cybersecurity.webp',
+      startYear: 2019,
+      endYear: 2023,
     },
   ],
 } as const satisfies WorkHistoryData

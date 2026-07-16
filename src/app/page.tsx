@@ -3,7 +3,6 @@ import { BlogPreviewSection } from '@/sections/blog-preview'
 import { LandingSection } from '@/sections/landing'
 import { PortfolioSection } from '@/sections/portfolio'
 import { QuoteSection } from '@/sections/quote'
-import { StatsSection } from '@/sections/stats'
 import { WorkHistorySection } from '@/sections/work-history'
 
 export default function Page() {
@@ -13,7 +12,6 @@ export default function Page() {
       <LandingSection />
       <QuoteSection />
       <WorkHistorySection />
-      <StatsSection />
       <PortfolioSection maxProjects={4} />
       <BlogPreviewSection />
     </main>
