@@ -10,9 +10,11 @@ export const metadata: Metadata = {
 
 export default function PortfolioPage() {
   return (
-    <main id="main-content" className="min-h-screen overflow-hidden bg-background pt-12 text-foreground">
+    <>
       <Navbar />
-      <PortfolioSection />
-    </main>
+      <main id="main-content" className="min-h-screen overflow-hidden bg-background pt-12 text-foreground">
+        <PortfolioSection headingLevel="h1" />
+      </main>
+    </>
   )
 }

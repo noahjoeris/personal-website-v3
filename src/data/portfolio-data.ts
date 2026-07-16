@@ -1,17 +1,33 @@
 export type PortfolioImageUrl = `/images/portfolio/${string}`
 
+export type PortfolioProjectLink = {
+  href: string
+  label: string
+  kind: 'live' | 'source'
+}
+
+export type PortfolioMedia = {
+  src: PortfolioImageUrl
+  alt: string
+  caption: string
+  width: number
+  height: number
+  layout?: 'compact' | 'wide'
+  animated?: boolean
+}
+
 export type PortfolioProject = {
   slug: string
   name: string
   imgUrl: PortfolioImageUrl
   shortDescription: string
   description?: string
-  links: readonly string[]
+  links: readonly PortfolioProjectLink[]
   period: string
-  projectType: string
-  techUsed: string
+  projectType: readonly string[]
+  techUsed: readonly string[]
   client?: string
-  gallery: readonly PortfolioImageUrl[]
+  gallery: readonly PortfolioMedia[]
 }
 
 export type PortfolioData = {
@@ -30,10 +46,10 @@ export const portfolioData = {
       imgUrl: '/images/portfolio/bdk/bdk.png',
       shortDescription: 'Open-source contributions to Bitcoin wallet development libraries.',
       description: `Bitcoin Dev Kit (BDK) is an open-source collection of Rust libraries for building Bitcoin wallets and applications. As a contributor, I develop new features and provide ongoing maintenance.`,
-      links: ['https://github.com/bitcoindevkit'],
+      links: [{ href: 'https://github.com/bitcoindevkit', label: 'BDK on GitHub', kind: 'source' }],
       period: 'Mar 2026 - Present',
-      projectType: 'Bitcoin, Open Source, Wallet Development',
-      techUsed: 'Rust, Bitcoin',
+      projectType: ['Bitcoin', 'Open Source', 'Wallet Development'],
+      techUsed: ['Rust', 'Bitcoin'],
       gallery: [],
     },
     {
@@ -52,10 +68,24 @@ Key features:
 * ⚡ Trigger Reorg button — pick a node and depth, create a reorg in two clicks (Regtest & custom Signet)
 * 🕸️ Node Connection Manager — inspect peer links, shape P2P topology, isolate nodes, toggle networking
 * ⚙️ Config-driven networks and nodes via \`config.toml\`, header history persisted in SQLite`,
-      links: ['https://github.com/noahjoeris/reorg-playground', 'https://reorgplayground.app'],
+      links: [
+        { href: 'https://reorgplayground.app', label: 'Open live observer', kind: 'live' },
+        { href: 'https://github.com/noahjoeris/reorg-playground', label: 'View source code', kind: 'source' },
+      ],
       period: 'Feb 2026 - Present',
-      projectType: 'Bitcoin, Developer Tool, Open Source',
-      techUsed: 'Rust, Axum, Tokio, SQLite, Typescript, React, Vite, Tailwind, shadcn/ui, React Flow',
+      projectType: ['Bitcoin', 'Developer Tool', 'Open Source'],
+      techUsed: [
+        'Rust',
+        'Axum',
+        'Tokio',
+        'SQLite',
+        'TypeScript',
+        'React',
+        'Vite',
+        'Tailwind',
+        'shadcn/ui',
+        'React Flow',
+      ],
       gallery: [],
     },
     {
@@ -72,18 +102,66 @@ Key features:
 * 💳 On/off ramps powered by Meld
 * ⚙️ Combined swap + transfer in one action
 * 🧩 Widget integration for seamless dApp embedding`,
-      links: ['https://github.com/velocitylabs-org/turtle', 'https://app.turtle.cool'],
+      links: [
+        { href: 'https://app.turtle.cool', label: 'Open Turtle app', kind: 'live' },
+        { href: 'https://github.com/velocitylabs-org/turtle', label: 'View source code', kind: 'source' },
+      ],
       period: 'Apr 2024 - Jan 2026',
-      projectType: 'Web App, Web3, Polkadot Ecosystem',
-      techUsed: 'Typescript, React, Nextjs, Tailwind, Polkadot, XCM, Snowbridge',
+      projectType: ['Web App', 'Web3', 'Polkadot Ecosystem'],
+      techUsed: ['TypeScript', 'React', 'Next.js', 'Tailwind', 'Polkadot', 'XCM', 'Snowbridge'],
       client: 'Velocity Labs',
       gallery: [
-        '/images/portfolio/turtle/gallery1.gif',
-        '/images/portfolio/turtle/gallery2.gif',
-        '/images/portfolio/turtle/gallery3.gif',
-        '/images/portfolio/turtle/gallery4.webp',
-        '/images/portfolio/turtle/gallery5.webp',
-        '/images/portfolio/turtle/gallery6.webp',
+        {
+          src: '/images/portfolio/turtle/gallery1.gif',
+          alt: 'Turtle Total Amount in Transfers.',
+          caption: 'Total Amount in Transfers.',
+          width: 480,
+          height: 480,
+          layout: 'compact',
+          animated: true,
+        },
+        {
+          src: '/images/portfolio/turtle/gallery2.gif',
+          alt: 'Turtle transfer widget with chain, token, amount, and destination controls',
+          caption: 'Ethereum to Polkadot transfer.',
+          width: 480,
+          height: 480,
+          layout: 'compact',
+          animated: true,
+        },
+        {
+          src: '/images/portfolio/turtle/gallery3.gif',
+          alt: 'Meld on-ramp integration.',
+          caption: 'Meld on-ramp Turtle integration.',
+          width: 480,
+          height: 480,
+          layout: 'compact',
+          animated: true,
+        },
+        {
+          src: '/images/portfolio/turtle/gallery4.webp',
+          alt: 'The Turtle Widget.',
+          caption: 'The Turtle Widget.',
+          width: 1200,
+          height: 869,
+          layout: 'compact',
+        },
+        {
+          src: '/images/portfolio/turtle/gallery5.webp',
+          alt: 'Analytics for transaction volume, and token activity.',
+          caption: 'Analytics for transaction volume, and token activity.',
+          width: 700,
+          height: 680,
+          layout: 'compact',
+        },
+        {
+          src: '/images/portfolio/turtle/gallery6.webp',
+          alt: 'Cross-chain flow from Hydration to connected networks.',
+          caption: 'Cross-chain flow from Hydration to connected networks.',
+          width: 2958,
+          height: 1450,
+          layout: 'compact',
+        },
       ],
     },
     {
@@ -100,12 +178,24 @@ Key features:
 - 🔐 **Escrow marketplace PoC:** Secure 2-of-3 multisig trading between Lastic, buyer, and seller—ensuring safe fund and coretime exchange.
 - 🚀 **Auto Teleport:** Automatically transfers DOT between the Relaychain and Coretime chain using XCM, reducing fragmentation and improving UX.
 - 🤝 **Coretime crowdfunding smart contract:** Built a production-ready Solidity contract enabling users to collectively crowdfund coretime purchases, fully tested with Foundry, deployed on Moonbeam, and usable to provide Polkadot’s economic security to parachains.`,
-      links: ['https://github.com/velocitylabs-org/turtle', 'https://app.turtle.cool'],
+      links: [
+        { href: 'https://www.lastic.xyz', label: 'Open Lastic app', kind: 'live' },
+        { href: 'https://github.com/LasticXYZ/LasticUI', label: 'View source code', kind: 'source' },
+      ],
       period: 'Mar 2024 - Jul 2024',
-      projectType: 'Web3, Web app, Polkadot Ecosystem, Smart Contract',
-      techUsed: 'Typescript, React, Nextjs, Tailwind, Polkadot, XCM, Solidity, Foundry',
+      projectType: ['Web3', 'Web App', 'Polkadot Ecosystem', 'Smart Contract'],
+      techUsed: ['TypeScript', 'React', 'Next.js', 'Tailwind', 'Polkadot', 'XCM', 'Solidity', 'Foundry'],
       client: 'Velocity Labs',
-      gallery: ['/images/portfolio/lastic/gallery1.webp'],
+      gallery: [
+        {
+          src: '/images/portfolio/lastic/gallery1.webp',
+          alt: 'Lastic primary bulk coretime market with sale period, pricing, and purchase controls',
+          caption: 'Primary-market dashboard for monitoring a coretime sale and purchasing a core.',
+          width: 2580,
+          height: 1806,
+          layout: 'wide',
+        },
+      ],
     },
     {
       slug: 'pba',
@@ -122,8 +212,28 @@ Key projects:
 * 🌳 Merkle Multi-Proof Generator: Built efficient verification proofs for multiple claims in one Merkle tree.`,
       links: [],
       period: 'Jan 2024 - Feb 2024',
-      projectType: 'Blockchain Infrastructure, Cryptography',
-      techUsed: 'Rust, Substrate, Polkadot, XCM',
+      projectType: ['Blockchain Infrastructure', 'Cryptography'],
+      techUsed: ['Rust', 'Substrate', 'Polkadot', 'XCM'],
+      gallery: [],
+    },
+    {
+      slug: 'innovation-hub',
+      name: 'Innovation Hub',
+      imgUrl: '/images/portfolio/innovationhub/innovationhub.webp',
+      shortDescription: 'Knowledge-sharing platform for Airbus',
+      description: `InnovationHub is an **Airbus internal knowledge-sharing platform** built to connect experts, managers, and innovators across the company around emerging technologies like blockchain, AI, quantum resistance, and VR. It helped teams communicate innovation projects, avoid duplicate efforts, and quickly find the right experts in disruptive fields. I **led the product design** and **developed the React frontend**.
+
+Key features:
+* 🚀 Projects, Spaces, and Experts pages for presenting initiatives, locations, and people
+* 🔍 Advanced search across Projects, Experts, Spaces, Questions, and Topics
+* 🧠 Q&A system for sharing and reusing knowledge on emerging technologies
+* 🖥️ Event display mode showing project slideshows at Airbus events
+* 🤝 Improved company-wide collaboration and visibility across innovation efforts`,
+      links: [],
+      period: 'Apr 2023 - Apr 2024',
+      projectType: ['Web App', 'Cloud'],
+      techUsed: ['AWS', 'TypeScript', 'React', 'Next.js', 'MUI', 'Zustand'],
+      client: 'Airbus',
       gallery: [],
     },
     {
@@ -142,28 +252,8 @@ Key features:
 * 🛡️ MITRE ATT&CK mapping: Test and validate detection rules against standardized attack techniques`,
       links: [],
       period: 'Sep 2020 - Mar 2021',
-      projectType: 'Web App, Cybersecurity, Security Operations Center',
-      techUsed: 'Typescript, React, MUI, Redux, Go',
-      client: 'Airbus',
-      gallery: [],
-    },
-    {
-      slug: 'innovation-hub',
-      name: 'Innovation Hub',
-      imgUrl: '/images/portfolio/innovationhub/innovationhub.webp',
-      shortDescription: 'Knowledge-sharing platform for Airbus',
-      description: `InnovationHub is an **Airbus internal knowledge-sharing platform** built to connect experts, managers, and innovators across the company around emerging technologies like blockchain, AI, quantum resistance, and VR. It helped teams communicate innovation projects, avoid duplicate efforts, and quickly find the right experts in disruptive fields. I **led the product design** and **developed the React frontend**.
-
-Key features:
-* 🚀 Projects, Spaces, and Experts pages for presenting initiatives, locations, and people
-* 🔍 Advanced search across Projects, Experts, Spaces, Questions, and Topics
-* 🧠 Q&A system for sharing and reusing knowledge on emerging technologies
-* 🖥️ Event display mode showing project slideshows at Airbus events
-* 🤝 Improved company-wide collaboration and visibility across innovation efforts`,
-      links: [],
-      period: 'Apr 2023 - Apr 2024',
-      projectType: 'Web App, Cloud',
-      techUsed: 'AWS, Typescript, React, Nextjs, MUI, Zustand',
+      projectType: ['Web App', 'Cybersecurity', 'Security Operations Center'],
+      techUsed: ['TypeScript', 'React', 'MUI', 'Redux', 'Go'],
       client: 'Airbus',
       gallery: [],
     },

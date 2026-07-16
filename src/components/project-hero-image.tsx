@@ -104,20 +104,7 @@ export function ProjectHeroImage({ src }: ProjectHeroImageProps) {
 
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
-      {/* Inline `position` + size are a safeguard: if Tailwind CSS fails to apply (e.g. older/
-          locked-down browsers, blocked stylesheet), the utility classes are lost and this fill
-          image would otherwise use the viewport as its containing block and cover the whole page.
-          The inline values mirror the Tailwind classes so the image stays correctly sized. */}
-      <div
-        ref={ref}
-        style={{
-          position: 'relative',
-          willChange: 'transform',
-          aspectRatio: '1 / 1',
-          width: 'clamp(140px, 22vw, 280px)',
-        }}
-        className="relative aspect-square w-[clamp(140px,22vw,280px)]"
-      >
+      <div ref={ref} className="relative aspect-square w-[clamp(140px,22vw,280px)] will-change-transform">
         <Image
           src={src}
           alt=""

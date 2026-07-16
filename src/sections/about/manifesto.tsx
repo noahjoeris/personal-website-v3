@@ -27,7 +27,7 @@ export function AboutManifesto() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.9, ease: REVEAL_EASE }}
-          className="about-bitcoin-artwork relative mx-auto aspect-[2/3] self-start overflow-hidden border-b border-foreground/15 bg-background desktop:border-b-0 desktop:border-r"
+          className="relative mx-auto aspect-[2/3] w-[74%] max-w-[26rem] self-start overflow-hidden border-b border-foreground/15 bg-background desktop:mx-0 desktop:w-full desktop:max-w-none desktop:border-b-0 desktop:border-r"
         >
           <Image
             src={imgSrc}

@@ -104,7 +104,7 @@ export function QuoteSection() {
             const lineIdx = wordToLine[idx] ?? 0
             return (
               <Fragment key={`${idx}-${word}`}>
-                <span data-word-wrap className="inline-block" style={{ clipPath: 'inset(0)' }}>
+                <span data-word-wrap className="inline-block [clip-path:inset(0)]">
                   <motion.span
                     custom={lineIdx}
                     variants={variants}

@@ -16,6 +16,8 @@ const bigShoulders = Big_Shoulders({
   variable: '--font-big-shoulders',
   display: 'swap',
   weight: ['400', '500', '600', '700'],
+  fallback: ['Arial Narrow', 'Arial', 'sans-serif'],
+  adjustFontFallback: false,
 })
 
 const plexMono = IBM_Plex_Mono({

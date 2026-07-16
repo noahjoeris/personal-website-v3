@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import Markdown from 'react-markdown'
 
 import { Navbar } from '@/components/navbar'
+import { ProjectDetailsAside, ProjectNavigation } from '@/components/project-details'
 import { ProjectHeroImage } from '@/components/project-hero-image'
 import { getProjectBySlug, portfolioData } from '@/data/portfolio-data'
 import { ProjectGallerySection } from '@/sections/project-gallery'
@@ -25,16 +27,18 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     return { title: 'Project not found' }
   }
 
-  const ogImages = [{ url: project.imgUrl }]
+  const canonicalPath = `/portfolio/${slug}`
+  const ogImages = [{ url: project.imgUrl, alt: project.name }]
 
   return {
     title: project.name,
     description: project.shortDescription,
+    alternates: { canonical: canonicalPath },
     openGraph: {
       type: 'article',
       title: `${project.name} — Portfolio`,
       description: project.shortDescription,
-      url: `/portfolio/${slug}`,
+      url: canonicalPath,
       images: ogImages,
     },
     twitter: {
@@ -54,93 +58,69 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound()
   }
 
+  const projectIndex = portfolioData.projects.findIndex(candidate => candidate.slug === project.slug)
+  const previousProject = projectIndex > 0 ? portfolioData.projects[projectIndex - 1] : undefined
+  const nextProject =
+    projectIndex < portfolioData.projects.length - 1 ? portfolioData.projects[projectIndex + 1] : undefined
+
   return (
-    <main id="main-content" className="min-h-screen bg-background text-foreground">
+    <>
       <Navbar />
-
-      <section
-        aria-labelledby="project-title"
-        className="relative flex min-h-[50vh] items-center justify-center overflow-hidden px-6 pt-20 tablet:min-h-[60vh] tablet:px-10 tablet:pt-24"
-      >
-        <h1 id="project-title" className="sr-only">
-          {project.name}
-        </h1>
-
-        <span
-          aria-hidden="true"
-          className="z-0 select-none text-center text-[clamp(3.5rem,15vw,15rem)] font-bold uppercase leading-none tracking-tight text-foreground"
+      <main id="main-content" className="min-h-screen bg-background text-foreground">
+        <section
+          aria-labelledby="project-title"
+          className="relative flex min-h-[50vh] items-center justify-center overflow-hidden px-6 pt-20 tablet:min-h-[60vh] tablet:px-10 tablet:pt-24"
         >
-          {project.name}
-        </span>
+          <Link
+            href="/portfolio"
+            className="absolute left-5 top-20 z-30 inline-flex min-h-11 items-center gap-2 rounded-sm text-xs font-medium uppercase tracking-[0.18em] text-foreground/65 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring tablet:left-10 tablet:top-24 desktop:left-16"
+          >
+            <span aria-hidden="true">←</span> All projects
+          </Link>
 
-        <ProjectHeroImage src={project.imgUrl} />
+          <span
+            aria-hidden="true"
+            className="z-0 max-w-[96vw] select-none text-center text-[clamp(3.5rem,15vw,15rem)] font-bold uppercase leading-[0.86] tracking-tight text-foreground text-balance"
+          >
+            {project.name}
+          </span>
 
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute z-20 select-none text-center text-[clamp(3.5rem,15vw,15rem)] font-bold uppercase leading-none tracking-tight text-transparent"
-          style={{ WebkitTextStroke: '2px rgba(255,255,255,0.9)', paintOrder: 'stroke fill' }}
+          <ProjectHeroImage src={project.imgUrl} />
+
+          <h1
+            id="project-title"
+            className="pointer-events-none absolute z-20 max-w-[96vw] select-none text-center text-[clamp(3.5rem,15vw,15rem)] font-bold uppercase leading-[0.86] tracking-tight text-transparent text-balance [-webkit-text-stroke:2px_rgba(255,255,255,0.9)] [paint-order:stroke_fill]"
+          >
+            {project.name}
+          </h1>
+        </section>
+
+        <section
+          aria-labelledby="about-project"
+          className="mx-auto max-w-6xl px-6 py-16 tablet:px-10 tablet:py-24 desktop:px-16"
         >
-          {project.name}
-        </span>
-      </section>
+          <div className="grid gap-12 desktop:grid-cols-[minmax(0,1fr)_19rem] desktop:gap-20">
+            <div>
+              <h2 id="about-project" className="text-sm uppercase tracking-[0.2em] text-foreground/50">
+                About the project
+              </h2>
+              <p className="mt-5 max-w-3xl text-3xl leading-[1.08] text-foreground text-balance tablet:text-4xl">
+                {project.shortDescription}
+              </p>
+              {project.description ? (
+                <div className="mt-8 max-w-[65ch] font-reading text-base leading-[1.75] text-foreground/76 [text-wrap:pretty] [&_a]:font-medium [&_a]:text-primary-light [&_a]:underline [&_a]:decoration-primary/40 [&_a]:underline-offset-4 [&_a]:transition-colors hover:[&_a]:text-foreground [&_li]:pl-1 [&_p+p]:mt-5 [&_strong]:font-semibold [&_strong]:text-foreground/95 [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5">
+                  <Markdown>{project.description}</Markdown>
+                </div>
+              ) : null}
+            </div>
 
-      {/* Description & Metadata */}
-      <section className="mx-auto max-w-4xl px-6 py-16 tablet:px-10 tablet:py-24 desktop:px-16">
-        <div className="grid gap-12 tablet:grid-cols-[1fr_280px] tablet:gap-16">
-          <div className="space-y-6">
-            <h2 className="text-sm uppercase tracking-[0.2em] text-foreground/50">About the project</h2>
-            <p className="text-xl leading-relaxed text-foreground/85 tablet:text-2xl">{project.shortDescription}</p>
-            {project.description && (
-              <div className="text-lg leading-relaxed text-foreground/70 [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_li]:text-foreground/70 [&_p]:leading-relaxed [&_p+p]:mt-4 [&_strong]:text-foreground/90">
-                <Markdown>{project.description}</Markdown>
-              </div>
-            )}
+            <ProjectDetailsAside project={project} />
           </div>
+        </section>
 
-          <aside className="space-y-6">
-            <div>
-              <h3 className="text-sm uppercase tracking-[0.2em] text-foreground/50">Period</h3>
-              <p className="mt-1 text-lg">{project.period}</p>
-            </div>
-            <div>
-              <h3 className="text-sm uppercase tracking-[0.2em] text-foreground/50">Type</h3>
-              <p className="mt-1 text-lg">{project.projectType}</p>
-            </div>
-            <div>
-              <h3 className="text-sm uppercase tracking-[0.2em] text-foreground/50">Tech</h3>
-              <p className="mt-1 text-lg">{project.techUsed}</p>
-            </div>
-            {project.client && (
-              <div>
-                <h3 className="text-sm uppercase tracking-[0.2em] text-foreground/50">Client</h3>
-                <p className="mt-1 text-lg">{project.client}</p>
-              </div>
-            )}
-            {project.links.length > 0 && (
-              <div>
-                <h3 className="text-sm uppercase tracking-[0.2em] text-foreground/50">Links</h3>
-                <ul className="mt-1 space-y-1">
-                  {project.links.map(link => (
-                    <li key={link}>
-                      <a
-                        href={link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-lg text-primary transition-colors hover:text-primary-light"
-                      >
-                        {new URL(link).hostname.replace('www.', '')}
-                        <span className="sr-only"> (opens in new tab)</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </aside>
-        </div>
-      </section>
-
-      <ProjectGallerySection gallery={project.gallery} projectName={project.name} />
-    </main>
+        <ProjectGallerySection gallery={project.gallery} />
+        <ProjectNavigation previousProject={previousProject} nextProject={nextProject} />
+      </main>
+    </>
   )
 }

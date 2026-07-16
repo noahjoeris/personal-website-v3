@@ -15,8 +15,7 @@ export function GrainOverlay() {
 
   return (
     <div
-      className={`pointer-events-none fixed inset-0 z-[var(--z-grain)] bg-repeat ${opacityClass}`}
-      style={{ backgroundImage: 'url(/grain.gif)' }}
+      className={`pointer-events-none fixed inset-0 z-[var(--z-grain)] bg-[url('/grain.gif')] bg-repeat ${opacityClass}`}
       aria-hidden
     />
   )

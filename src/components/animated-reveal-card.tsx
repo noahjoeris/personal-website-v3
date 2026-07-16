@@ -19,26 +19,21 @@ export function AnimatedRevealCard({ index, className, children }: AnimatedRevea
 
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start 0.94', 'end 0.45'],
+    offset: ['start 0.98', 'start 0.32'],
   })
 
   const progress = useSpring(scrollYProgress, CARD_SPRING)
-
-  const x = useTransform(progress, [0, 1], shouldReduceMotion ? [0, 0] : [direction * 56, 0])
-  const y = useTransform(progress, [0, 1], shouldReduceMotion ? [0, 0] : [72, 0])
-  const scale = useTransform(progress, [0, 1], shouldReduceMotion ? [1, 1] : [0.94, 1])
-  const opacity = useTransform(progress, [0, 0.5, 1], shouldReduceMotion ? [1, 1, 1] : [0.2, 0.62, 1])
-  const rotateZ = useTransform(progress, [0, 1], shouldReduceMotion ? [0, 0] : [direction * 1.6, 0])
+  const x = useTransform(progress, [0, 1], shouldReduceMotion ? [0, 0] : [direction * 110, 0])
+  const y = useTransform(progress, [0, 1], shouldReduceMotion ? [0, 0] : [110, 0])
+  const scale = useTransform(progress, [0, 1], shouldReduceMotion ? [1, 1] : [0.88, 1])
+  const opacity = useTransform(progress, [0, 0.45, 1], shouldReduceMotion ? [1, 1, 1] : [0.12, 0.62, 1])
+  const rotateZ = useTransform(progress, [0, 1], shouldReduceMotion ? [0, 0] : [direction * 3.5, 0])
 
   return (
     <motion.div
       ref={ref}
-      style={{ x, y, scale, opacity, rotateZ }}
-      className={cn(
-        'relative mx-auto w-full max-w-lg',
-        index % 2 === 0 ? 'tablet:ml-0 tablet:mr-auto' : 'tablet:mr-0 tablet:ml-auto',
-        className,
-      )}
+      style={{ x, y, scale, opacity, rotateZ, transformPerspective: 1200 }}
+      className={cn('relative w-full', className)}
     >
       {children}
     </motion.div>

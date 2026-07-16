@@ -27,12 +27,7 @@ export function WorkHistorySection() {
               <Fragment key={`${item.company}-${item.duration}`}>
                 <article className="flex flex-col gap-4 py-6 tablet:flex-row tablet:items-center tablet:justify-between tablet:gap-6 tablet:py-7">
                   <div className="flex items-start gap-4 tablet:gap-5">
-                    {/* Inline `position` safeguards against Tailwind not applying: a fill image
-                        without a positioned ancestor would cover the whole viewport. */}
-                    <div
-                      style={{ position: 'relative' }}
-                      className="relative mt-0.5 h-11 w-11 shrink-0 overflow-hidden rounded-sm border border-foreground/20 bg-black/40 tablet:h-12 tablet:w-12"
-                    >
+                    <div className="relative mt-0.5 h-11 w-11 shrink-0 overflow-hidden rounded-sm border border-foreground/20 bg-black/40 tablet:h-12 tablet:w-12">
                       <Image
                         src={item.imgUrl}
                         alt={`${item.company} logo`}

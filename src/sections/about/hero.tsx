@@ -69,7 +69,7 @@ export function AboutHero() {
           initial={shouldReduceMotion ? false : { opacity: 0, x: 35 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.95, delay: 0.2, ease: REVEAL_EASE }}
-          className="about-hero-portrait relative mx-auto desktop:col-span-5 desktop:mt-10"
+          className="relative mx-auto w-[82%] max-w-72 tablet:w-[72%] tablet:max-w-[26rem] desktop:col-span-5 desktop:mt-10 desktop:w-full desktop:max-w-xl"
         >
           <div aria-hidden className="absolute -inset-3 border border-foreground/20 tablet:-inset-5" />
           <div className="relative aspect-[4/5] overflow-hidden bg-background/25">

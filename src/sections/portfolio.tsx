@@ -14,9 +14,10 @@ import { useSectionParallax } from '@/lib/hooks/use-section-parallax'
 
 type PortfolioSectionProps = {
   maxProjects?: number
+  headingLevel?: 'h1' | 'h2'
 }
 
-export function PortfolioSection({ maxProjects }: PortfolioSectionProps) {
+export function PortfolioSection({ maxProjects, headingLevel = 'h2' }: PortfolioSectionProps) {
   const { sectionRef, introY, glowOneX, glowOneY, glowTwoX, glowTwoY } = useSectionParallax()
   const allProjects = portfolioData.projects
   const projects = maxProjects ? allProjects.slice(0, maxProjects) : allProjects
@@ -28,20 +29,21 @@ export function PortfolioSection({ maxProjects }: PortfolioSectionProps) {
 
       <div className="mx-auto w-full max-w-9xl">
         <motion.div style={{ y: introY }} className="mb-12 tablet:mb-16 desktop:mb-20">
-          <SectionHeading eyebrow="Explore my" title="Portfolio" />
+          <SectionHeading eyebrow="Explore my" title="Portfolio" headingLevel={headingLevel} />
         </motion.div>
 
-        <div className="mx-auto max-w-3xl space-y-10 tablet:space-y-12 desktop:space-y-16">
+        <div className="mx-auto max-w-3xl space-y-16 tablet:space-y-24 desktop:space-y-28">
           {projects.map((project, index) => (
-            <AnimatedRevealCard key={`${project.name}-${project.period}`} index={index}>
-              <div className="mb-4 flex max-w-72 items-center justify-between px-1 text-sm uppercase tracking-[0.18em] text-foreground/55">
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                <span>{project.period}</span>
-              </div>
-
+            <AnimatedRevealCard
+              key={project.slug}
+              index={index}
+              className={index % 2 === 0 ? 'mr-auto max-w-[22rem]' : 'ml-auto max-w-[22rem]'}
+            >
               <ProjectCompact
                 project={project}
-                className="shadow-[0_24px_64px_rgba(0,0,0,0.28)] transition-transform duration-500 ease-out"
+                index={index}
+                titleLevel={headingLevel === 'h1' ? 'h2' : 'h3'}
+                priority={index < 2}
               />
             </AnimatedRevealCard>
           ))}

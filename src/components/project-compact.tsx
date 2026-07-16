@@ -11,60 +11,101 @@ type ProjectCompactProject = Pick<
 
 type ProjectCompactProps = {
   project: ProjectCompactProject
+  index: number
+  titleLevel?: 'h2' | 'h3'
+  priority?: boolean
   className?: string
 }
 
-export function ProjectCompact({ project, className }: ProjectCompactProps) {
-  const galleryPreview = project.gallery.slice(0, 3)
+export function ProjectCompact({
+  project,
+  index,
+  titleLevel = 'h3',
+  priority = false,
+  className,
+}: ProjectCompactProps) {
   const titleId = `project-${project.slug}-title`
+  const HeadingTag = titleLevel
+  const galleryPreview = project.gallery.slice(0, 3)
+  const revealFromLeft = index % 2 === 0
 
   return (
-    <Link href={`/portfolio/${project.slug}`} aria-labelledby={titleId}>
-      {/* Inline `position` + size safeguard against Tailwind CSS not applying (older/blocked
-          browsers): without a positioned, sized ancestor a fill image uses the viewport as its
-          containing block and covers the whole page. Inline values mirror the Tailwind classes. */}
-      <article
-        style={{ position: 'relative', aspectRatio: '1 / 1', width: '100%', maxWidth: '18rem' }}
-        className={cn(
-          'group relative aspect-square w-full max-w-72 overflow-hidden rounded-md border border-foreground/25 bg-black',
-          className,
-        )}
-      >
-        <Image
-          src={project.imgUrl}
-          alt=""
-          fill
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 group-active:scale-105 group-focus-within:scale-105"
-          sizes="(max-width: 640px) 90vw, 288px"
-        />
+    <Link
+      href={`/portfolio/${project.slug}`}
+      aria-labelledby={titleId}
+      className={cn(
+        'group block w-full max-w-[22rem] rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background',
+        className,
+      )}
+    >
+      <article>
+        <div className="mb-4 flex items-center justify-between gap-4 px-1 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-foreground/55">
+          <span>{String(index + 1).padStart(2, '0')}</span>
+          <span>{project.period}</span>
+        </div>
 
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -translate-x-full bg-black/90 transition-transform duration-500 ease-out group-hover:translate-x-0 group-active:translate-x-0 group-focus-within:translate-x-0"
-        />
+        <div className="relative aspect-square overflow-hidden border border-foreground/25 bg-black shadow-[0_28px_80px_rgba(0,0,0,0.42)] transition duration-500 ease-out group-hover:border-foreground/50 group-focus-visible:border-primary-light">
+          <Image
+            src={project.imgUrl}
+            alt=""
+            fill
+            priority={priority}
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-110 group-active:scale-110 group-focus-visible:scale-110"
+            sizes="(max-width: 767px) 84vw, 352px"
+          />
 
-        <div className="absolute inset-0 flex -translate-x-full flex-col justify-between p-5 transition-transform duration-500 ease-out group-hover:translate-x-0 group-active:translate-x-0 group-focus-within:translate-x-0">
-          <div className="space-y-2">
-            <h3 id={titleId} className="text-3xl uppercase text-foreground">
-              {project.name}
-            </h3>
-            <p className="text-lg text-foreground/85">{project.shortDescription}</p>
-            <p className="text-md text-foreground/70 uppercase">{project.period}</p>
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 bottom-0 z-10 h-1/2 bg-gradient-to-t from-black/95 via-black/45 to-transparent desktop:hidden"
+          />
+          <HeadingTag
+            id={titleId}
+            className="absolute inset-x-5 bottom-5 z-20 text-[clamp(2.5rem,10vw,4rem)] font-bold uppercase leading-[0.86] tracking-[-0.025em] text-foreground drop-shadow-[0_3px_16px_rgba(0,0,0,0.9)] tablet:text-5xl desktop:sr-only"
+          >
+            {project.name}
+          </HeadingTag>
+
+          <div
+            className={cn(
+              'absolute inset-0 hidden flex-col justify-between bg-black/90 p-6 transition-transform duration-500 ease-out desktop:flex',
+              revealFromLeft ? '-translate-x-full' : 'translate-x-full',
+              'group-hover:translate-x-0 group-focus-visible:translate-x-0',
+            )}
+          >
+            <div>
+              <span aria-hidden="true" className="block text-4xl font-bold uppercase leading-[0.9] text-foreground">
+                {project.name}
+              </span>
+              <p className="mt-4 font-reading text-base leading-relaxed text-foreground/78">
+                {project.shortDescription}
+              </p>
+            </div>
+
+            <div className="flex items-end justify-between gap-4">
+              {galleryPreview.length > 0 ? (
+                <ul aria-hidden="true" className="flex items-center gap-2">
+                  {galleryPreview.map(media => (
+                    <li
+                      key={media.src}
+                      className="relative h-12 w-12 shrink-0 overflow-hidden border border-foreground/30 bg-foreground/10"
+                    >
+                      <Image
+                        src={media.src}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="48px"
+                        unoptimized={media.animated}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              <span aria-hidden="true" className="ml-auto text-2xl text-primary-light">
+                →
+              </span>
+            </div>
           </div>
-
-          {galleryPreview.length > 0 ? (
-            <ul aria-hidden="true" className="flex items-center gap-3">
-              {galleryPreview.map(gallerySrc => (
-                <li
-                  key={gallerySrc}
-                  style={{ position: 'relative' }}
-                  className="relative h-15 w-19 shrink-0 overflow-hidden rounded-xs border border-foreground/30 bg-foreground/10"
-                >
-                  <Image src={gallerySrc} alt="" fill className="object-cover" sizes="64px" />
-                </li>
-              ))}
-            </ul>
-          ) : null}
         </div>
       </article>
     </Link>
