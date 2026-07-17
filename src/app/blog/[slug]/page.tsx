@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+import { BlogComments } from '@/components/blog-comments'
 import { BlogPostCoverImage } from '@/components/blog-post-cover-image'
 import { BlogPostFooter } from '@/components/blog-post-footer'
 import { BlogTableOfContents } from '@/components/blog-table-of-contents'
@@ -57,6 +58,9 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       title: post.title,
       description: post.description,
       images: [socialImage],
+    },
+    other: {
+      'giscus:backlink': `${siteUrl}/blog/${slug}`,
     },
   }
 }
@@ -165,9 +169,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="mx-auto mt-12 max-w-[57ch] font-reading text-lg leading-[1.75] text-foreground/[0.88] [text-wrap:pretty]">
             <Content />
           </div>
-
-          <BlogPostFooter newerPost={newerPost} olderPost={olderPost} />
         </article>
+
+        <BlogComments slug={post.slug} />
+        <BlogPostFooter newerPost={newerPost} olderPost={olderPost} />
 
         <script type="application/ld+json">{serializedArticleJsonLd}</script>
       </section>

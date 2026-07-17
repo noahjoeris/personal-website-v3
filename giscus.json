@@ -1,0 +1,13 @@
+{
+  "origins": [
+    "https://giscus.app",
+    "https://noahjoeris.com",
+    "https://www.noahjoeris.com",
+    "https://personal-website-v3.vercel.app"
+  ],
+  "originsRegex": [
+    "^https://personal-website-v3-[a-z0-9-]+-noahjoeris-projects\\.vercel\\.app$",
+    "^http://localhost:[0-9]+$"
+  ],
+  "defaultCommentOrder": "oldest"
+}
