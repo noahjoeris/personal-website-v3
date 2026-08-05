@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { BlogComments } from '@/components/blog-comments'
 import { BlogPostCoverImage } from '@/components/blog-post-cover-image'
 import { BlogPostFooter } from '@/components/blog-post-footer'
+import { BlogReadingProgress } from '@/components/blog-reading-progress'
 import { BlogTableOfContents } from '@/components/blog-table-of-contents'
 import { Navbar } from '@/components/navbar'
 import { blogData, blogPostTagLabels } from '@/data/blog-data'
@@ -99,6 +100,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <main id="main-content" className="min-h-screen bg-background text-foreground">
+      <BlogReadingProgress articleId="blog-post" />
       <Navbar />
       <section className="mx-auto w-full max-w-6xl px-6 pb-24 pt-28 tablet:px-10">
         <Link
@@ -108,7 +110,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <span aria-hidden="true">←</span> Back to blog
         </Link>
 
-        <article aria-labelledby="post-title">
+        <article id="blog-post" aria-labelledby="post-title">
           <header className="mx-auto mt-6 max-w-5xl border-b border-foreground/12 pb-7">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs uppercase tracking-[0.15em] text-foreground/60 tablet:text-sm">
               <Link
@@ -172,8 +174,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </article>
 
-        <BlogComments slug={post.slug} />
         <BlogPostFooter newerPost={newerPost} olderPost={olderPost} />
+        <BlogComments slug={post.slug} />
 
         <script type="application/ld+json">{serializedArticleJsonLd}</script>
       </section>
