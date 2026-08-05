@@ -88,7 +88,7 @@ These reasons can also be transitive: a transaction may be marked canonical beca
 
 `CanonicalViewTask` is the second step. It turns the `CanonicalReason`s into `ChainPosition`s, defining where the transactions sit in the chain.
 
-For transitively anchored transactions, it requests additional chain data to determine whether the transaction has a direct anchor.
+For transitively anchored transactions, it requests additional chain data to determine whether the transaction has a direct anchor available.
 
 ## The Driver
 
@@ -141,7 +141,7 @@ where
 }
 ```
 
-The loop is intentionally simple. Whenever the task returns `TaskProgress::Query(heights)`, the driver resolves those heights and continues polling.
+The loop is simple. Whenever the task returns `TaskProgress::Query(heights)`, the driver resolves those heights and continues polling until finished.
 
 ## Usage
 
@@ -175,12 +175,12 @@ pub fn canonicalize<A: Anchor>(
 
 `ChainTask` provides the sans-I/O core. Tasks declare the block heights they need, while the driver resolves those heights. This keeps canonicalization decoupled from the chain source and leaves the driver in control of I/O.
 
-This design supports synchronous or asynchronous drivers and provides independence from a particular source or runtime. A task does not care where blocks come from or how the driver obtains them.
+This design supports synchronous or asynchronous drivers. A task does not care where blocks come from or how the driver obtains them.
 
 It also improves testability and allows drivers backed by sources such as Bitcoin Core RPC or streaming clients to be added without changing the canonicalization logic.
 
 ## Additional Details
 
-`BlockQueries` acts as a cache for a task. It deduplicates requests, tracks which heights have been fetched, and allows fetched data to be reused.
+There are a few details I’ve left out. One worth mentioning is BlockQueries, which acts as a cache for a task. It deduplicates requests, tracks which heights have been fetched, and allows fetched data to be reused.
 
 Canonicalization can also include median-time-past data for canonical transactions, making it easier to verify timelocks.
