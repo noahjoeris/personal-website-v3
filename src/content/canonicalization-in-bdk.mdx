@@ -1,0 +1,186 @@
+import { defineBlogPostMetadata } from "@/data/blog-data";
+
+export const metadata = defineBlogPostMetadata({
+  title: "A Short Introduction to Canonicalization in BDK",
+  description: "How BDK canonicalizes transactions with a sans-I/O ChainTask design.",
+  publishedAt: "2026-08-05",
+  tags: ["engineering", "bdk", "bitcoin"],
+  status: "published",
+  featured: true,
+});
+
+> The following is a short and incomplete introduction to our new canonicalization process in BDK. This is a new approach, it may change and is partially still a work in progress.
+
+## Motivation
+
+The goal of canonicalization is to turn the `TxGraph` into a conflict-free canonical view.
+
+We cannot use the transaction graph directly because it may contain conflicting transactions, data affected by reorgs, and stale observations.
+
+We also want to remain flexible about where chain data comes from. Using a sans-I/O pattern gives us an abstraction over the chain source, allowing it to be replaced without changing the canonicalization logic. Chain sources may be local or accessed over a network, and may use asynchronous or blocking I/O.
+
+## Overview
+
+The result of canonicalization is a `CanonicalView`.
+
+By combining the transaction graph with the best chain, we get a clear picture of all canonical transactions. The resulting view allows us to query transactions, outputs, UTXOs, and balances.
+
+Canonicalization is built around the `ChainTask` trait, two task implementations, and a driver.
+
+## The `ChainTask` Trait
+
+`ChainTask` is the core of the sans-I/O design.
+
+A task implements this trait and requests the block heights it needs to complete its work. A driver resolves those requests using data from a chain source.
+
+```rust
+pub trait ChainTask<B = BlockHash> {
+    type Output;
+
+    fn tip(&self) -> BlockId;
+
+    /// Drive the task forward, returning its progress status.
+    ///
+    /// Each call should perform one logical unit of work. The driver calls this
+    /// in a loop, matching the returned [`TaskProgress`].
+    fn poll(&mut self) -> TaskProgress;
+
+    fn resolve_query(&mut self, height: u32, response: Option<B>);
+
+    fn unresolved_queries<'a>(&'a self) -> impl Iterator<Item = u32> + 'a;
+
+    fn finish(self) -> Self::Output;
+}
+
+pub enum TaskProgress {
+    /// Internal progress was made. The driver should call
+    /// [`poll`](ChainTask::poll) again.
+    Advanced,
+
+    /// The task needs block data at these newly requested heights. The driver
+    /// should resolve each height via
+    /// [`resolve_query`](ChainTask::resolve_query) and call
+    /// [`poll`](ChainTask::poll) again.
+    Query(Vec<u32>),
+
+    Blocked,
+    Done,
+}
+```
+
+The most important method is `poll()`. The driver calls it repeatedly. Each call executes a unit of work, requests data, reports blocked, or reports completion.
+
+## The Canonicalization Tasks
+
+`CanonicalTask` and `CanonicalViewTask` both implement the `ChainTask` trait.
+
+### `CanonicalTask`
+
+`CanonicalTask` is the first step. It processes the transactions in the `TxGraph` and identifies the “winning” transactions.
+
+The transaction graph contains anchors for its transactions. These anchors are candidates that the task checks against the chain source.
+
+The task assigns a `CanonicalReason` to each canonical transaction. A transaction may be considered canonical because it was assumed canonical by the user, because it is anchored, or because it was observed in the mempool or a stale block.
+
+These reasons can also be transitive: a transaction may be marked canonical because one of its descendants is canonical.
+
+### `CanonicalViewTask`
+
+`CanonicalViewTask` is the second step. It turns the `CanonicalReason`s into `ChainPosition`s, defining where the transactions sit in the chain.
+
+For transitively anchored transactions, it requests additional chain data to determine whether the transaction has a direct anchor.
+
+## The Driver
+
+A driver repeatedly calls `poll()` and matches on the returned `TaskProgress`.
+
+When the task returns `Query(heights)`, the driver resolves those heights and supplies the results through `resolve_query()`. This continues until the task returns `Done`.
+
+At the moment, `LocalChain` is our only driver. It is fully synchronous and provides a `run_task()` method:
+
+```rust
+pub fn run_task<Q>(&self, mut task: Q) -> Q::Output
+where
+    Q: ChainTask<D>,
+    D: Clone,
+{
+    loop {
+        match task.poll() {
+            TaskProgress::Advanced => continue,
+            TaskProgress::Done => return task.finish(),
+            TaskProgress::Query(heights) => {
+                debug_assert!(
+                    !heights.is_empty(),
+                    "TaskProgress::Query must not be empty"
+                );
+
+                for height in heights {
+                    let data = self
+                        .get(height)
+                        .filter(|cp| {
+                            let chain_tip = task.tip();
+                            self.is_block_in_chain(cp.block_id(), chain_tip)
+                                == Some(true)
+                        })
+                        .map(|cp| cp.data());
+
+                    task.resolve_query(height, data);
+                }
+            }
+            // This is a synchronous driver: every `Query` height is resolved
+            // before the next poll, so the task never has an in-flight query
+            // and cannot return this variant.
+            TaskProgress::Blocked => {
+                unreachable!(
+                    "run_task resolves queries synchronously; \
+                     nothing is ever in-flight"
+                )
+            }
+        }
+    }
+}
+```
+
+The loop is intentionally simple. Whenever the task returns `TaskProgress::Query(heights)`, the driver resolves those heights and continues polling.
+
+## Usage
+
+The easiest way to perform canonicalization in one call is:
+
+```rust
+let view = chain.canonicalize(
+    &tx_graph,
+    chain.tip().block_id(),
+    CanonicalParams::default(),
+);
+```
+
+Internally, this runs both tasks:
+
+```rust
+pub fn canonicalize<A: Anchor>(
+    &self,
+    tx_graph: &TxGraph<A>,
+    tip: BlockId,
+    params: CanonicalParams,
+) -> CanonicalView<A> {
+    let (txs, queries) =
+        self.run_task(CanonicalTask::new(tx_graph, tip, params));
+
+    self.run_task(txs.view_task(tx_graph, queries))
+}
+```
+
+## The Sans-I/O Architecture
+
+`ChainTask` provides the sans-I/O core. Tasks declare the block heights they need, while the driver resolves those heights. This keeps canonicalization decoupled from the chain source and leaves the driver in control of I/O.
+
+This design supports synchronous or asynchronous drivers and provides independence from a particular source or runtime. A task does not care where blocks come from or how the driver obtains them.
+
+It also improves testability and allows drivers backed by sources such as Bitcoin Core RPC or streaming clients to be added without changing the canonicalization logic.
+
+## Additional Details
+
+`BlockQueries` acts as a cache for a task. It deduplicates requests, tracks which heights have been fetched, and allows fetched data to be reused.
+
+Canonicalization can also include median-time-past data for canonical transactions, making it easier to verify timelocks.
