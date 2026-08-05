@@ -7,7 +7,7 @@ import { BlogPostCoverImage } from '@/components/blog-post-cover-image'
 import { BlogPostFooter } from '@/components/blog-post-footer'
 import { BlogTableOfContents } from '@/components/blog-table-of-contents'
 import { Navbar } from '@/components/navbar'
-import { blogData, blogPostCategoryLabels } from '@/data/blog-data'
+import { blogData, blogPostTagLabels } from '@/data/blog-data'
 import { formatBlogPostDate, getPublishedBlogPostBySlug, getPublishedBlogPosts } from '@/lib/blog'
 import { siteUrl } from '@/lib/site'
 
@@ -142,15 +142,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </p>
 
             <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs uppercase tracking-[0.14em]">
-              <Link
-                href={`/blog?topic=${post.category}`}
-                className="rounded-sm text-primary-light underline decoration-primary/35 underline-offset-4 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                {blogPostCategoryLabels[post.category]}
-              </Link>
-              <ul className="flex flex-wrap gap-x-3 gap-y-1 text-foreground/50" aria-label="Post tags">
+              <ul className="flex flex-wrap gap-x-3 gap-y-1" aria-label="Post tags">
                 {post.tags.map(tag => (
-                  <li key={tag}>#{tag}</li>
+                  <li key={tag}>
+                    <Link
+                      href={`/blog?topic=${tag}`}
+                      className="rounded-sm text-primary-light underline decoration-primary/35 underline-offset-4 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      {blogPostTagLabels[tag]}
+                    </Link>
+                  </li>
                 ))}
               </ul>
             </div>

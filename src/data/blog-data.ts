@@ -1,38 +1,24 @@
 export type ISODate = `${number}-${number}-${number}`
 
-export const blogPostCategories = ['bitcoin', 'open-source', 'self-hosting', 'life', 'technology'] as const
-
-export type BlogPostCategory = (typeof blogPostCategories)[number]
-
-export const blogPostCategoryLabels = {
-  bitcoin: 'Bitcoin',
-  'open-source': 'Open source',
-  'self-hosting': 'Self-hosting',
-  life: 'Life',
-  technology: 'Technology',
-} as const satisfies Record<BlogPostCategory, string>
-
-export const blogPostTags = [
-  'architecture',
-  'bitcoin',
-  'coding',
-  'crypto',
-  'mdx',
-  'nextjs',
-  'open-source',
-  'personal-growth',
-  'tech',
-] as const
+export const blogPostTags = ['bdk', 'bitcoin', 'crypto', 'engineering', 'personal-growth', 'tech'] as const
 
 export type BlogPostTag = (typeof blogPostTags)[number]
+
+export const blogPostTagLabels = {
+  bdk: 'BDK',
+  bitcoin: 'Bitcoin',
+  crypto: 'Crypto',
+  engineering: 'Engineering',
+  'personal-growth': 'Personal growth',
+  tech: 'Tech',
+} as const satisfies Record<BlogPostTag, string>
 
 export type BlogPostMetadata = {
   title: string
   description: string
-  category: BlogPostCategory
   publishedAt: ISODate
   updatedAt?: ISODate
-  tags: readonly BlogPostTag[]
+  tags: readonly [BlogPostTag, ...BlogPostTag[]]
   status: 'draft' | 'published'
   featured?: boolean
   coverImageSrc?: `/images/blog/${string}`
@@ -69,7 +55,9 @@ export function isBlogPostMetadata(value: unknown): value is BlogPostMetadata {
 
   const candidate = value as Record<string, unknown>
   const hasValidTags =
-    Array.isArray(candidate.tags) && candidate.tags.every(tag => blogPostTags.includes(tag as BlogPostTag))
+    Array.isArray(candidate.tags) &&
+    candidate.tags.length > 0 &&
+    candidate.tags.every(tag => blogPostTags.includes(tag as BlogPostTag))
   const hasValidUpdatedAt =
     candidate.updatedAt === undefined ||
     (isISODate(candidate.updatedAt) && isISODate(candidate.publishedAt) && candidate.updatedAt >= candidate.publishedAt)
@@ -79,7 +67,6 @@ export function isBlogPostMetadata(value: unknown): value is BlogPostMetadata {
     candidate.title.trim().length > 0 &&
     typeof candidate.description === 'string' &&
     candidate.description.trim().length > 0 &&
-    blogPostCategories.includes(candidate.category as BlogPostCategory) &&
     isISODate(candidate.publishedAt) &&
     hasValidUpdatedAt &&
     hasValidTags &&

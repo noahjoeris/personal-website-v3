@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { BlogPostCompact, BlogPostFeatured } from '@/components/blog-post-compact'
 import { Navbar } from '@/components/navbar'
 import { SectionHeading } from '@/components/section-heading'
-import { type BlogPostCategory, blogData, blogPostCategories, blogPostCategoryLabels } from '@/data/blog-data'
+import { type BlogPostTag, blogData, blogPostTagLabels, blogPostTags } from '@/data/blog-data'
 import { getPublishedBlogPosts } from '@/lib/blog'
 
 export const metadata: Metadata = {
@@ -32,22 +32,24 @@ type BlogPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
-function isBlogPostCategory(value: string | string[] | undefined): value is BlogPostCategory {
-  return typeof value === 'string' && blogPostCategories.includes(value as BlogPostCategory)
+function isBlogPostTag(value: string | string[] | undefined): value is BlogPostTag {
+  return typeof value === 'string' && blogPostTags.includes(value as BlogPostTag)
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const [posts, query] = await Promise.all([getPublishedBlogPosts(), searchParams])
-  const selectedTopic = isBlogPostCategory(query.topic) ? query.topic : null
+  const selectedTopic = isBlogPostTag(query.topic) ? query.topic : null
   const featuredPost = posts.find(post => post.featured)
   const archivePosts = selectedTopic
-    ? posts.filter(post => post.category === selectedTopic)
+    ? posts.filter(post => post.tags.includes(selectedTopic))
     : posts.filter(post => post.slug !== featuredPost?.slug)
   const postsByYear = new Map<number, typeof archivePosts>()
-  const topicCounts = new Map<BlogPostCategory, number>()
+  const topicCounts = new Map<BlogPostTag, number>()
 
   for (const post of posts) {
-    topicCounts.set(post.category, (topicCounts.get(post.category) ?? 0) + 1)
+    for (const tag of post.tags) {
+      topicCounts.set(tag, (topicCounts.get(tag) ?? 0) + 1)
+    }
   }
 
   for (const post of archivePosts) {
@@ -91,27 +93,27 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                       <span className="font-mono text-xs text-foreground">{posts.length}</span>
                     </Link>
                   </li>
-                  {blogPostCategories.map(category => {
-                    const count = topicCounts.get(category) ?? 0
+                  {blogPostTags.map(tag => {
+                    const count = topicCounts.get(tag) ?? 0
                     if (count === 0) {
                       return null
                     }
 
                     return (
-                      <li key={category}>
+                      <li key={tag}>
                         <Link
-                          href={`/blog?topic=${category}`}
+                          href={`/blog?topic=${tag}`}
                           scroll={false}
-                          aria-label={`${blogPostCategoryLabels[category]}: ${count} ${count === 1 ? 'post' : 'posts'}`}
-                          aria-current={selectedTopic === category ? 'page' : undefined}
+                          aria-label={`${blogPostTagLabels[tag]}: ${count} ${count === 1 ? 'post' : 'posts'}`}
+                          aria-current={selectedTopic === tag ? 'page' : undefined}
                           className="inline-flex h-9 items-center gap-2 rounded-md border border-foreground/12 bg-foreground/[0.03] px-3 transition-colors hover:border-foreground/30 focus-visible:border-primary-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[current=page]:border-primary-light aria-[current=page]:bg-foreground/[0.06]"
                         >
                           <span
                             className={`font-mono text-xs uppercase tracking-wide ${
-                              selectedTopic === category ? 'text-primary-light' : 'text-foreground/65'
+                              selectedTopic === tag ? 'text-primary-light' : 'text-foreground/65'
                             }`}
                           >
-                            {blogPostCategoryLabels[category]}
+                            {blogPostTagLabels[tag]}
                           </span>
                           <span className="font-mono text-xs text-foreground">{count}</span>
                         </Link>
@@ -128,7 +130,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                   id="featured-post-heading"
                   className="mb-5 text-sm font-semibold uppercase tracking-[0.22em] text-primary-light"
                 >
-                  Start here
+                  Featured
                 </h2>
                 <BlogPostFeatured post={featuredPost} />
               </section>

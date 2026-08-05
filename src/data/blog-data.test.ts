@@ -5,7 +5,6 @@ import { isBlogPostMetadata } from './blog-data'
 const validMetadata = {
   title: 'A post',
   description: 'A useful description.',
-  category: 'bitcoin',
   publishedAt: '2026-07-15',
   tags: ['bitcoin'],
   status: 'published',
@@ -24,8 +23,8 @@ describe('blog post metadata validation', () => {
     expect(isBlogPostMetadata({ ...validMetadata, updatedAt: '2026-07-14' })).toBe(false)
   })
 
-  it('rejects unknown categories, tags, and cover-image paths', () => {
-    expect(isBlogPostMetadata({ ...validMetadata, category: 'finance' })).toBe(false)
+  it('rejects empty tags, unknown tags, and cover-image paths', () => {
+    expect(isBlogPostMetadata({ ...validMetadata, tags: [] })).toBe(false)
     expect(isBlogPostMetadata({ ...validMetadata, tags: ['unknown'] })).toBe(false)
     expect(isBlogPostMetadata({ ...validMetadata, coverImageSrc: '/other/image.webp' })).toBe(false)
   })

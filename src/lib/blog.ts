@@ -27,9 +27,9 @@ export type BlogPost = BlogPostSummary & {
   headings: BlogHeading[]
 }
 
-export function formatBlogPostDate(date: string) {
+export function formatBlogPostDate(date: string, dateStyle: 'long' | 'medium' = 'long') {
   return new Intl.DateTimeFormat('en', {
-    dateStyle: 'long',
+    dateStyle,
   }).format(new Date(date))
 }
 
