@@ -34,3 +34,6 @@ pnpm-debug.log*
 
 # AI
 .claude
+
+# Next.js generated TypeScript refs
+next-env.d.ts
