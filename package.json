@@ -27,7 +27,9 @@
     "next": "^16.2.10",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-markdown": "^10.1.0"
+    "react-markdown": "^10.1.0",
+    "rehype-pretty-code": "^0.14.5",
+    "shiki": "^4.4.2"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.3",

@@ -70,3 +70,35 @@ html:not(.js-hydrated) [style*="opacity:0"] {
     transform: none;
   }
 }
+
+/* rehype-pretty-code: line padding so highlight spans full scroll width */
+figure[data-rehype-pretty-code-figure] code {
+  display: grid;
+}
+
+figure[data-rehype-pretty-code-figure] [data-line] {
+  border-left: 2px solid transparent;
+  padding-inline: 0.75rem;
+}
+
+@media (min-width: 48rem) {
+  figure[data-rehype-pretty-code-figure] [data-line] {
+    padding-inline: 1rem;
+  }
+}
+
+figure[data-rehype-pretty-code-figure] [data-highlighted-line] {
+  background-color: rgb(255 255 255 / 0.06);
+  border-left-color: var(--color-primary);
+}
+
+figure[data-rehype-pretty-code-figure] [data-highlighted-chars] {
+  border-radius: 0.2rem;
+  background-color: rgb(255 255 255 / 0.1);
+  padding-inline: 0.15rem;
+}
+
+/* Increase dimmed-theme comment contrast against the code-block background. */
+figure[data-rehype-pretty-code-figure] [style*="color:#768390"] {
+  color: #8b949e !important;
+}

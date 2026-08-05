@@ -13,6 +13,7 @@ import {
   type ThHTMLAttributes,
 } from 'react'
 
+import { CodeBlock } from '@/components/code-block'
 import { slugifyBlogHeading } from '@/lib/blog-content'
 import { cn } from '@/lib/utils'
 
@@ -167,6 +168,13 @@ function MDXTableCell({ className, ...props }: TdHTMLAttributes<HTMLTableCellEle
   return <td className={cn('border-b border-foreground/15 p-3 text-left align-top', className)} {...props} />
 }
 
+function isHighlightedCodeBlock(props: HTMLAttributes<HTMLElement>) {
+  return 'data-language' in props || 'data-theme' in props
+}
+
+const codeBlockShellClassName =
+  'relative left-1/2 mt-8 w-[min(48rem,calc(100vw-3rem))] max-w-none -translate-x-1/2 overflow-hidden rounded-md border border-foreground/10 bg-foreground/5 tablet:w-[min(56rem,calc(100vw-5rem))]'
+
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ...components,
@@ -174,16 +182,45 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     blockquote: ({ className, ...props }) => (
       <blockquote className={cn('mt-8 border-l-2 border-primary/55 pl-5 text-foreground/70', className)} {...props} />
     ),
-    code: ({ className, ...props }) => (
-      <code
-        className={cn('rounded-sm bg-foreground/10 px-1.5 py-0.5 text-[0.95em] text-foreground', className)}
-        {...props}
-      />
-    ),
-    figcaption: ({ className, ...props }) => (
-      <figcaption className={cn('mt-3 text-center text-sm leading-6 text-foreground/60', className)} {...props} />
-    ),
-    figure: ({ className, ...props }) => <figure className={cn('mt-10 [&_img]:my-0', className)} {...props} />,
+    code: ({ className, ...props }) => {
+      const isBlock =
+        isHighlightedCodeBlock(props) || (typeof className === 'string' && /(^|\s)language-/.test(className))
+
+      return (
+        <code
+          className={cn(
+            !isBlock && 'rounded-sm bg-foreground/10 px-1.5 py-0.5 text-[0.95em] text-foreground',
+            isBlock && 'font-mono text-[1em]',
+            className,
+          )}
+          {...props}
+        />
+      )
+    },
+    figcaption: ({ className, ...props }) => {
+      if ('data-rehype-pretty-code-title' in props) {
+        return (
+          <figcaption
+            className={cn(
+              'border-b border-foreground/10 px-4 py-2 font-mono text-xs tracking-wide text-foreground/55',
+              className,
+            )}
+            {...props}
+          />
+        )
+      }
+
+      return (
+        <figcaption className={cn('mt-3 text-center text-sm leading-6 text-foreground/60', className)} {...props} />
+      )
+    },
+    figure: ({ className, ...props }) => {
+      if ('data-rehype-pretty-code-figure' in props) {
+        return <figure className={cn(codeBlockShellClassName, className)} {...props} />
+      }
+
+      return <figure className={cn('mt-10 [&_img]:my-0', className)} {...props} />
+    },
     h1: MDXHeading1,
     h2: MDXHeading2,
     h3: MDXHeading3,
@@ -205,15 +242,37 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <ol className={cn('mt-6 list-decimal pl-6', className)} {...props} />
     ),
     p: ({ className, ...props }) => <p className={cn('mt-6 first:mt-0', className)} {...props} />,
-    pre: ({ className, ...props }) => (
-      <pre
-        className={cn(
-          'mt-8 overflow-x-auto rounded-md border border-foreground/10 bg-foreground/5 p-4 [&_code]:bg-transparent [&_code]:p-0',
-          className,
-        )}
-        {...props}
-      />
-    ),
+    pre: ({ children, className, ...props }) => {
+      const isHighlighted = isHighlightedCodeBlock(props)
+
+      if (isHighlighted) {
+        const language = 'data-language' in props ? props['data-language'] : undefined
+
+        return (
+          <CodeBlock
+            code={getNodeText(children)}
+            language={typeof language === 'string' ? language : undefined}
+            className={className}
+            {...props}
+          >
+            {children}
+          </CodeBlock>
+        )
+      }
+
+      return (
+        <pre
+          className={cn(
+            'overflow-x-auto p-4 font-mono text-sm leading-relaxed [&_code]:bg-transparent [&_code]:p-0 tablet:text-[0.9em]',
+            codeBlockShellClassName,
+            className,
+          )}
+          {...props}
+        >
+          {children}
+        </pre>
+      )
+    },
     strong: ({ className, ...props }) => (
       <strong className={cn('font-semibold text-foreground', className)} {...props} />
     ),
