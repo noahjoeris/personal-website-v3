@@ -71,13 +71,19 @@ describe('createFireflyPose', () => {
   })
 
   it('avoids occupied marks', () => {
-    const occupied = [{ x: 10, y: 18, size: 80 }]
+    const occupiedMark = { x: 10, y: 18, size: 80 }
     const collidingRand = sequence([
       0, 0, 0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.9, 0.9, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
     ])
-    const pose = createFireflyPose({ layout: 'desktop', viewport, occupied, rand: collidingRand, slot: 0 })
+    const pose = createFireflyPose({
+      layout: 'desktop',
+      viewport,
+      occupied: [occupiedMark],
+      rand: collidingRand,
+      slot: 0,
+    })
 
-    expect(marksOverlap(pose, occupied[0], viewport)).toBe(false)
+    expect(marksOverlap(pose, occupiedMark, viewport)).toBe(false)
   })
 })
 

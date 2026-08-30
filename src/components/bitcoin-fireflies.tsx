@@ -46,7 +46,7 @@ const OVERLAP_GAP = 36
 const MAX_PLACEMENT_ATTEMPTS = 48
 
 // Edge columns, bands down the page so density holds after they scroll with the document.
-export const DESKTOP_REGIONS: readonly FireflyRegion[] = [
+export const DESKTOP_REGIONS: readonly [FireflyRegion, ...FireflyRegion[]] = [
   { x: [6, 16], y: [4, 11] },
   { x: [82, 94], y: [5, 12] },
   { x: [86, 96], y: [14, 22] },
@@ -61,7 +61,7 @@ export const DESKTOP_REGIONS: readonly FireflyRegion[] = [
   { x: [5, 13], y: [82, 92] },
 ]
 
-export const MOBILE_REGIONS: readonly FireflyRegion[] = [
+export const MOBILE_REGIONS: readonly [FireflyRegion, ...FireflyRegion[]] = [
   { x: [6, 20], y: [3, 10] },
   { x: [80, 94], y: [4, 11] },
   { x: [5, 16], y: [18, 28] },
