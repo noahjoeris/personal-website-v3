@@ -30,7 +30,7 @@ export type AboutData = {
     name: string
     title: readonly [string, string]
     intro: string
-    portraitImgSrc: `/images/about/${string}`
+    portraitVideoSrc: `/images/about/${string}`
     status: string
     signals: readonly string[]
   }
@@ -64,7 +64,7 @@ export const aboutData = {
     name: 'Noah Joeris',
     title: ['Noah', 'Joeris'],
     intro: 'Bitcoin Software Engineer',
-    portraitImgSrc: '/images/about/me.webp',
+    portraitVideoSrc: '/images/about/me.mp4',
     status: 'Status: Building',
     signals: ['Bitcoin open source', 'React + Rust'],
   },

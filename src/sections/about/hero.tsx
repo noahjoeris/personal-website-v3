@@ -1,14 +1,55 @@
 'use client'
 
 import { motion, useReducedMotion } from 'framer-motion'
-import Image from 'next/image'
+import { useEffect, useRef } from 'react'
 
 import { aboutData } from '@/data/about-data'
 
 const REVEAL_EASE = [0.19, 1, 0.22, 1] as const
 
+function AboutPortrait({ name, videoSrc, reduceMotion }: { name: string; videoSrc: string; reduceMotion: boolean }) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    video.muted = true
+    video.defaultMuted = true
+
+    if (reduceMotion) {
+      video.pause()
+      return
+    }
+
+    const play = () => {
+      if (video.ended) return
+      void video.play().catch(() => {})
+    }
+
+    play()
+    video.addEventListener('canplay', play)
+    return () => video.removeEventListener('canplay', play)
+  }, [reduceMotion])
+
+  return (
+    <video
+      ref={videoRef}
+      autoPlay={!reduceMotion}
+      muted
+      playsInline
+      preload="auto"
+      disablePictureInPicture
+      aria-label={`Portrait of ${name}`}
+      className="absolute inset-0 h-full w-full object-cover"
+    >
+      <source src={videoSrc} type="video/mp4" />
+    </video>
+  )
+}
+
 export function AboutHero() {
-  const { name, title, intro, portraitImgSrc, status, signals } = aboutData.hero
+  const { name, title, intro, portraitVideoSrc, status, signals } = aboutData.hero
   const shouldReduceMotion = useReducedMotion()
 
   return (
@@ -69,28 +110,11 @@ export function AboutHero() {
           initial={shouldReduceMotion ? false : { opacity: 0, x: 35 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.95, delay: 0.2, ease: REVEAL_EASE }}
-          className="relative mx-auto w-[82%] max-w-72 tablet:w-[72%] tablet:max-w-[26rem] desktop:col-span-5 desktop:mt-10 desktop:w-full desktop:max-w-xl"
+          className="relative mx-auto w-[90%] max-w-80 tablet:w-[78%] tablet:max-w-[28rem] desktop:col-span-5 desktop:mt-6 desktop:w-full desktop:max-w-2xl"
         >
-          <div aria-hidden className="absolute -inset-3 border border-foreground/20 tablet:-inset-5" />
-          <div className="relative aspect-[4/5] overflow-hidden bg-background/25">
-            <Image
-              src={portraitImgSrc}
-              alt={`Portrait of ${name}`}
-              fill
-              priority
-              sizes="(max-width: 1023px) 100vw, 40vw"
-              className="object-cover grayscale contrast-125"
-            />
-            <div aria-hidden className="absolute inset-0 bg-primary/30 mix-blend-color" />
-            <div
-              aria-hidden
-              className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent"
-            />
+          <div className="about-hero-portrait-mask relative aspect-[4/5] overflow-hidden">
+            <AboutPortrait name={name} videoSrc={portraitVideoSrc} reduceMotion={Boolean(shouldReduceMotion)} />
           </div>
-          <div
-            aria-hidden
-            className="absolute -bottom-px -right-px h-24 w-24 bg-background [clip-path:polygon(100%_0,100%_100%,0_100%)] tablet:h-36 tablet:w-36"
-          />
         </motion.div>
       </div>
 

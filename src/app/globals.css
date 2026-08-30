@@ -54,6 +54,18 @@ body {
   color: var(--color-foreground);
 }
 
+/* Soft-edge dissolve so the about portrait sits in the hero wash instead of a hard frame. */
+.about-hero-portrait-mask {
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 4%, #000 14%, #000 86%, transparent 96%),
+    linear-gradient(to bottom, transparent 2%, #000 10%, #000 78%, transparent 100%);
+  mask-image:
+    linear-gradient(to right, transparent 4%, #000 14%, #000 86%, transparent 96%),
+    linear-gradient(to bottom, transparent 2%, #000 10%, #000 78%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
 /* Keep SSR content visible until React hydrates (Edge tracking prevention, slow JS, blocked
  * scripts). Framer Motion renders intro elements at opacity:0; if hydration never runs they would
  * stay invisible and the page would look blank. The `.js-hydrated` class is added on hydration
