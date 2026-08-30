@@ -11,7 +11,7 @@ export function AboutValues() {
   return (
     <section
       aria-labelledby="about-values-title"
-      className="relative overflow-hidden border-t border-foreground/15 px-6 py-24 tablet:px-10 tablet:py-32 desktop:px-16"
+      className="relative z-10 overflow-hidden border-t border-foreground/15 px-6 py-24 tablet:px-10 tablet:py-32 desktop:px-16"
     >
       <div className="relative mx-auto w-full max-w-[88rem]">
         <div className="border-b border-foreground/20 pb-12 tablet:pb-16">

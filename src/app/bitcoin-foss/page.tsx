@@ -138,9 +138,9 @@ export default async function BitcoinFossPage() {
   const events = feedState.status === 'ok' ? feedState.feed.events : []
 
   return (
-    <main id="main-content" className="min-h-screen bg-background text-foreground">
+    <main id="main-content" className="min-h-screen text-foreground">
       <Navbar />
-      <section className="mx-auto w-full max-w-5xl px-6 pb-20 pt-24 tablet:px-10 desktop:px-16">
+      <section className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-20 pt-24 tablet:px-10 desktop:px-16">
         <SectionHeading eyebrow="Proof of work" title={pageTitle} headingLevel="h1" size="compact" />
 
         {feedState.status === 'error' ? (

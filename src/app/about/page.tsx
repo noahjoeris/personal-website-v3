@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main id="main-content" className="min-h-screen bg-background text-foreground">
+    <main id="main-content" className="min-h-screen text-foreground">
       <Navbar />
       <AboutHero />
       <AboutStory />

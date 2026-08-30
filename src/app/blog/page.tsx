@@ -58,9 +58,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   }
 
   return (
-    <main id="main-content" className="min-h-screen bg-background text-foreground">
+    <main id="main-content" className="min-h-screen text-foreground">
       <Navbar />
-      <section className="relative isolate mx-auto w-full max-w-5xl px-6 pb-24 pt-28 tablet:px-10">
+      <section className="relative z-10 isolate mx-auto w-full max-w-5xl px-6 pb-24 pt-28 tablet:px-10">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute left-1/2 top-8 -z-10 h-80 w-[80vw] max-w-4xl -translate-x-1/2 rounded-full bg-primary/10 blur-3xl"

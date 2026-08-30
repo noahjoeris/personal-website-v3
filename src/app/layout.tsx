@@ -3,6 +3,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata, Viewport } from 'next'
 import { Big_Shoulders, IBM_Plex_Mono } from 'next/font/google'
 
+import { BitcoinFireflies } from '@/components/bitcoin-fireflies'
 import { Footer } from '@/components/footer'
 import { GrainOverlay } from '@/components/grain-overlay'
 import { HydrationFallback } from '@/components/hydration-fallback'
@@ -76,7 +77,8 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <div className="flex min-h-screen flex-col">
+        <div className="relative flex min-h-screen flex-col">
+          <BitcoinFireflies />
           <div className="flex-1">{children}</div>
           <Footer />
         </div>

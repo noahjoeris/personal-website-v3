@@ -66,10 +66,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
     <>
       <Navbar />
-      <main id="main-content" className="min-h-screen bg-background text-foreground">
+      <main id="main-content" className="min-h-screen text-foreground">
         <section
           aria-labelledby="project-title"
-          className="relative flex min-h-[50vh] items-center justify-center overflow-hidden px-6 pt-20 tablet:min-h-[60vh] tablet:px-10 tablet:pt-24"
+          className="relative z-10 flex min-h-[50vh] items-center justify-center overflow-hidden px-6 pt-20 tablet:min-h-[60vh] tablet:px-10 tablet:pt-24"
         >
           <Link
             href="/portfolio"
@@ -97,7 +97,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         <section
           aria-labelledby="about-project"
-          className="mx-auto max-w-6xl px-6 py-16 tablet:px-10 tablet:py-24 desktop:px-16"
+          className="relative z-10 mx-auto max-w-6xl px-6 py-16 tablet:px-10 tablet:py-24 desktop:px-16"
         >
           <div className="grid gap-12 desktop:grid-cols-[minmax(0,1fr)_19rem] desktop:gap-20">
             <div>

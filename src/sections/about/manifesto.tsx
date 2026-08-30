@@ -14,7 +14,7 @@ export function AboutManifesto() {
   return (
     <section
       aria-labelledby="about-manifesto-title"
-      className="relative isolate overflow-hidden border-y border-foreground/15 bg-[#021d1c]"
+      className="relative z-10 isolate overflow-hidden border-y border-foreground/15 bg-[#021d1c]"
     >
       <div
         aria-hidden

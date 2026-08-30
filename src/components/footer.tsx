@@ -11,7 +11,7 @@ export function Footer() {
   })
 
   return (
-    <footer className="bg-background">
+    <footer className="relative z-10 bg-background">
       <div className="px-5 pt-3 tablet:pt-4 tablet:px-10 desktop:px-16">
         <AnimatedDivider className="bg-foreground/20" />
       </div>

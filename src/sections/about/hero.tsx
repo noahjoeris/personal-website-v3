@@ -55,7 +55,7 @@ export function AboutHero() {
   return (
     <section
       aria-labelledby="about-hero-title"
-      className="relative isolate overflow-hidden bg-background desktop:min-h-screen"
+      className="relative z-10 isolate overflow-hidden bg-background desktop:min-h-screen"
     >
       <div
         aria-hidden
@@ -110,7 +110,7 @@ export function AboutHero() {
           initial={shouldReduceMotion ? false : { opacity: 0, x: 35 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.95, delay: 0.2, ease: REVEAL_EASE }}
-          className="relative mx-auto w-[90%] max-w-80 tablet:w-[78%] tablet:max-w-[28rem] desktop:col-span-5 desktop:mt-6 desktop:w-full desktop:max-w-2xl"
+          className="relative z-10 mx-auto w-[90%] max-w-80 tablet:w-[78%] tablet:max-w-[28rem] desktop:col-span-5 desktop:mt-6 desktop:w-full desktop:max-w-2xl"
         >
           <div className="about-hero-portrait-mask relative aspect-[4/5] overflow-hidden">
             <AboutPortrait name={name} videoSrc={portraitVideoSrc} reduceMotion={Boolean(shouldReduceMotion)} />

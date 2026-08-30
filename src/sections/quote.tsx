@@ -46,7 +46,7 @@ export function QuoteSection() {
   return (
     <section
       aria-labelledby="quote-section-title"
-      className="relative isolate flex min-h-[80vh] items-center overflow-hidden border-y border-foreground/15 bg-background px-6 py-20 tablet:px-10 tablet:py-24 desktop:min-h-screen desktop:px-16 desktop:py-28"
+      className="relative z-10 isolate flex min-h-[80vh] items-center overflow-hidden border-y border-foreground/15 bg-background px-6 py-20 tablet:px-10 tablet:py-24 desktop:min-h-screen desktop:px-16 desktop:py-28"
     >
       <div className="mx-auto w-full max-w-9xl">
         <h2 id="quote-section-title" className="sr-only">

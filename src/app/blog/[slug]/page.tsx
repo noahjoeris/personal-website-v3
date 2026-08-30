@@ -99,10 +99,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { Content } = post
 
   return (
-    <main id="main-content" className="min-h-screen bg-background text-foreground">
+    <main id="main-content" className="min-h-screen text-foreground">
       <BlogReadingProgress articleId="blog-post" />
       <Navbar />
-      <section className="mx-auto w-full max-w-6xl px-6 pb-24 pt-28 tablet:px-10">
+      <section className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-24 pt-28 tablet:px-10">
         <Link
           href="/blog"
           className="inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-medium uppercase tracking-[0.2em] text-foreground/60 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
