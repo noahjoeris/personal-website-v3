@@ -40,13 +40,13 @@ export const metadata: Metadata = {
     title: landingData.metadata.title,
     description: landingData.metadata.description,
     url: '/',
-    images: [{ url: '/images/about/me.webp', alt: siteName }],
+    images: [{ url: landingData.hero.heroImgSrc, alt: siteName }],
   },
   twitter: {
     card: 'summary_large_image',
     title: landingData.metadata.title,
     description: landingData.metadata.description,
-    images: ['/images/about/me.webp'],
+    images: [landingData.hero.heroImgSrc],
   },
 }
 

@@ -37,7 +37,7 @@ export const blogData = {
   authorHref: '/about',
   description: 'Practical notes and opinionated essays on Bitcoin, freedom tech, and living deliberately.',
   emptyStateDescription: 'The first posts will land here soon.',
-  socialImageSrc: '/images/about/me.webp',
+  socialImageSrc: '/images/noah-hero.webp',
 } as const satisfies BlogData
 
 /**
