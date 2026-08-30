@@ -77,7 +77,7 @@ export const landingData = {
   hero: {
     srTitle: 'Noah Joeris - Bitcoin Software Engineer',
     signatureImgSrc: '/images/signature.png',
-    heroImgSrc: '/images/noah-hero.avif',
+    heroImgSrc: '/images/noah-hero.webp',
     intro: {
       highlight: 'Building',
       text: 'Bitcoin software',

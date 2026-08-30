@@ -6,7 +6,8 @@
 @theme inline {
   --breakpoint-*: initial;
   --breakpoint-tablet: 48rem;
-  --breakpoint-desktop: 64rem;
+  /* Keep 1024px iPad Pro portrait in the tablet layout. */
+  --breakpoint-desktop: 64.0625rem;
   --font-sans: var(--font-big-shoulders), sans-serif;
   --font-reading: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;

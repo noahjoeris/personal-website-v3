@@ -19,11 +19,11 @@ export function HeroImage() {
       <Image
         src={heroImgSrc}
         alt=""
-        width={2048}
-        height={1152}
+        width={1408}
+        height={1408}
         priority
-        className="absolute bottom-0 left-1/2 h-auto w-[860px] max-w-none -translate-x-1/2 tablet:w-[1160px] desktop:inset-0 desktop:h-full desktop:w-full desktop:max-w-full desktop:translate-x-0 desktop:object-cover desktop:object-[center_20%]"
-        sizes="(max-width: 767px) 860px, (max-width: 1023px) 1160px, 100vw"
+        className="absolute bottom-0 left-1/2 h-auto w-full max-w-[420px] -translate-x-1/2 object-contain object-bottom tablet:h-[94%] tablet:w-auto tablet:max-w-none desktop:h-[583px]"
+        sizes="(max-width: 420px) 100vw, (max-width: 767px) 420px, (max-width: 1023px) 583px, 583px"
       />
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-linear-to-b from-transparent via-background/40 to-background tablet:h-52 desktop:h-[30vh] desktop:via-background/32 desktop:to-background" />
