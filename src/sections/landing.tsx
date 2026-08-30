@@ -10,7 +10,7 @@ export function LandingSection() {
     <section className="relative overflow-hidden bg-background desktop:min-h-screen">
       <LandingBackground />
 
-      <div className="relative mt-3 h-[460px] w-full tablet:mt-0 tablet:h-[620px] desktop:absolute desktop:inset-0 desktop:h-full">
+      <div className="relative mt-3 h-[460px] w-full tablet:mt-0 tablet:h-[min(calc(100vw+4.5rem),80vh)] desktop:absolute desktop:inset-0 desktop:h-full">
         <div className="relative h-full w-full">
           <HeroImage />
         </div>
