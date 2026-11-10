@@ -5,29 +5,40 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  schedule:
+    - cron: '17 7 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
+      - uses: pnpm/action-setup@v6.1.1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
-          node-version: 22
+          node-version-file: package.json
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+
+      - name: Security audit
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: pnpm audit
 
       - name: Lint
         run: pnpm lint
 
       - name: Type check
         run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
 
       - name: Build
         run: pnpm build

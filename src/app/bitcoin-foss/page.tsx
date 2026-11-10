@@ -115,6 +115,7 @@ async function getFeed(): Promise<FeedState> {
   try {
     const res = await fetch(feedUrl, {
       next: { revalidate: 300 },
+      signal: AbortSignal.timeout(10_000),
     })
 
     if (!res.ok) {
