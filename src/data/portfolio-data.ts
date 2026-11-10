@@ -102,10 +102,7 @@ Key features:
 * 💳 On/off ramps powered by Meld
 * ⚙️ Combined swap + transfer in one action
 * 🧩 Widget integration for seamless dApp embedding`,
-      links: [
-        { href: 'https://app.turtle.cool', label: 'Open Turtle app', kind: 'live' },
-        { href: 'https://github.com/velocitylabs-org/turtle', label: 'View source code', kind: 'source' },
-      ],
+      links: [{ href: 'https://github.com/velocitylabs-org/turtle', label: 'View source code', kind: 'source' }],
       period: 'Apr 2024 - Jan 2026',
       projectType: ['Web App', 'Web3', 'Polkadot Ecosystem'],
       techUsed: ['TypeScript', 'React', 'Next.js', 'Tailwind', 'Polkadot', 'XCM', 'Snowbridge'],

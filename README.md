@@ -9,6 +9,8 @@
 
 ## Getting Started
 
+Use Node.js 26 LTS and pnpm 9.15.2, declared in `package.json`. CI and Vercel use the same Node.js major version.
+
 ```bash
 pnpm i
 pnpm dev
@@ -23,8 +25,12 @@ pnpm dev
 - `pnpm start` — serve the production build
 - `pnpm typecheck` — `tsc --noEmit`
 - `pnpm lint` — biome check (CI gate)
+- `pnpm test` — run the unit tests
+- `pnpm test:watch` — run unit tests in watch mode
 - `pnpm fix` — biome check with auto-fix
 - `pnpm format` — biome formatter only
+
+Vite is declared explicitly to keep Vitest's peer dependency on a patched 8.x release.
 
 ## Project structure
 
